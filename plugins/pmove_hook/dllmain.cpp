@@ -200,6 +200,7 @@ void UIElement_Render(unsigned int a1, __int64 a2, __int64 a3, __int64 a4, __int
 void InitializeGameHooks()
 {
 	printf("GetModuleHandle\n");
+	/*
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
 
 	struct hook_t
@@ -223,9 +224,10 @@ void InitializeGameHooks()
 		{(char*)(baseAddr + 0x7FF7365769FA - StartOfBinary), &Com_Frame, (LPVOID*)(&Com_Frame_Orig), false},
 		{(char*)(baseAddr + 0x7FF725865FA0 - StartOfBinary), &UIElement_Render, (LPVOID*)(&UIElement_Render_Orig), false}
 	};
-	
+	*/
 	printf("MH_Initialize...\n");
 	MH_Initialize();
+	/*
 	size_t amountHooks = sizeof(hooks) / sizeof(hook_t);
 	for (int i = 0; i < amountHooks; i++)
 		if (MH_CreateHook(hooks[i].addr, hooks[i].ourFunction, hooks[i].originalFunction) != MH_OK)
@@ -234,6 +236,7 @@ void InitializeGameHooks()
 	for (int i = 0; i < amountHooks; i++)
 		if (MH_EnableHook(hooks[i].addr) != MH_OK)
 			printf("enable game hook %d didn't work\n", i);
+	*/
 }
 
 
