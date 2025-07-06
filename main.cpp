@@ -21,7 +21,7 @@
 // [ Contact ]
 // 
 // Creator       : HiNAtyu Studio
-// Update date   : 2024/06/11
+// Update date   : 2024/07/06
 // YouTube       : https://www.youtube.com/channel/UCmxJAnVPtkStQVKrvAVMZSw
 // Twitter 1     : @KonataGIF ( https://x.com/KonataGIF )
 // Twitter 2     : @H1NAtyu ( https://twitter.com/H1NAtyu )
