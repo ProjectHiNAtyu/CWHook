@@ -3782,7 +3782,7 @@ void GameSetup()
 	auto LUI_ReportError	= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_ReportError));
 	auto Dvar_RegisterBool	= (LPVOID)((uintptr_t)CalcAdr(_adr.Dvar_RegisterBool));
 
-	if (MH_CreateHook(DB_LoadXFile		, &DB_LoadXFile_d		, reinterpret_cast<LPVOID*>(&Live_IsSignedIn_h)) != MH_OK)
+	if (MH_CreateHook(DB_LoadXFile		, &DB_LoadXFile_d		, reinterpret_cast<LPVOID*>(&DB_LoadXFile_h)) != MH_OK)
 		printf("[Failed] <GameSetup> Hook failed : %s\n", "DB_LoadXFile");
 	else
 		MH_EnableHook(DB_LoadXFile);
