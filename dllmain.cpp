@@ -397,7 +397,7 @@ void setupFunctions() {
 
 extern "C" __declspec(dllexport) int DiscordCreate()
 {
-	//CreateThread(0, 0xA0, (LPTHREAD_START_ROUTINE)entry_point, 0, 0, 0);
+	CreateThread(0, 0xA0, (LPTHREAD_START_ROUTINE)entry_point, 0, 0, 0);
 
 	//puts(__FUNCTION__ " done.");
 	return 1;
