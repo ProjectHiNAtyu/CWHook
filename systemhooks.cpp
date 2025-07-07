@@ -36,6 +36,8 @@ DWORD inputThreadId = -1;
 HANDLE inputHandle = nullptr;
 void* RtlRestoreContextAddr;
 
+GetSystemMetrics_t GetSystemMetricsOrig;
+
 // ntdll hooks
 NtUserQueryWindow_t NtUserQueryWindowOrig;
 NtUserGetForegroundWindow_t NtUserGetForegroundWindowOrig;
@@ -122,43 +124,38 @@ void RtlRestoreContextFunc(PCONTEXT ContextRecord, _EXCEPTION_RECORD* ExceptionR
 	MH_RemoveHook(RtlRestoreContextAddr);
 }
 
-NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
-	PVOID* BaseAddress,
-	ULONG_PTR ZeroBits,
-	SIZE_T RegionSize,
-	ULONG AllocationType,
-	ULONG Protect)
+int GetSystemMetricsFunc(int nIndex)
 {
-	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
+	static bool firstcheckprint = false;
+	if (!firstcheckprint)
+	{
+		printf("GetSystemMetricsFunc calling check\n");
+		firstcheckprint = true;
+	}
+
+	int result = GetSystemMetricsOrig(nIndex);
 	static bool bInit = false;
 
-	if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
+	if (!bInit)
 	{
+		printf("GetSystemMetricsFunc If evaluation = true\n");
 		static int counter = 0;
 		counter++;
 
-		/* checksum counts for latest build supported by donetsk defcon
-			p 57
-			p 41
-			p 30
-		*/
 		static bool firstTime = true;
 		if (firstTime)
 		{
 			clock_t start_time = clock();
 			CreateInlineAsmStub();
 			CreateChecksumHealingStub();
-			
+
 			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
 			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
 			printf("done hooking\n");
-			
+
 			firstTime = false;
 		}
 
-		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
-		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
-		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
 		if (counter == 6)
 		{
 			DisableTlsCallbacks();
@@ -176,6 +173,89 @@ NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 
 	return result;
 }
+
+NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+	PVOID* BaseAddress,
+	ULONG_PTR ZeroBits,
+	SIZE_T RegionSize,
+	ULONG AllocationType,
+	ULONG Protect)
+{
+	static bool firstcheckprint = false;
+	if (!firstcheckprint)
+	{
+		printf("NtAllocateVirtualMemoryFunc calling check\n");
+		firstcheckprint = true;
+	}
+
+	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle, BaseAddress, ZeroBits, RegionSize, AllocationType, Protect);
+	
+	return result;
+}
+
+//	NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+//		PVOID* BaseAddress,
+//		ULONG_PTR ZeroBits,
+//		SIZE_T RegionSize,
+//		ULONG AllocationType,
+//		ULONG Protect)
+//	{
+//		static bool firstcheckprint = false;
+//		if (!firstcheckprint)
+//		{
+//	
+//			printf("NtAllocateVirtualMemoryFunc calling check\n");
+//			firstcheckprint = true;
+//		}
+//	
+//		NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
+//		static bool bInit = false;
+//	
+//		if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
+//		{
+//			printf("NtAllocateVirtualMemoryFunc If evaluation = true\n");
+//			static int counter = 0;
+//			counter++;
+//	
+//			/* checksum counts for latest build supported by donetsk defcon
+//				p 57
+//				p 41
+//				p 30
+//			*/
+//			static bool firstTime = true;
+//			if (firstTime)
+//			{
+//				clock_t start_time = clock();
+//				CreateInlineAsmStub();
+//				CreateChecksumHealingStub();
+//				
+//				double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+//				printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+//				printf("done hooking\n");
+//				
+//				firstTime = false;
+//			}
+//	
+//			// Arxan does a startup checksum check routine that I didn't bother bypassing, 
+//			// doesn't matter anyways since iirc none of the game's functions gets called anyways.
+//			// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
+//			if (counter == 6)
+//			{
+//				DisableTlsCallbacks();
+//				DisableKiUserApcDispatcherHook();
+//				RestoreKernel32ThreadInitThunkFunction();
+//				RemoveNtdllChecksumChecks();
+//				RestoreNtdllDbgFunctions();
+//	
+//				InitializePluginLoader();
+//				CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
+//	
+//				bInit = true;
+//			}
+//		}
+//	
+//		return result;
+//	}
 
 HWND DialogButton = 0;
 DWORD WINAPI testThread()
@@ -504,6 +584,8 @@ void InitializeSystemHooks()
 	void* SetWindowsHookExAddr = (void*)GetProcAddress(GetModuleHandle("user32.dll"), "SetWindowsHookExW");
 	void* CreateWindowExAddr = (void*)GetProcAddress(GetModuleHandle("user32.dll"), "CreateWindowExW");
 
+	void* GetSystemMetricsAddr = (void*)GetProcAddress(GetModuleHandle("user32.dll"), "GetSystemMetrics");
+
 	void* NtUserQueryWindowAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserQueryWindow");
 	void* NtUserGetForegroundWindowAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserGetForegroundWindow");
 	void* NtUserBuildHwndListAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserBuildHwndList");
@@ -561,6 +643,8 @@ void InitializeSystemHooks()
 		{NtUserWindowFromDCAddr, &GetMenuFunc, NULL},
 		
 		{NtAllocateVirtualMemoryAddr, &NtAllocateVirtualMemoryFunc, (LPVOID*)(&NtAllocateVirtualMemoryOrig)},
+
+		{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
 	};
 
 	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");

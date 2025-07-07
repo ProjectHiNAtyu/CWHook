@@ -35,6 +35,9 @@ typedef enum _WINDOWINFOCLASS {
 
 #define REMOVE_HWBP_ON_SUSPEND 0
 
+typedef int(__stdcall* GetSystemMetrics_t)(int nIndex);
+extern GetSystemMetrics_t GetSystemMetricsOrig;
+
 typedef int(__stdcall* SetThreadContext_t)(HANDLE hThread, CONTEXT* lpContext);
 extern SetThreadContext_t SetThreadContextOrig;
 
