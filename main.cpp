@@ -3851,7 +3851,7 @@ void GameStart()
 //++++++++++++++++++++++++++++++
 void entry_point()
 {
-	GameStart();
+	//GameStart();
 
 	puts(__FUNCTION__ " done.");
 }
@@ -3871,7 +3871,7 @@ void GameSetup()
 	//SetupMinHook("GameSetup", "DB_LoadXFile"		, CalcAdr(_adr.DB_LoadXFile)		, &DB_LoadXFile_d		, &DB_LoadXFile_h);
 	//SetupMinHook("GameSetup", "Load_ScriptFile"		, CalcAdr(_adr.Load_ScriptFile)		, &Load_ScriptFile_d	, &Load_ScriptFile_h);
 	//SetupMinHook("GameSetup", "LUI_ReportError"		, CalcAdr(_adr.LUI_ReportError)		, &LUI_ReportError_d	, &LUI_ReportError_h);
-	SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcAdr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d	, &Dvar_RegisterBool_h);
+	//SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcAdr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d	, &Dvar_RegisterBool_h);
 
 	/*
 
@@ -3919,21 +3919,14 @@ void GameSetup()
 	//utils::hook::jump(									CalcAdr(_adr.SEH_StringEd_GetString)						, SEH_StringEd_GetString_d);
 	//utils::hook::jump(									CalcAdr(_adr.LiveStorage_GetActiveStatsSource)				, LiveStorage_GetActiveStatsSource_d);
 
-
 	//utils::hook::jump(									CalcAdr(_adr.GamerProfile_IsProfileLoggedIn)				, GamerProfile_IsProfileLoggedIn_d);
 	//utils::hook::jump(									CalcAdr(_adr.Live_IsUserSignedInToBnet)						, Live_IsUserSignedInToBnet_d);
 	//utils::hook::jump(									CalcAdr(_adr.Live_IsUserSignedInToDemonware)				, Live_IsUserSignedInToDemonware_d);
-
 
 	//utils::hook::jump(									CalcAdr(_adr.Live_IsInSystemlinkLobby)						, Live_IsInSystemlinkLobby_d);
 	//Live_IsInSystemlinkLobby_h.create(					CalcAdr(_adr.Live_IsInSystemlinkLobby)						, Live_IsInSystemlinkLobby_d);
 
 	//DDL_Lookup_MoveToNameHash_h.create(					CalcAdr(_adr.DDL_Lookup_MoveToNameHash)						, DDL_Lookup_MoveToNameHash_d);
-
-
-
-
-
 	//luaL_loadfile_h.create(								CalcAdr(_adr.luaL_loadfile)									, luaL_loadfile_d);
 	
 	//luaL_loadbuffer_h.create(							CalcAdr(_adr.luaL_loadbuffer)								, luaL_loadbuffer_d);
@@ -3943,7 +3936,6 @@ void GameSetup()
 	//LiveStorage_ReadStats_h.create(						CalcAdr(_adr.LiveStorage_ReadStats)							, LiveStorage_ReadStats_d);
 	//Com_DDL_LoadAsset_h.create(							CalcAdr(_adr.Com_DDL_LoadAsset)								, Com_DDL_LoadAsset_d);
 	//LiveStorage_GetPlayerDataBufferForSource_h.create(	CalcAdr(_adr.LiveStorage_GetPlayerDataBufferForSource)		, LiveStorage_GetPlayerDataBufferForSource_d);
-	
 	
 	//	LUI_LuaCall_LUIGlobalPackage_DebugPrint_h.create(		CalcAdr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, LUI_LuaCall_LUIGlobalPackage_DebugPrint_d);
 	//	LUI_CoD_LuaCall_OfflineDataFetched_h.create(			CalcAdr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, LUI_CoD_LuaCall_OfflineDataFetched_d);
@@ -3968,10 +3960,7 @@ void GameSetup()
 	//utils::hook::jump(									CalcAdr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, lua_pushboolean_return_true_d);
 	//utils::hook::jump(									CalcAdr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, lua_pushboolean_return_true_d);
 	
-
 	//LUIMethod_LUIGlobalPackage_list_f();
-	
-
 	//utils::hook::jump(									CalcAdr(_adr.LiveStorage_GetActiveStatsSource)		, LiveStorage_GetActiveStatsSource_d);
 
 	//utils::hook::jump(									CalcAdr(_adr.dwGetLogOnStatus)								, dwGetLogOnStatus_d);
@@ -3990,12 +3979,6 @@ void GameSetup()
 	//utils::hook::jump(									CalcAdr(_adr.LUI_CoD_LuaCall_IsConnectedToGameServer)		, lua_pushboolean_return_true_d);
 	//utils::hook::jump(									CalcAdr(_adr.LUI_COD_LuaCall_IsPremiumPlayerReady)			, lua_pushboolean_return_true_d);
 
-
-
-
-
-
-
 	//R_EndFrame_h.create(								CalcAdr(_adr.R_EndFrame)									, R_EndFrame_d);
 	//dwGetLogOnStatus_h.create(							CalcAdr(_adr.dwGetLogOnStatus)								, dwGetLogOnStatus_d);
 	//Dvar_RegisterBool_h.create(							CalcAdr(_adr.Dvar_RegisterBool)								, Dvar_RegisterBool_d);
@@ -4005,7 +3988,6 @@ void GameSetup()
 	//Live_IsUserSignedInToDemonware_h.create(			CalcAdr(_adr.Live_IsUserSignedInToDemonware)				, Live_IsUserSignedInToDemonware_d);
 	//LUI_CoD_LuaCall_IsUserSignedInToLive_h.create(		CalcAdr(_adr.LUI_CoD_LuaCall_IsUserSignedInToLive)			, LUI_CoD_LuaCall_IsUserSignedInToLive_d);
 	//LUI_CoD_LuaCall_IsUserSignedInToDemonware_h.create(	CalcAdr(_adr.LUI_CoD_LuaCall_IsUserSignedInToDemonware)		, LUI_CoD_LuaCall_IsUserSignedInToDemonware_d);
-
 
 	////utils::hook::jump(				CalcAdr(_adr.SEH_StringEd_GetString)						, SEH_StringEd_GetString_d);
 	//	utils::hook::jump(									CalcAdr(_adr.GetUsername)									, GetUsername_d);
@@ -4054,7 +4036,6 @@ void GameSetup()
 	//	LOG("Component/Auth", INFO, "Sign in state now 2.");
 	//	});
 	//thr.detach();
-
 
 	//	
 	//	
@@ -4181,7 +4162,7 @@ void Initialization()
 
 	SetupProfile();
 
-	HookExeModuleFunctions();
+	//HookExeModuleFunctions();
 
 }
 
