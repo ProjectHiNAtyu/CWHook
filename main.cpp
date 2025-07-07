@@ -1,4 +1,4 @@
-//><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><//
+ï»¿//><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><//
 // [ IW8 ] Force offline mode Fence bypass - 1.57 Edition
 //><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><//
 
@@ -101,7 +101,7 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : Header include
-// ja : ƒwƒbƒ_[‘g‚İ‚İ
+// ja : ãƒ˜ãƒƒãƒ€ãƒ¼çµ„ã¿è¾¼ã¿
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -150,7 +150,7 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : define
-// ja : ’è‹`
+// ja : å®šç¾©
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -166,7 +166,7 @@ typedef unsigned char byte;
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : enum / struct
-// ja : —ñ‹“Œ^ / \‘¢‘Ì
+// ja : åˆ—æŒ™å‹ / æ§‹é€ ä½“
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -174,7 +174,7 @@ typedef unsigned char byte;
 
 //++++++++++++++++++++++++++++++
 // en : Game title
-// ja : ƒQ[ƒ€ƒ^ƒCƒgƒ‹
+// ja : ã‚²ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«
 //++++++++++++++++++++++++++++++
 enum GameTitle
 {
@@ -187,7 +187,7 @@ enum GameTitle
 
 //++++++++++++++++++++++++++++++
 // en : Game title
-// ja : ƒAƒhƒŒƒXƒ|ƒCƒ“ƒ^[
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒã‚¤ãƒ³ã‚¿ãƒ¼
 //++++++++++++++++++++++++++++++
 struct AdrOffsets
 {
@@ -310,7 +310,7 @@ struct AdrOffsets
 
 //++++++++++++++++++++++++++++++
 // en : hook
-// ja : ƒtƒbƒN
+// ja : ãƒ•ãƒƒã‚¯
 //++++++++++++++++++++++++++++++
 struct hook_t
 {
@@ -323,7 +323,7 @@ struct hook_t
 
 //++++++++++++++++++++++++++++++
 // en : detour for hook
-// ja : ƒtƒbƒN—pƒfƒBƒg[ƒ‹
+// ja : ãƒ•ãƒƒã‚¯ç”¨ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«
 //++++++++++++++++++++++++++++++
 struct detours
 {
@@ -383,7 +383,7 @@ struct detours
 
 //++++++++++++++++++++++++++++++
 // en : Locali client number
-// ja : ƒ[ƒJƒ‹ƒNƒ‰ƒCƒAƒ“ƒg”Ô†
+// ja : ãƒ­ãƒ¼ã‚«ãƒ«ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç•ªå·
 //++++++++++++++++++++++++++++++
 enum LocalClientNum_t
 {
@@ -397,7 +397,7 @@ enum LocalClientNum_t
 
 //++++++++++++++++++++++++++++++
 // en : Fence online services state code
-// ja : ƒtƒFƒ“ƒXƒIƒ“ƒ‰ƒCƒ“ƒT[ƒrƒXó‘ÔƒR[ƒh
+// ja : ãƒ•ã‚§ãƒ³ã‚¹ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ã‚µãƒ¼ãƒ“ã‚¹çŠ¶æ…‹ã‚³ãƒ¼ãƒ‰
 //++++++++++++++++++++++++++++++
 enum FenceOnlineServices_CODE_STATE
 {
@@ -414,7 +414,7 @@ enum FenceOnlineServices_CODE_STATE
 
 //++++++++++++++++++++++++++++++
 // en : BattleNet authentication status
-// ja : ƒoƒgƒ‹ƒlƒbƒg”FØó‘Ô
+// ja : ãƒãƒˆãƒ«ãƒãƒƒãƒˆèªè¨¼çŠ¶æ…‹
 //++++++++++++++++++++++++++++++
 enum BattleNetAuthState
 {
@@ -427,7 +427,7 @@ enum BattleNetAuthState
 
 //++++++++++++++++++++++++++++++
 // en : Demonware Online Status
-// ja : ƒf[ƒ‚ƒ“ƒEƒFƒAƒIƒ“ƒ‰ƒCƒ“ó‘Ô
+// ja : ãƒ‡ãƒ¼ãƒ¢ãƒ³ã‚¦ã‚§ã‚¢ã‚ªãƒ³ãƒ©ã‚¤ãƒ³çŠ¶æ…‹
 //++++++++++++++++++++++++++++++
 enum DWOnlineStatus
 {
@@ -439,7 +439,7 @@ enum DWOnlineStatus
 
 //++++++++++++++++++++++++++++++
 // en : XUID ( CoD In-Game Unique Identifier )
-// ja : XUID ( CoD ƒCƒ“ƒQ[ƒ€ ŒÅ—L¯•Êq )
+// ja : XUID ( CoD ã‚¤ãƒ³ã‚²ãƒ¼ãƒ  å›ºæœ‰è­˜åˆ¥å­ )
 //++++++++++++++++++++++++++++++
 struct XUID
 {
@@ -456,7 +456,7 @@ struct XUID
 
 //++++++++++++++++++++++++++++++
 // en : LUA Status
-// ja : LUAó‘Ô
+// ja : LUAçŠ¶æ…‹
 //++++++++++++++++++++++++++++++
 struct lua_State
 {
@@ -466,7 +466,7 @@ struct lua_State
 
 //++++++++++++++++++++++++++++++
 // en : LUA Registration
-// ja : LUA“o˜^
+// ja : LUAç™»éŒ²
 //++++++++++++++++++++++++++++++
 struct luaL_Reg
 {
@@ -477,7 +477,7 @@ struct luaL_Reg
 
 //	//++++++++++++++++++++++++++++++
 //	// en : LUI method
-//	// ja : LUIƒƒ\ƒbƒh
+//	// ja : LUIãƒ¡ã‚½ãƒƒãƒ‰
 //	//++++++++++++++++++++++++++++++
 //	template <typename LUIGlobalPackage>
 //	class LUIMethod
@@ -516,7 +516,7 @@ struct luaL_Reg
 
 //++++++++++++++++++++++++++++++
 // en : XZone Memory
-// ja : XZoneƒƒ‚ƒŠ[
+// ja : XZoneãƒ¡ãƒ¢ãƒªãƒ¼
 //++++++++++++++++++++++++++++++
 struct XZoneMemory
 {
@@ -526,7 +526,7 @@ struct XZoneMemory
 
 //++++++++++++++++++++++++++++++
 // en : Authentication Signature Database
-// ja : ”FØ–¼ƒf[ƒ^ƒx[ƒX
+// ja : èªè¨¼ç½²åãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹
 //++++++++++++++++++++++++++++++
 struct DB_AuthSignature
 {
@@ -536,7 +536,7 @@ struct DB_AuthSignature
 
 //++++++++++++++++++++++++++++++
 // en : Fast file failure mode database
-// ja : ‚‘¬ƒtƒ@ƒCƒ‹¸”sƒ‚[ƒhƒf[ƒ^ƒx[ƒX
+// ja : é«˜é€Ÿãƒ•ã‚¡ã‚¤ãƒ«å¤±æ•—ãƒ¢ãƒ¼ãƒ‰ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹
 //++++++++++++++++++++++++++++++
 enum DB_FastFileFailureMode : int
 {
@@ -547,7 +547,7 @@ enum DB_FastFileFailureMode : int
 
 //++++++++++++++++++++++++++++++
 // en : Voice Communication Setting
-// ja : ƒ{ƒCƒXƒRƒ~ƒ…ƒjƒP[ƒVƒ‡ƒ“İ’è
+// ja : ãƒœã‚¤ã‚¹ã‚³ãƒŸãƒ¥ãƒ‹ã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
 //++++++++++++++++++++++++++++++
 enum voiceCommunicationSetting : __int8
 {
@@ -560,7 +560,7 @@ enum voiceCommunicationSetting : __int8
 
 //++++++++++++++++++++++++++++++
 // en : Voice Communication Setting
-// ja : ƒ{ƒCƒXƒRƒ~ƒ…ƒjƒP[ƒVƒ‡ƒ“İ’è
+// ja : ãƒœã‚¤ã‚¹ã‚³ãƒŸãƒ¥ãƒ‹ã‚±ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
 //++++++++++++++++++++++++++++++
 struct MicrosoftReputationValues
 {
@@ -573,7 +573,7 @@ struct MicrosoftReputationValues
 
 //++++++++++++++++++++++++++++++
 // en : Xenon User Data
-// ja : Xenonƒ†[ƒU[ƒf[ƒ^
+// ja : Xenonãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿
 //++++++++++++++++++++++++++++++
 struct XenonUserData
 {
@@ -601,7 +601,7 @@ struct XenonUserData
 
 //++++++++++++++++++++++++++++++
 // en : Database Stream Start
-// ja : ƒf[ƒ^ƒx[ƒXƒXƒgƒŠ[ƒ€ŠJn
+// ja : ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚¹ãƒˆãƒªãƒ¼ãƒ é–‹å§‹
 //++++++++++++++++++++++++++++++
 enum DBStreamStart : __int32
 {
@@ -612,7 +612,7 @@ enum DBStreamStart : __int32
 
 //++++++++++++++++++++++++++++++
 // en : Script file
-// ja : ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹
+// ja : ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«
 //++++++++++++++++++++++++++++++
 struct ScriptFile
 {
@@ -627,7 +627,7 @@ struct ScriptFile
 
 //++++++++++++++++++++++++++++++
 // en : LUA file
-// ja : LUAƒtƒ@ƒCƒ‹
+// ja : LUAãƒ•ã‚¡ã‚¤ãƒ«
 //++++++++++++++++++++++++++++++
 struct LuaFile
 {
@@ -640,7 +640,7 @@ struct LuaFile
 
 //++++++++++++++++++++++++++++++
 // en : XAsset type
-// ja : XAssetí—Ş
+// ja : XAssetç¨®é¡
 //++++++++++++++++++++++++++++++
 enum XAssetType
 {
@@ -766,7 +766,7 @@ enum XAssetType
 
 //++++++++++++++++++++++++++++++
 // en : XAsset header
-// ja : XAssetƒwƒbƒ_[
+// ja : XAssetãƒ˜ãƒƒãƒ€ãƒ¼
 //++++++++++++++++++++++++++++++
 union XAssetHeader
 {
@@ -899,7 +899,7 @@ struct XAsset
 
 //++++++++++++++++++++++++++++++
 // en : Script string list
-// ja : ƒXƒNƒŠƒvƒg•¶š—ñƒŠƒXƒg
+// ja : ã‚¹ã‚¯ãƒªãƒ—ãƒˆæ–‡å­—åˆ—ãƒªã‚¹ãƒˆ
 //++++++++++++++++++++++++++++++
 struct ScriptStringList
 {
@@ -911,7 +911,7 @@ struct ScriptStringList
 
 //++++++++++++++++++++++++++++++
 // en : XAsset list
-// ja : XAsset ƒŠƒXƒg
+// ja : XAsset ãƒªã‚¹ãƒˆ
 //++++++++++++++++++++++++++++++
 struct XAssetList
 {
@@ -924,7 +924,7 @@ struct XAssetList
 
 //++++++++++++++++++++++++++++++
 // en : Dvar value
-// ja : Dvar’l
+// ja : Dvarå€¤
 //++++++++++++++++++++++++++++++
 union DvarValue
 {
@@ -942,7 +942,7 @@ union DvarValue
 
 //++++++++++++++++++++++++++++++
 // en : Dvar usage flags
-// ja : Dvarg—pƒtƒ‰ƒO
+// ja : Dvarä½¿ç”¨ãƒ•ãƒ©ã‚°
 //++++++++++++++++++++++++++++++
 struct BbConstUsageFlags
 {
@@ -975,7 +975,7 @@ struct dvar_t
 
 //++++++++++++++++++++++++++++++
 // en : DDL type
-// ja : DDLí—Ş
+// ja : DDLç¨®é¡
 //++++++++++++++++++++++++++++++
 enum DDLType : unsigned int
 {
@@ -997,7 +997,7 @@ enum DDLType : unsigned int
 
 //++++++++++++++++++++++++++++++
 // en : DDL member
-// ja : DDLƒƒ“ƒo[
+// ja : DDLãƒ¡ãƒ³ãƒãƒ¼
 //++++++++++++++++++++++++++++++
 struct DDLMember
 {
@@ -1019,7 +1019,7 @@ struct DDLMember
 
 //++++++++++++++++++++++++++++++
 // en : DDL hash
-// ja : DDLƒnƒbƒVƒ…
+// ja : DDLãƒãƒƒã‚·ãƒ¥
 //++++++++++++++++++++++++++++++
 struct DDLHash
 {
@@ -1030,7 +1030,7 @@ struct DDLHash
 
 //++++++++++++++++++++++++++++++
 // en : DDL hash table
-// ja : DDLƒnƒbƒVƒ…ƒe[ƒuƒ‹
+// ja : DDLãƒãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ«
 //++++++++++++++++++++++++++++++
 struct DDLHashTable
 {
@@ -1042,7 +1042,7 @@ struct DDLHashTable
 
 //++++++++++++++++++++++++++++++
 // en : DDL struct
-// ja : DDL\‘¢‘Ì
+// ja : DDLæ§‹é€ ä½“
 //++++++++++++++++++++++++++++++
 struct DDLStruct
 {
@@ -1057,7 +1057,7 @@ struct DDLStruct
 
 //++++++++++++++++++++++++++++++
 // en : DDL enum
-// ja : DDL—ñ‹“Œ^
+// ja : DDLåˆ—æŒ™å‹
 //++++++++++++++++++++++++++++++
 struct DDLEnum
 {
@@ -1070,7 +1070,7 @@ struct DDLEnum
 
 //++++++++++++++++++++++++++++++
 // en : DDL define
-// ja : DDL’è‹`
+// ja : DDLå®šç¾©
 //++++++++++++++++++++++++++++++
 struct __declspec(align(8)) DDLDef
 {
@@ -1094,7 +1094,7 @@ struct __declspec(align(8)) DDLDef
 
 //++++++++++++++++++++++++++++++
 // en : DDL file
-// ja : DDLƒtƒ@ƒCƒ‹
+// ja : DDLãƒ•ã‚¡ã‚¤ãƒ«
 //++++++++++++++++++++++++++++++
 struct DDLFile
 {
@@ -1105,7 +1105,7 @@ struct DDLFile
 
 //++++++++++++++++++++++++++++++
 // en : DDL state
-// ja : DDLó‘Ô
+// ja : DDLçŠ¶æ…‹
 //++++++++++++++++++++++++++++++
 struct DDLState
 {
@@ -1119,7 +1119,7 @@ struct DDLState
 
 //++++++++++++++++++++++++++++++
 // en : Stats source
-// ja : “Œvƒ\[ƒX
+// ja : çµ±è¨ˆã‚½ãƒ¼ã‚¹
 //++++++++++++++++++++++++++++++
 enum StatsSource
 {
@@ -1131,7 +1131,7 @@ enum StatsSource
 
 //++++++++++++++++++++++++++++++
 // en : Stats group
-// ja : “ŒvƒOƒ‹[ƒv
+// ja : çµ±è¨ˆã‚°ãƒ«ãƒ¼ãƒ—
 //++++++++++++++++++++++++++++++
 enum StatsGroup
 {
@@ -1153,93 +1153,96 @@ enum StatsGroup
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : Member Variables
-// ja : ƒƒ“ƒo[•Ï”
+// ja : ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
 
 
 // en : Image Base Address Reference
-// ja : ƒCƒ[ƒWƒx[ƒXƒAƒhƒŒƒXQÆ
+// ja : ã‚¤ãƒ¡ãƒ¼ã‚¸ãƒ™ãƒ¼ã‚¹ã‚¢ãƒ‰ãƒ¬ã‚¹å‚ç…§
 const auto _ImageBase = (uintptr_t)GetModuleHandle(nullptr);
 
 
 // en : Current Game title
-// ja : Œ»İ‚ÌƒQ[ƒ€ƒ^ƒCƒgƒ‹
+// ja : ç¾åœ¨ã®ã‚²ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«
 GameTitle _gameTitle = GameTitle::UNKNOWN;
 
 
 // en : Address Pointer
-// ja : ƒAƒhƒŒƒXƒ|ƒCƒ“ƒ^[
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒã‚¤ãƒ³ã‚¿ãƒ¼
 AdrOffsets _adr;
 
 
 // en : detour for hook
-// ja : ƒtƒbƒN—pƒfƒBƒg[ƒ‹
+// ja : ãƒ•ãƒƒã‚¯ç”¨ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«
 detours _hooks;
 
 
 // en : Profile initialization file path
-// ja : ƒvƒƒtƒB[ƒ‹‰Šú‰»ƒtƒ@ƒCƒ‹ƒpƒX
+// ja : ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«åˆæœŸåŒ–ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
 std::string _profileIniPath;
 
 
 // en : Player name
-// ja : ƒvƒŒƒCƒ„[–¼
+// ja : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å
 std::string _playerName;
 
 
 // en : Document path
-// ja : ƒhƒLƒ…ƒƒ“ƒgƒpƒX
+// ja : ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆãƒ‘ã‚¹
 std::string _documentPath;
 
 
 // en : Splash image loading function (to hold the IAT hook)
-// ja : ƒXƒvƒ‰ƒbƒVƒ…‰æ‘œ“Ç‚İ‚İŠÖ”iIATƒtƒbƒN‚Ì•Û—pj
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ç”»åƒèª­ã¿è¾¼ã¿é–¢æ•°ï¼ˆIATãƒ•ãƒƒã‚¯ã®ä¿æŒç”¨ï¼‰
 std::optional<std::pair<void*, void*>> LoadImageA_h;
 
 
 // en : Splash image loading function (For holding the original function pointer)
-// ja : ƒXƒvƒ‰ƒbƒVƒ…‰æ‘œ“Ç‚İ‚İŠÖ”iŒ³ŠÖ”ƒ|ƒCƒ“ƒ^[•Û—pj
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ç”»åƒèª­ã¿è¾¼ã¿é–¢æ•°ï¼ˆå…ƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ãƒ¼ä¿æŒç”¨ï¼‰
 typedef HCURSOR(WINAPI* LoadImageA_t)(HINSTANCE, LPCSTR, UINT, int, int, UINT);
-// en : Splash image loading function (For holding the original function pointer)
-// ja : ƒXƒvƒ‰ƒbƒVƒ…‰æ‘œ“Ç‚İ‚İŠÖ”iŒ³ŠÖ”ƒ|ƒCƒ“ƒ^[•Û—pƒgƒ‰ƒ“ƒ|ƒŠƒ“j
+// en : Splash image loading function (Trampoline for holding the original function pointer)
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ç”»åƒèª­ã¿è¾¼ã¿é–¢æ•°ï¼ˆå…ƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ãƒ¼ä¿æŒç”¨ãƒˆãƒ©ãƒ³ãƒãƒªãƒ³ï¼‰
 LoadImageA_t LoadImageA_b = nullptr;
+// en : Splash image loading function (void for holding the original function pointer)
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ç”»åƒèª­ã¿è¾¼ã¿é–¢æ•°ï¼ˆå…ƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ãƒ¼ä¿æŒç”¨voidï¼‰
+void* LoadImageA_v;
 
 
 // en : A flag to detect whether the splash image loading function has been executed.
-// ja : ƒXƒvƒ‰ƒbƒVƒ…‰æ‘œ“Ç‚İ‚İŠÖ”‚ªÀs‚³‚ê‚½‚©‚Ç‚¤‚©‚ğŒŸ’m‚·‚éƒtƒ‰ƒO
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ç”»åƒèª­ã¿è¾¼ã¿é–¢æ•°ãŒå®Ÿè¡Œã•ã‚ŒãŸã‹ã©ã†ã‹ã‚’æ¤œçŸ¥ã™ã‚‹ãƒ•ãƒ©ã‚°
 bool _splashed = false;
 
 
 // en : The number of frames counted by the R_EndFrame function
-// ja : R_EndFrameŠÖ”‚ÅƒJƒEƒ“ƒg‚³‚ê‚½ƒtƒŒ[ƒ€‰ñ”
+// ja : R_EndFrameé–¢æ•°ã§ã‚«ã‚¦ãƒ³ãƒˆã•ã‚ŒãŸãƒ•ãƒ¬ãƒ¼ãƒ å›æ•°
 int _elapsedFrameCount = 0;
 
 
 // en : Whether the frame count in the R_EndFrame function is complete
-// ja : R_EndFrameŠÖ”‚Å‚ÌƒtƒŒ[ƒ€ƒJƒEƒ“ƒg‚ªŠ®—¹‚µ‚½‚©‚Ç‚¤‚©
+// ja : R_EndFrameé–¢æ•°ã§ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚«ã‚¦ãƒ³ãƒˆãŒå®Œäº†ã—ãŸã‹ã©ã†ã‹
 bool _frameCountEnd;
 
 
 // en : Whether to dump GSC
-// ja : GSC‚ğƒ_ƒ“ƒv‚·‚é‚©‚Ç‚¤‚©
+// ja : GSCã‚’ãƒ€ãƒ³ãƒ—ã™ã‚‹ã‹ã©ã†ã‹
 bool _dumpGSC = false;
 
 
 // en : Exception Error Filter Settings function (to hold the IAT hook)
-// ja : —áŠOƒGƒ‰[ƒtƒBƒ‹ƒ^[İ’èŠÖ”iIATƒtƒbƒN‚Ì•Û—pj
+// ja : ä¾‹å¤–ã‚¨ãƒ©ãƒ¼ãƒ•ã‚£ãƒ«ã‚¿ãƒ¼è¨­å®šé–¢æ•°ï¼ˆIATãƒ•ãƒƒã‚¯ã®ä¿æŒç”¨ï¼‰
 std::optional<std::pair<void*, void*>> SetUnhandledExceptionFilter_h;
 
 
 // en : GetThreadContext hook function
-// ja : GetThreadContext‚ÌƒtƒbƒNŠÖ”
+// ja : GetThreadContextã®ãƒ•ãƒƒã‚¯é–¢æ•°
 //using GetThreadContext_t = BOOL(WINAPI*)(HANDLE, LPCONTEXT);
 //GetThreadContext_t OriginalGetThreadContext = nullptr;
 
 
 // en : Unused variables (just to be safe)
-// ja : –¢g—p‚Ì•Ï”i”O‚Ì‚½‚ß•Û‘¶—pj
+// ja : æœªä½¿ç”¨ã®å¤‰æ•°ï¼ˆå¿µã®ãŸã‚ä¿å­˜ç”¨ï¼‰
 bool signed_in = false;
 bool force_sign_in_state_now = false;
 inline int* unk_SignInState{};
@@ -1247,7 +1250,7 @@ bool _loadMainMenu = false;
 
 
 // en : Hook source function pointer for various MinHooks (for storage)
-// ja : ŠeíMinHook—pƒtƒbƒNŒ³ŠÖ”ƒ|ƒCƒ“ƒ^[i•Û—pj
+// ja : å„ç¨®MinHookç”¨ãƒ•ãƒƒã‚¯å…ƒé–¢æ•°ãƒã‚¤ãƒ³ã‚¿ãƒ¼ï¼ˆä¿æŒç”¨ï¼‰
 typedef XAssetHeader(__fastcall* DB_FindXAssetHeader_t)(XAssetType type, const char* given_name, int allow_create_default);
 DB_FindXAssetHeader_t DB_FindXAssetHeader_h;
 
@@ -1304,7 +1307,7 @@ Content_DoWeHaveContentPack_t Content_DoWeHaveContentPack_h;
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : Basic generic function
-// ja : Šî–{”Ä—pŠÖ”
+// ja : åŸºæœ¬æ±ç”¨é–¢æ•°
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -1312,7 +1315,7 @@ Content_DoWeHaveContentPack_t Content_DoWeHaveContentPack_h;
 
 //++++++++++++++++++++++++++++++
 // en : In-game address calculation
-// ja : ƒQ[ƒ€“àƒAƒhƒŒƒXZo
+// ja : ã‚²ãƒ¼ãƒ å†…ã‚¢ãƒ‰ãƒ¬ã‚¹ç®—å‡º
 //++++++++++++++++++++++++++++++
 size_t CalcAdr(const size_t val)
 {
@@ -1323,7 +1326,7 @@ size_t CalcAdr(const size_t val)
 
 //++++++++++++++++++++++++++++++
 // en : Address Modifiers
-// ja : ƒAƒhƒŒƒXCüq
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿®é£¾å­
 //++++++++++++++++++++++++++++++
 size_t operator"" _b(const size_t val)
 {
@@ -1334,7 +1337,7 @@ size_t operator"" _b(const size_t val)
 
 //++++++++++++++++++++++++++++++
 // en : Address Modifiers
-// ja : ƒAƒhƒŒƒXCüq
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿®é£¾å­
 //++++++++++++++++++++++++++++++
 size_t reverse_b(const size_t val)
 {
@@ -1345,7 +1348,7 @@ size_t reverse_b(const size_t val)
 
 //++++++++++++++++++++++++++++++
 // en : Address Modifiers
-// ja : ƒAƒhƒŒƒXCüq
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿®é£¾å­
 //++++++++++++++++++++++++++++++
 size_t operator"" _g(const size_t val)
 {
@@ -1356,7 +1359,7 @@ size_t operator"" _g(const size_t val)
 
 //++++++++++++++++++++++++++++++
 // en : Address Modifiers
-// ja : ƒAƒhƒŒƒXCüq
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿®é£¾å­
 //++++++++++++++++++++++++++++++
 size_t reverse_g(const size_t val)
 {
@@ -1367,7 +1370,7 @@ size_t reverse_g(const size_t val)
 
 //++++++++++++++++++++++++++++++
 // en : Address Modifiers
-// ja : ƒAƒhƒŒƒXCüq
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹ä¿®é£¾å­
 //++++++++++++++++++++++++++++++
 size_t reverse_g(const void* val)
 {
@@ -1378,7 +1381,7 @@ size_t reverse_g(const void* val)
 
 //++++++++++++++++++++++++++++++
 // en : Replaces all occurrences of a specified string within a string
-// ja : •¶š—ñ“à‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éAw’è‚³‚ê‚½•¶š—ñ‚ğ‘S‚Ä’u‚«Š·‚¦‚é
+// ja : æ–‡å­—åˆ—å†…ã«å«ã¾ã‚Œã¦ã„ã‚‹ã€æŒ‡å®šã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’å…¨ã¦ç½®ãæ›ãˆã‚‹
 //++++++++++++++++++++++++++++++
 void ReplaceAll(std::string& stringreplace, const std::string& origin, const std::string& dest)
 {
@@ -1396,7 +1399,7 @@ void ReplaceAll(std::string& stringreplace, const std::string& origin, const std
 
 //++++++++++++++++++++++++++++++
 // en : Evaluates whether a string contains a specified character string
-// ja : w’è‚Ì•¶š—ñ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚©•]‰¿‚·‚é
+// ja : æŒ‡å®šã®æ–‡å­—åˆ—ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã‹è©•ä¾¡ã™ã‚‹
 //++++++++++++++++++++++++++++++
 bool isSubStr(std::string str, std::string subStr)
 {
@@ -1412,7 +1415,7 @@ bool isSubStr(std::string str, std::string subStr)
 
 //++++++++++++++++++++++++++++++
 // en : Converting a string to a floating point number
-// ja : •¶š—ñ‚ğ•‚“®¬”“_‚É•ÏŠ·‚·‚é
+// ja : æ–‡å­—åˆ—ã‚’æµ®å‹•å°æ•°ç‚¹ã«å¤‰æ›ã™ã‚‹
 //++++++++++++++++++++++++++++++
 float strToFloat(const std::string& str)
 {
@@ -1469,17 +1472,17 @@ float strToFloat(const std::string& str)
 
 //++++++++++++++++++++++++++++++
 // en : Returns a string based on the format
-// ja : ƒtƒH[ƒ}ƒbƒg‚ÉŠî‚Ã‚¢‚½•¶š—ñ‚ğ•Ô‚·
+// ja : ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«åŸºã¥ã„ãŸæ–‡å­—åˆ—ã‚’è¿”ã™
 //++++++++++++++++++++++++++++++
 const char* StrVa(const char* fmt, ...)
 {
-	// Ã“Iƒoƒbƒtƒ@iƒXƒŒƒbƒhƒ[ƒJƒ‹‚ÅˆÀ‘Sj
-	static thread_local char buffer[1024]; // \•ª‚ÈƒTƒCƒY‚Ìƒoƒbƒtƒ@‚ğŠm•Û
+	// é™çš„ãƒãƒƒãƒ•ã‚¡ï¼ˆã‚¹ãƒ¬ãƒƒãƒ‰ãƒ­ãƒ¼ã‚«ãƒ«ã§å®‰å…¨ï¼‰
+	static thread_local char buffer[1024]; // ååˆ†ãªã‚µã‚¤ã‚ºã®ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿
 
 	va_list ap;
 	va_start(ap, fmt);
 
-	// ‘®w’è‚³‚ê‚½•¶š—ñ‚ğƒoƒbƒtƒ@‚É‘‚«‚Ş
+	// æ›¸å¼æŒ‡å®šã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ›¸ãè¾¼ã‚€
 	vsnprintf(buffer, sizeof(buffer), fmt, ap);
 
 	va_end(ap);
@@ -1491,7 +1494,7 @@ const char* StrVa(const char* fmt, ...)
 
 //++++++++++++++++++++++++++++++
 // en : Copies a buffer of the specified size to the memory at the specified location.
-// ja : w’èˆÊ’u‚Ìƒƒ‚ƒŠ‚É‘Î‚µ‚ÄAw’èƒTƒCƒY‚Ìƒoƒbƒtƒ@[‚ğƒRƒs[‚·‚é
+// ja : æŒ‡å®šä½ç½®ã®ãƒ¡ãƒ¢ãƒªã«å¯¾ã—ã¦ã€æŒ‡å®šã‚µã‚¤ã‚ºã®ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void RtmCopyMemory(void* place, const void* data, const size_t length)
 {
@@ -1508,7 +1511,7 @@ void RtmCopyMemory(void* place, const void* data, const size_t length)
 
 //++++++++++++++++++++++++++++++
 // en : Set a buffer of the specified size to the memory at the specified location.
-// ja : w’èˆÊ’u‚Ìƒƒ‚ƒŠ‚É‘Î‚µ‚ÄAw’èƒTƒCƒY‚Ìƒoƒbƒtƒ@[‚ğİ’è‚·‚é
+// ja : æŒ‡å®šä½ç½®ã®ãƒ¡ãƒ¢ãƒªã«å¯¾ã—ã¦ã€æŒ‡å®šã‚µã‚¤ã‚ºã®ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’è¨­å®šã™ã‚‹
 //++++++++++++++++++++++++++++++
 template <typename T>
 void RtmSetMemory(void* place, T value = false)
@@ -1520,7 +1523,7 @@ void RtmSetMemory(void* place, T value = false)
 
 //++++++++++++++++++++++++++++++
 // en : Set a buffer of the specified size to the memory at the specified location.
-// ja : w’èˆÊ’u‚Ìƒƒ‚ƒŠ‚É‘Î‚µ‚ÄAw’èƒTƒCƒY‚Ìƒoƒbƒtƒ@[‚ğİ’è‚·‚é
+// ja : æŒ‡å®šä½ç½®ã®ãƒ¡ãƒ¢ãƒªã«å¯¾ã—ã¦ã€æŒ‡å®šã‚µã‚¤ã‚ºã®ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’è¨­å®šã™ã‚‹
 //++++++++++++++++++++++++++++++
 template <typename T>
 void RtmSetMemory(const size_t place, T value = false)
@@ -1532,7 +1535,7 @@ void RtmSetMemory(const size_t place, T value = false)
 
 //++++++++++++++++++++++++++++++
 // en : Fills the specified size of memory at the specified location with No Operation (0x90).
-// ja : w’èˆÊ’u‚Ìƒƒ‚ƒŠ‚É‘Î‚µ‚ÄAw’èƒTƒCƒY•ªƒƒ‚ƒŠ‚ğNo Operation (0x90) ‚Å–„‚ß‚é
+// ja : æŒ‡å®šä½ç½®ã®ãƒ¡ãƒ¢ãƒªã«å¯¾ã—ã¦ã€æŒ‡å®šã‚µã‚¤ã‚ºåˆ†ãƒ¡ãƒ¢ãƒªã‚’No Operation (0x90) ã§åŸ‹ã‚ã‚‹
 //++++++++++++++++++++++++++++++
 void RtmNop(void* place, const size_t length)
 {
@@ -1549,7 +1552,7 @@ void RtmNop(void* place, const size_t length)
 
 //++++++++++++++++++++++++++++++
 // en : Fills the specified size of memory at the specified location with No Operation (0x90).
-// ja : w’èˆÊ’u‚Ìƒƒ‚ƒŠ‚É‘Î‚µ‚ÄAw’èƒTƒCƒY•ªƒƒ‚ƒŠ‚ğNo Operation (0x90) ‚Å–„‚ß‚é
+// ja : æŒ‡å®šä½ç½®ã®ãƒ¡ãƒ¢ãƒªã«å¯¾ã—ã¦ã€æŒ‡å®šã‚µã‚¤ã‚ºåˆ†ãƒ¡ãƒ¢ãƒªã‚’No Operation (0x90) ã§åŸ‹ã‚ã‚‹
 //++++++++++++++++++++++++++++++
 void RtmNop(const size_t place, const size_t length)
 {
@@ -1560,7 +1563,7 @@ void RtmNop(const size_t place, const size_t length)
 
 //	//++++++++++++++++++++++++++++++
 //	// en : patch import
-//	// ja : ƒpƒbƒ`ƒCƒ“ƒ|[ƒg
+//	// ja : ãƒ‘ãƒƒãƒã‚¤ãƒ³ãƒãƒ¼ãƒˆ
 //	//++++++++++++++++++++++++++++++
 //	std::pair<void**, void*> patch_import(const std::string& lib, const std::string& func, void* function)
 //	{
@@ -1581,7 +1584,7 @@ void RtmNop(const size_t place, const size_t length)
 
 //++++++++++++++++++++++++++++++
 // en : Pattern Search
-// ja : ƒpƒ^[ƒ“ŒŸõ
+// ja : ãƒ‘ã‚¿ãƒ¼ãƒ³æ¤œç´¢
 //++++++++++++++++++++++++++++++
 uintptr_t find_pattern(const char* module_name, const char* pattern)
 {
@@ -1636,7 +1639,7 @@ uintptr_t find_pattern(const char* module_name, const char* pattern)
 
 //++++++++++++++++++++++++++++++
 // en : Pattern Search
-// ja : ƒpƒ^[ƒ“ŒŸõ
+// ja : ãƒ‘ã‚¿ãƒ¼ãƒ³æ¤œç´¢
 //++++++++++++++++++++++++++++++
 uintptr_t find_pattern(uintptr_t start, const char* module_name, const char* pattern)
 {
@@ -1691,7 +1694,7 @@ uintptr_t find_pattern(uintptr_t start, const char* module_name, const char* pat
 
 //++++++++++++++++++++++++++++++
 // en : signature display
-// ja : –¼•\¦
+// ja : ç½²åè¡¨ç¤º
 //++++++++++++++++++++++++++++++
 void printSig(std::string name, void* address, size_t len)
 {
@@ -1710,7 +1713,7 @@ void printSig(std::string name, void* address, size_t len)
 
 //++++++++++++++++++++++++++++++
 // en : Check if a specified file exists
-// ja : w’è‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©ƒ`ƒFƒbƒN‚·‚é
+// ja : æŒ‡å®šã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã™ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 //++++++++++++++++++++++++++++++
 inline bool file_exists(const char* name)
 {
@@ -1720,10 +1723,35 @@ inline bool file_exists(const char* name)
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Simplified MinHook settings
+// ja : MinHookè¨­å®šç°¡ç•¥åŒ–
+//++++++++++++++++++++++++++++++
+bool SetupMinHook(const char* callName, const char* funcName, size_t address, LPVOID detourFunc, LPVOID backupFunc)
+{
+	LPVOID baseFunc = (LPVOID)((uintptr_t)address);
+
+	if (MH_CreateHook(baseFunc, detourFunc, reinterpret_cast<LPVOID*>(backupFunc)) != MH_OK)
+	{
+		printf("[Failed] <%s> Create hook failed : %s\n", callName, funcName);
+		return false;
+	}
+
+	if (MH_EnableHook(baseFunc) != MH_OK)
+	{
+		printf("[Failed] <%s> Enable hook failed : %s\n", callName, funcName);
+		return false;
+	}
+
+	printf("[Success] <%s> Hooked successfully! : %s\n", callName, funcName);
+}
+
+
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : Address Construction
-// ja : ƒAƒhƒŒƒX\’z
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹æ§‹ç¯‰
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
@@ -1731,7 +1759,7 @@ inline bool file_exists(const char* name)
 
 //++++++++++++++++++++++++++++++
 // en : Address Construction
-// ja : ƒAƒhƒŒƒX\’z
+// ja : ã‚¢ãƒ‰ãƒ¬ã‚¹æ§‹ç¯‰
 //++++++++++++++++++++++++++++++
 void GetAddressOffset(GameTitle title)
 {
@@ -1928,7 +1956,7 @@ void GetAddressOffset(GameTitle title)
 
 //++++++++++++++++++++++++++++++
 // en : Find the XAsset header in the database (execute the function)
-// ja : ƒf[ƒ^ƒx[ƒX‚©‚çXAsset‚Ìƒwƒbƒ_[‚ğ’T‚· ( ŠÖ”‚ğÀs‚·‚é )
+// ja : ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰XAssetã®ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’æ¢ã™ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 XAssetHeader DB_FindXAssetHeader_f(XAssetType type, const char* given_name, int allow_create_default)
 {
@@ -1940,7 +1968,7 @@ XAssetHeader DB_FindXAssetHeader_f(XAssetType type, const char* given_name, int 
 
 //++++++++++++++++++++++++++++++
 // en : Find the XAsset header in the database ( for detour )
-// ja : ƒf[ƒ^ƒx[ƒX‚©‚çXAsset‚Ìƒwƒbƒ_[‚ğ’T‚· ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰XAssetã®ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’æ¢ã™ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 XAssetHeader DB_FindXAssetHeader_d(XAssetType type, const char* given_name, int allow_create_default)
 {
@@ -1974,7 +2002,7 @@ XAssetHeader DB_FindXAssetHeader_d(XAssetType type, const char* given_name, int 
 
 //++++++++++++++++++++++++++++++
 // en : Loading XAsset files from a database ( for detour )
-// ja : ƒf[ƒ^ƒx[ƒX‚©‚çXAssetƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‹ã‚‰XAssetãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* asset_list, unsigned int zone_flags, bool was_paused, DB_FastFileFailureMode failure_mode, DB_AuthSignature* out_signature)
 {
@@ -2000,7 +2028,7 @@ int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* ass
 
 //++++++++++++++++++++++++++++++
 // en : Sends numerical information to the LUA state
-// ja : LUAó‘Ô‚É‘Î‚µ‚Ä”’lî•ñ‚ğ‘—M‚·‚é
+// ja : LUAçŠ¶æ…‹ã«å¯¾ã—ã¦æ•°å€¤æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void lua_pushinteger(lua_State* L, int n)
 {
@@ -2012,7 +2040,7 @@ void lua_pushinteger(lua_State* L, int n)
 
 //++++++++++++++++++++++++++++++
 // en : Sends bool information to the LUA state
-// ja : LUAó‘Ô‚É‘Î‚µ‚Äboolî•ñ‚ğ‘—M‚·‚é
+// ja : LUAçŠ¶æ…‹ã«å¯¾ã—ã¦boolæƒ…å ±ã‚’é€ä¿¡ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void lua_pushboolean(lua_State* luaVM, int boolean)
 {
@@ -2024,7 +2052,7 @@ void lua_pushboolean(lua_State* luaVM, int boolean)
 
 //++++++++++++++++++++++++++++++
 // en : Get a string from a LUA state
-// ja : LUAó‘Ô‚©‚ç•¶š—ñ‚ğæ“¾‚·‚é
+// ja : LUAçŠ¶æ…‹ã‹ã‚‰æ–‡å­—åˆ—ã‚’å–å¾—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 const char* lua_tolstring(lua_State* lua_vm, int idx, std::size_t* len)
 {
@@ -2036,7 +2064,7 @@ const char* lua_tolstring(lua_State* lua_vm, int idx, std::size_t* len)
 
 //++++++++++++++++++++++++++++++
 // en : Displays the LUI debug log in the console log when LUI_LuaCall_LUIGlobalPackage_DebugPrint is called (for detour)
-// ja : LUI_LuaCall_LUIGlobalPackage_DebugPrint ‚ªŒÄ‚Î‚ê‚½‚ÌLUI‘¤‚ÌƒfƒoƒbƒOƒƒO‚ğƒRƒ“ƒ\[ƒ‹ƒƒO‚É•\¦‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_LuaCall_LUIGlobalPackage_DebugPrint ãŒå‘¼ã°ã‚ŒãŸæ™‚ã®LUIå´ã®ãƒ‡ãƒãƒƒã‚°ãƒ­ã‚°ã‚’ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãƒ­ã‚°ã«è¡¨ç¤ºã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 {
@@ -2051,7 +2079,7 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_OfflineDataFetched to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_OfflineDataFetched ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_OfflineDataFetched ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_OfflineDataFetched_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2059,7 +2087,7 @@ int LUI_CoD_LuaCall_OfflineDataFetched_d(lua_State* luaVM) { lua_pushboolean(lua
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_COD_LuaCall_IsPremiumPlayer to send bool true information (for detour)
-// ja : LUI_COD_LuaCall_IsPremiumPlayer ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_COD_LuaCall_IsPremiumPlayer ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_COD_LuaCall_IsPremiumPlayer_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2067,7 +2095,7 @@ int LUI_COD_LuaCall_IsPremiumPlayer_d(lua_State* luaVM) { lua_pushboolean(luaVM,
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsLocalPlayAllowed to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsLocalPlayAllowed ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsLocalPlayAllowed ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsLocalPlayAllowed_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2075,7 +2103,7 @@ int LUI_CoD_LuaCall_IsLocalPlayAllowed_d(lua_State* luaVM) { lua_pushboolean(lua
 
 //++++++++++++++++++++++++++++++
 // en : Displays stack trace errors that occur on the LUI in the console log (for detour)
-// ja : LUIã‚Å”­¶‚µ‚½ƒXƒ^ƒbƒNƒgƒŒ[ƒXƒGƒ‰[‚ğƒRƒ“ƒ\[ƒ‹ƒƒO‚É•\¦‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUIä¸Šã§ç™ºç”Ÿã—ãŸã‚¹ã‚¿ãƒƒã‚¯ãƒˆãƒ¬ãƒ¼ã‚¹ã‚¨ãƒ©ãƒ¼ã‚’ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ãƒ­ã‚°ã«è¡¨ç¤ºã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 void LUI_ReportError_d(const char* error, lua_State* lua_vm)
 {
@@ -2098,7 +2126,7 @@ void LUI_ReportError_d(const char* error, lua_State* lua_vm)
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state to send bool true information (for jump hooks)
-// ja : LUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒWƒƒƒ“ƒvƒtƒbƒN—p )
+// ja : LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ã‚¸ãƒ£ãƒ³ãƒ—ãƒ•ãƒƒã‚¯ç”¨ )
 //++++++++++++++++++++++++++++++
 int lua_pushboolean_return_true_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2106,7 +2134,7 @@ int lua_pushboolean_return_true_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1);
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_COD_LuaCall_HasActiveLocalClient to send bool true information (for detour)
-// ja : LUI_COD_LuaCall_HasActiveLocalClient ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_COD_LuaCall_HasActiveLocalClient ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_COD_LuaCall_HasActiveLocalClient_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2114,7 +2142,7 @@ int LUI_COD_LuaCall_HasActiveLocalClient_d(lua_State* luaVM) { lua_pushboolean(l
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_StatsResetGetState to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_StatsResetGetState ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_StatsResetGetState ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_StatsResetGetState_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2122,7 +2150,7 @@ int LUI_CoD_LuaCall_StatsResetGetState_d(lua_State* luaVM) { lua_pushboolean(lua
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LuaShared_LuaCall_IsDevelopmentBuild to send bool true information (for detour)
-// ja : LuaShared_LuaCall_IsDevelopmentBuild ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LuaShared_LuaCall_IsDevelopmentBuild ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LuaShared_LuaCall_IsDevelopmentBuild_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2130,7 +2158,7 @@ int LuaShared_LuaCall_IsDevelopmentBuild_d(lua_State* luaVM) { lua_pushboolean(l
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsUserSignedInToLive to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsUserSignedInToLive ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsUserSignedInToLive ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsUserSignedInToLive_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2138,7 +2166,7 @@ int LUI_CoD_LuaCall_IsUserSignedInToLive_d(lua_State* luaVM) { lua_pushboolean(l
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LuaShared_LuaCall_IsConsoleGame to send bool true information (for detour)
-// ja : LuaShared_LuaCall_IsConsoleGame ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LuaShared_LuaCall_IsConsoleGame ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LuaShared_LuaCall_IsConsoleGame_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2146,7 +2174,7 @@ int LuaShared_LuaCall_IsConsoleGame_d(lua_State* luaVM) { lua_pushboolean(luaVM,
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_COD_LuaCall_IsBattleNetLanOnly to send bool true information (for detour)
-// ja : LUI_COD_LuaCall_IsBattleNetLanOnly ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_COD_LuaCall_IsBattleNetLanOnly ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_COD_LuaCall_IsBattleNetLanOnly_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2154,7 +2182,7 @@ int LUI_COD_LuaCall_IsBattleNetLanOnly_d(lua_State* luaVM) { lua_pushboolean(lua
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsBattleNetAuthReady to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsBattleNetAuthReady ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsBattleNetAuthReady ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsBattleNetAuthReady_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2162,7 +2190,7 @@ int LUI_CoD_LuaCall_IsBattleNetAuthReady_d(lua_State* luaVM) { lua_pushboolean(l
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAllowed to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsGameModeAllowed ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsGameModeAllowed ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsGameModeAllowed_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2170,7 +2198,7 @@ int LUI_CoD_LuaCall_IsGameModeAllowed_d(lua_State* luaVM) { lua_pushboolean(luaV
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAvailable to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsGameModeAvailable ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsGameModeAvailable ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsGameModeAvailable_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2178,7 +2206,7 @@ int LUI_CoD_LuaCall_IsGameModeAvailable_d(lua_State* luaVM) { lua_pushboolean(lu
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsConnectedToGameServer to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsConnectedToGameServer ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsConnectedToGameServer ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsConnectedToGameServer_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2186,7 +2214,7 @@ int LUI_CoD_LuaCall_IsConnectedToGameServer_d(lua_State* luaVM) { lua_pushboolea
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_COD_LuaCall_IsBattleNet to send bool true information (for detour)
-// ja : LUI_COD_LuaCall_IsBattleNet ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_COD_LuaCall_IsBattleNet ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_COD_LuaCall_IsBattleNet_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2194,7 +2222,7 @@ int LUI_COD_LuaCall_IsBattleNet_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1);
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_IsUserSignedInToDemonware to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsUserSignedInToDemonware ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_IsUserSignedInToDemonware ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsUserSignedInToDemonware_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2202,7 +2230,7 @@ int LUI_CoD_LuaCall_IsUserSignedInToDemonware_d(lua_State* luaVM) { lua_pushbool
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LuaShared_LuaCall_IsDemoBuild to send bool true information (for detour)
-// ja : LuaShared_LuaCall_IsDemoBuild ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LuaShared_LuaCall_IsDemoBuild ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LuaShared_LuaCall_IsDemoBuild_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2210,7 +2238,7 @@ int LuaShared_LuaCall_IsDemoBuild_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1
 
 //++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_CoD_LuaCall_ShouldBeInOnlineArea to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_ShouldBeInOnlineArea ‚ÌLUAó‘Ô‚É‘Î‚µ‚Ä‹­§“I‚É bool true î•ñ‚ğ‘—M‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUI_CoD_LuaCall_ShouldBeInOnlineArea ã®LUAçŠ¶æ…‹ã«å¯¾ã—ã¦å¼·åˆ¶çš„ã« bool true æƒ…å ±ã‚’é€ä¿¡ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int j_LUI_CoD_LuaCall_ShouldBeInOnlineArea_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
@@ -2218,7 +2246,7 @@ int j_LUI_CoD_LuaCall_ShouldBeInOnlineArea_d(lua_State* luaVM) { lua_pushboolean
 
 //++++++++++++++++++++++++++++++
 // en : Loads the buffer data of a LUA file (for detour)
-// ja : LUAƒtƒ@ƒCƒ‹‚Ìƒoƒbƒtƒ@[ƒf[ƒ^‚ğƒ[ƒh‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUAãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int luaL_loadbuffer_d(lua_State* s, const char* buf, size_t size, const char* name)
 {
@@ -2242,7 +2270,7 @@ int luaL_loadbuffer_d(lua_State* s, const char* buf, size_t size, const char* na
 
 //++++++++++++++++++++++++++++++
 // en : Loads the buffer data of a LUA file (execute the function)
-// ja : LUAƒtƒ@ƒCƒ‹‚Ìƒoƒbƒtƒ@[ƒf[ƒ^‚ğƒ[ƒh‚·‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : LUAãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒƒãƒ•ã‚¡ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 int luaL_loadbuffer_f(lua_State* s, const char* buf, size_t size, const char* name)
 {
@@ -2254,7 +2282,7 @@ int luaL_loadbuffer_f(lua_State* s, const char* buf, size_t size, const char* na
 
 //++++++++++++++++++++++++++++++
 // en : Dumping LUA files onto your PC disk
-// ja : LUAƒtƒ@ƒCƒ‹‚ğPCƒfƒBƒXƒNã‚Éƒ_ƒ“ƒv‚·‚é
+// ja : LUAãƒ•ã‚¡ã‚¤ãƒ«ã‚’PCãƒ‡ã‚£ã‚¹ã‚¯ä¸Šã«ãƒ€ãƒ³ãƒ—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void ExtractLuaScript(const char* file)
 {
@@ -2285,13 +2313,13 @@ void ExtractLuaScript(const char* file)
 		}
 
 
-		// ZLib’è‹`
+		// ZLibå®šç¾©
 		z_stream stream = {};
 		stream.zalloc = Z_NULL;
 		stream.zfree = Z_NULL;
 		stream.opaque = Z_NULL;
 		
-		// ‰Šú‰»
+		// åˆæœŸåŒ–
 		if (inflateInit(&stream) != Z_OK)
 		{
 			printf("[Failed] <ExtractLuaScript> inflateInit failed for %s\n", file);
@@ -2299,17 +2327,17 @@ void ExtractLuaScript(const char* file)
 			return;
 		}
 		
-		// “ü—Íƒf[ƒ^
+		// å…¥åŠ›ãƒ‡ãƒ¼ã‚¿
 		stream.avail_in = temp->len;
 		stream.next_in = (Bytef*)temp->buffer;
 		
-		// o—Íƒoƒbƒtƒ@i\•ª‚ÈƒTƒCƒY‚ğŠm•Û‚·‚é‚½‚ß‚É“K“–‚È‰ŠúƒTƒCƒYA•K—v‚É‰‚¶‚Ä’²®j
+		// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ï¼ˆååˆ†ãªã‚µã‚¤ã‚ºã‚’ç¢ºä¿ã™ã‚‹ãŸã‚ã«é©å½“ãªåˆæœŸã‚µã‚¤ã‚ºã€å¿…è¦ã«å¿œã˜ã¦èª¿æ•´ï¼‰
 		const size_t outBufferSize = temp->len * 4;
 		std::vector<char> outBuffer(outBufferSize);
 		stream.avail_out = outBufferSize;
 		stream.next_out = (Bytef*)outBuffer.data();
 		
-		// ‰ğ“€
+		// è§£å‡
 		int ret = inflate(&stream, Z_FINISH);
 		if (ret != Z_STREAM_END)
 		{
@@ -2320,10 +2348,10 @@ void ExtractLuaScript(const char* file)
 		}
 		
 		
-		// ‰ğ“€ƒf[ƒ^‚ğƒtƒ@ƒCƒ‹‚É‘‚«‚İ
+		// è§£å‡ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã¿
 		luafiledump.write(outBuffer.data(), outBufferSize - stream.avail_out);
 		
-		// Œãˆ—
+		// å¾Œå‡¦ç†
 		inflateEnd(&stream);
 
 
@@ -2337,7 +2365,7 @@ void ExtractLuaScript(const char* file)
 
 //++++++++++++++++++++++++++++++
 // en : Loading a custom LUA file
-// ja : ƒJƒXƒ^ƒ€LUAƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é
+// ja : ã‚«ã‚¹ã‚¿ãƒ LUAãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void LoadCustomLua(lua_State* s, const char* file)
 {
@@ -2376,7 +2404,7 @@ void LoadCustomLua(lua_State* s, const char* file)
 
 //++++++++++++++++++++++++++++++
 // en : Loading a custom LUA file (for detour)
-// ja : LUAƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUAãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int luaL_loadfile_d(lua_State* s, const char* file_name)
 {
@@ -2393,7 +2421,7 @@ int luaL_loadfile_d(lua_State* s, const char* file_name)
 
 //++++++++++++++++++++++++++++++
 // en : Opening the LUA Library (for detour)
-// ja : LUAƒ‰ƒCƒuƒ‰ƒŠ‚ğŠJ‚­ ( ƒfƒBƒg[ƒ‹—p )
+// ja : LUAãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’é–‹ã ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 void luaL_openlib_d(lua_State* s, const char* lib_name, const luaL_Reg* l, unsigned int n_up)
 {
@@ -2453,7 +2481,7 @@ void luaL_openlib_d(lua_State* s, const char* lib_name, const luaL_Reg* l, unsig
 
 //++++++++++++++++++++++++++++++
 // en : Returns a random number within a specified range.
-// ja : w’è‚µ‚½”ÍˆÍ“à‚©‚çƒ‰ƒ“ƒ_ƒ€‚Å”’l‚ğ•Ô‚·
+// ja : æŒ‡å®šã—ãŸç¯„å›²å†…ã‹ã‚‰ãƒ©ãƒ³ãƒ€ãƒ ã§æ•°å€¤ã‚’è¿”ã™
 //++++++++++++++++++++++++++++++
 int I_irand(int min, int max)
 {
@@ -2465,7 +2493,7 @@ int I_irand(int min, int max)
 
 //++++++++++++++++++++++++++++++
 // en : Gets the current system microseconds
-// ja : Œ»İ‚ÌƒVƒXƒeƒ€‚Ìƒ}ƒCƒNƒ•b‚ğæ“¾‚·‚é
+// ja : ç¾åœ¨ã®ã‚·ã‚¹ãƒ†ãƒ ã®ãƒã‚¤ã‚¯ãƒ­ç§’ã‚’å–å¾—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 unsigned __int64 Sys_Microseconds()
 {
@@ -2477,7 +2505,7 @@ unsigned __int64 Sys_Microseconds()
 
 //++++++++++++++++++++++++++++++
 // en : Get a random seed value
-// ja : ƒV[ƒh’l‚ğƒ‰ƒ“ƒ_ƒ€‚Åæ“¾‚·‚é
+// ja : ã‚·ãƒ¼ãƒ‰å€¤ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã§å–å¾—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 unsigned int* GetRandSeed()
 {
@@ -2489,7 +2517,7 @@ unsigned int* GetRandSeed()
 
 //++++++++++++++++++++++++++++++
 // en : Generate a random XUID
-// ja : XUID‚ğƒ‰ƒ“ƒ_ƒ€‚É¶¬‚·‚é
+// ja : XUIDã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«ç”Ÿæˆã™ã‚‹
 //++++++++++++++++++++++++++++++
 XUID* XUID::RandomXUID()
 {
@@ -2516,7 +2544,7 @@ XUID* XUID::RandomXUID()
 
 //++++++++++++++++++++++++++++++
 // en : Register a Boolean Dvar (for detour)
-// ja : BoolŒ^Dvar‚ğ“o˜^‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : Boolå‹Dvarã‚’ç™»éŒ²ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flags, const char* description)
 {
@@ -2536,10 +2564,10 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "cl_waterMarkEnabled", "LRKNROSQPM" }, true },
 		//{ { "con_bindableGrave", "OKLQKPPKPQ" }, false },
 		//{ { "con_minicon", "LMSLLSMONN" }, true },
-		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"	}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"	}, true },
 		{ { "force_offline_enabled"										, "MPSSOTQQPM"	}, true },
-
+		
+		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"	}, true },
 		{ { "systemlink_host"											, "LLPNKKORPT"	}, true }, // Local client is hosting system link game
 		{ { "systemlink"												, "LPSPMQSNPQ"	}, true },
 		{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"	}, true },
@@ -2561,7 +2589,8 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		{ { "fastfileAltLaunch"											, "MPNRKLKOKR"	}, false }, // When enabled, we load the 'alt' set of fastfiles. Intended for the launch chunks
 		{ { "ui_onlineRequired"											, "MTSTMKPMRM"	}, false },
 		{ { "lui_force_online_menus"									, "LMMRONPQMO"	}, false },
-		{ { "lui_cod_points_enabled"									, "LNTOKPTKS"	}, false },
+		//{ { "lui_cod_points_enabled"									, "LNTOKPTKS"	}, false },
+		
 		//{ { "lui_enable_magma_blade_layout", "LRKPTLNQTT" }, false },
 		//{ { "lui_force_online_menus", "LMMRONPQMO" }, false },
 		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
@@ -2609,7 +2638,7 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 
 //++++++++++++++++++++++++++++++
 // en : Look up a hash from a DDL name (for detour)
-// ja : DDL–¼‚©‚çƒnƒbƒVƒ…‚ğQÆ‚·‚é
+// ja : DDLåã‹ã‚‰ãƒãƒƒã‚·ãƒ¥ã‚’å‚ç…§ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void DDL_Lookup_MoveToNameHash_d(const DDLState* fromState, DDLState* toState, const char* name, unsigned int nameHash, bool suppressErrors)
 {
@@ -2621,7 +2650,7 @@ void DDL_Lookup_MoveToNameHash_d(const DDLState* fromState, DDLState* toState, c
 
 //++++++++++++++++++++++++++++++
 // en : Loading DDL Assets (for detour)
-// ja : DDLƒAƒZƒbƒg‚ğƒ[ƒh‚·‚éiƒfƒBƒg[ƒ‹—pj
+// ja : DDLã‚¢ã‚»ãƒƒãƒˆã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ï¼ˆãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ï¼‰
 //++++++++++++++++++++++++++++++
 DDLFile* Com_DDL_LoadAsset_d(const char* fileName)
 {
@@ -2642,7 +2671,7 @@ DDLFile* Com_DDL_LoadAsset_d(const char* fileName)
 
 //++++++++++++++++++++++++++++++
 // en : Dump the script file onto the PC disk
-// ja : ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹‚ğPCƒfƒBƒXƒNã‚Éƒ_ƒ“ƒv‚·‚é
+// ja : ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’PCãƒ‡ã‚£ã‚¹ã‚¯ä¸Šã«ãƒ€ãƒ³ãƒ—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 void dump_gsc_script(std::ofstream& stream, ScriptFile* scriptfile)
 {
@@ -2662,7 +2691,7 @@ void dump_gsc_script(std::ofstream& stream, ScriptFile* scriptfile)
 
 //++++++++++++++++++++++++++++++
 // en : Loading a script file (for detour)
-// ja : ƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 void Load_ScriptFile_d(DBStreamStart streamStart)
 {
@@ -2929,7 +2958,7 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 
 //++++++++++++++++++++++++++++++
 // en : Get the username (for detour)
-// ja : ƒ†[ƒU[–¼‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼åã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 const char* GetUsername_d() { return _playerName.c_str(); }
 
@@ -2937,7 +2966,7 @@ const char* GetUsername_d() { return _playerName.c_str(); }
 
 //++++++++++++++++++++++++++++++
 // en : Get whether you have a content pack (for detour)
-// ja : ƒRƒ“ƒeƒ“ƒcƒpƒbƒN‚ğ‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ãƒ‘ãƒƒã‚¯ã‚’æŒã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool Content_DoWeHaveContentPack_d(int controllerIndex) { return true; }
 
@@ -2945,7 +2974,7 @@ bool Content_DoWeHaveContentPack_d(int controllerIndex) { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Logs in to the gamer profile with the specified controller index. (execute the function)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚ÌƒQ[ƒ}[ƒvƒƒtƒB[ƒ‹‚É‘Î‚µ‚ÄƒƒOƒCƒ“‚·‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚²ãƒ¼ãƒãƒ¼ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ã«å¯¾ã—ã¦ãƒ­ã‚°ã‚¤ãƒ³ã™ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 void GamerProfile_LogInProfile(int controller) { reinterpret_cast<void(*)(int)>(CalcAdr(_adr.GamerProfile_LogInProfile))(controller); }
 
@@ -2953,7 +2982,7 @@ void GamerProfile_LogInProfile(int controller) { reinterpret_cast<void(*)(int)>(
 
 //++++++++++++++++++++++++++++++
 // en : Load a saved achievement (execute the function)
-// ja : ƒZ[ƒuÏ‚İÀÑ‚ğƒ[ƒh‚·‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : ã‚»ãƒ¼ãƒ–æ¸ˆã¿å®Ÿç¸¾ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 void LoadSavedAchievements() { reinterpret_cast<void(*)()>(CalcAdr(_adr.LoadSavedAchievements))(); }
 
@@ -2961,7 +2990,7 @@ void LoadSavedAchievements() { reinterpret_cast<void(*)()>(CalcAdr(_adr.LoadSave
 
 //++++++++++++++++++++++++++++++
 // en : Get the userdata
-// ja : ƒ†[ƒU[ƒf[ƒ^‚ğæ“¾‚·‚é
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 XenonUserData* Live_GetUserData(int controllerIndex)
 {
@@ -2975,7 +3004,7 @@ XenonUserData* Live_GetUserData(int controllerIndex)
 
 //++++++++++++++++++++++++++++++
 // en : Initializes the statistics source for the specified controller index. (execute the function)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚Ì“Œvƒ\[ƒX‚ğ‰Šú‰»‚·‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®çµ±è¨ˆã‚½ãƒ¼ã‚¹ã‚’åˆæœŸåŒ–ã™ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 void LiveStorage_StatsInit(const int controllerIndex, bool clear, bool freshStart, StatsSource statsSource) { reinterpret_cast<void(*)(const int, bool, bool, StatsSource)>(CalcAdr(_adr.LiveStorage_StatsInit))(controllerIndex, clear, freshStart, statsSource); }
 
@@ -2983,7 +3012,7 @@ void LiveStorage_StatsInit(const int controllerIndex, bool clear, bool freshStar
 
 //++++++++++++++++++++++++++++++
 // en : Reads the statistics source for the specified controller index. (execute the function)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚Ì“Œvƒ\[ƒX‚ğ“Ç‚İæ‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®çµ±è¨ˆã‚½ãƒ¼ã‚¹ã‚’èª­ã¿å–ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 void LiveStorage_ReadStats_f(int controllerIndex, StatsSource stats)
 {
@@ -2996,7 +3025,7 @@ void LiveStorage_ReadStats_f(int controllerIndex, StatsSource stats)
 
 //++++++++++++++++++++++++++++++
 // en : Checks if a statistics source exists for the specified controller index. (execute the function)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚Ì“Œvƒ\[ƒX‚ª‘¶İ‚·‚é‚©Šm”F‚·‚é ( ŠÖ”‚ğÀs‚·‚é )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®çµ±è¨ˆã‚½ãƒ¼ã‚¹ãŒå­˜åœ¨ã™ã‚‹ã‹ç¢ºèªã™ã‚‹ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 bool LiveStorage_DoWeHaveStatsForSource_f(const int controllerIndex, StatsSource statsSource)
 {
@@ -3018,7 +3047,7 @@ bool LiveStorage_DoWeHaveStatsForSource_f(const int controllerIndex, StatsSource
 
 //++++++++++++++++++++++++++++++
 // en : Get the daemonware logon status (for detour)
-// ja : ƒf[ƒ‚ƒ“ƒEƒFƒA‚ÌƒƒOƒIƒ“ó‘Ô‚ğæ“¾‚·‚éiƒfƒBƒg[ƒ‹—pj
+// ja : ãƒ‡ãƒ¼ãƒ¢ãƒ³ã‚¦ã‚§ã‚¢ã®ãƒ­ã‚°ã‚ªãƒ³çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹ï¼ˆãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ï¼‰
 //++++++++++++++++++++++++++++++
 DWOnlineStatus dwGetLogOnStatus_d(int controller_index) { return DWOnlineStatus::DW_LIVE_CONNECTED; }
 
@@ -3026,7 +3055,7 @@ DWOnlineStatus dwGetLogOnStatus_d(int controller_index) { return DWOnlineStatus:
 
 //++++++++++++++++++++++++++++++
 // en : Get whether the user is signed in to the daemonware (for detour)
-// ja : ƒ†[ƒU[‚ªƒf[ƒ‚ƒ“ƒEƒFƒA‚ÉƒTƒCƒ“ƒCƒ“‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒãƒ‡ãƒ¼ãƒ¢ãƒ³ã‚¦ã‚§ã‚¢ã«ã‚µã‚¤ãƒ³ã‚¤ãƒ³ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool Live_IsUserSignedInToDemonware_d(int controllerIndex) { return true; }
 
@@ -3034,7 +3063,7 @@ bool Live_IsUserSignedInToDemonware_d(int controllerIndex) { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Get whether the user is signed in to the BattleNet (for detour)
-// ja : ƒ†[ƒU[‚ªƒoƒgƒ‹ƒlƒbƒg‚ÉƒTƒCƒ“ƒCƒ“‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒãƒãƒˆãƒ«ãƒãƒƒãƒˆã«ã‚µã‚¤ãƒ³ã‚¤ãƒ³ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool Live_IsUserSignedInToBnet_d(int controllerIndex, int* onlinePlayFailReason) { *onlinePlayFailReason = 0; return true; }
 
@@ -3042,7 +3071,7 @@ bool Live_IsUserSignedInToBnet_d(int controllerIndex, int* onlinePlayFailReason)
 
 //++++++++++++++++++++++++++++++
 // en : Gets whether the game profile is logged in (for detour)
-// ja : ƒQ[ƒ€ƒvƒƒtƒB[ƒ‹‚ªƒƒOƒCƒ“Ï‚İ‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚²ãƒ¼ãƒ ãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ãŒãƒ­ã‚°ã‚¤ãƒ³æ¸ˆã¿ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool GamerProfile_IsProfileLoggedIn_d(int controllerIndex) { return true; }
 
@@ -3050,7 +3079,7 @@ bool GamerProfile_IsProfileLoggedIn_d(int controllerIndex) { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Check if user is signed in (for detour)
-// ja : ƒ†[ƒU[‚ªƒTƒCƒ“ƒCƒ“‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éiƒfƒBƒg[ƒ‹—pj
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒã‚µã‚¤ãƒ³ã‚¤ãƒ³ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ï¼ˆãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ï¼‰
 //++++++++++++++++++++++++++++++
 bool Live_IsUserSignedIn_d() { return true; }
 
@@ -3058,7 +3087,7 @@ bool Live_IsUserSignedIn_d() { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Get the status of a synchronized online data fence (for detour)
-// ja : “¯ŠúÏ‚İƒIƒ“ƒ‰ƒCƒ“ƒf[ƒ^ƒtƒFƒ“ƒX‚Ìó‘Ô‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : åŒæœŸæ¸ˆã¿ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚§ãƒ³ã‚¹ã®çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int Live_SyncOnlineDataFence_GetState_d(int controllerIndex, int gameMode) { return FenceOnlineServices_CODE_STATE::success; }
 
@@ -3066,7 +3095,7 @@ int Live_SyncOnlineDataFence_GetState_d(int controllerIndex, int gameMode) { ret
 
 //++++++++++++++++++++++++++++++
 // en : Get online service fence status (for detour)
-// ja : ƒIƒ“ƒ‰ƒCƒ“ƒT[ƒrƒXƒtƒFƒ“ƒX‚Ìó‘Ô‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚ªãƒ³ãƒ©ã‚¤ãƒ³ã‚µãƒ¼ãƒ“ã‚¹ãƒ•ã‚§ãƒ³ã‚¹ã®çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int Live_OnlineServicesFence_GetState_d(const int controllerIndex) { return FenceOnlineServices_CODE_STATE::success; }
 
@@ -3074,7 +3103,7 @@ int Live_OnlineServicesFence_GetState_d(const int controllerIndex) { return Fenc
 
 //++++++++++++++++++++++++++++++
 // en : Get whether the user is signed in or not (for detour)
-// ja : ƒTƒCƒ“ƒCƒ“’†‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚µã‚¤ãƒ³ã‚¤ãƒ³ä¸­ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool Live_IsSignedIn_d() { return true; }
 
@@ -3082,7 +3111,7 @@ bool Live_IsSignedIn_d() { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Check if user is signed in to live (for detour)
-// ja : ƒ†[ƒU[‚ªƒ‰ƒCƒu‚ÉƒTƒCƒ“ƒCƒ“‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN‚·‚éiƒfƒBƒg[ƒ‹—pj
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ãŒãƒ©ã‚¤ãƒ–ã«ã‚µã‚¤ãƒ³ã‚¤ãƒ³ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ï¼ˆãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ï¼‰
 //++++++++++++++++++++++++++++++
 bool Live_IsUserSignedInToLive_d() { return true; }
 
@@ -3090,7 +3119,7 @@ bool Live_IsUserSignedInToLive_d() { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Gets whether the specified controller index is active. (for detour)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚ªƒAƒNƒeƒBƒu‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãŒã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 bool CL_Mgr_IsControllerActive_d(const int controllerIndex) { return true; }
 
@@ -3098,7 +3127,7 @@ bool CL_Mgr_IsControllerActive_d(const int controllerIndex) { return true; }
 
 //++++++++++++++++++++++++++++++
 // en : Gets the client number from the specified controller index (for detour)
-// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚©‚çƒNƒ‰ƒCƒAƒ“ƒg”Ô†‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç•ªå·ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int CL_Mgr_GetClientFromController_d(int controllerIndex) { return 1; }
 
@@ -3106,7 +3135,7 @@ int CL_Mgr_GetClientFromController_d(int controllerIndex) { return 1; }
 
 //++++++++++++++++++++++++++++++
 // en : Get active statistics sources (for detour)
-// ja : ƒAƒNƒeƒBƒu‚È“Œvƒ\[ƒX‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªçµ±è¨ˆã‚½ãƒ¼ã‚¹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int LiveStorage_GetActiveStatsSource_d() { return 1; }
 
@@ -3114,7 +3143,7 @@ int LiveStorage_GetActiveStatsSource_d() { return 1; }
 
 //++++++++++++++++++++++++++++++
 // en : Get whether you are in a system link lobby (for detour)
-// ja : ƒVƒXƒeƒ€ƒŠƒ“ƒNƒƒr[‚É‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚·ã‚¹ãƒ†ãƒ ãƒªãƒ³ã‚¯ãƒ­ãƒ“ãƒ¼ã«ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 int Live_IsInSystemlinkLobby_d() { return 1; }
 
@@ -3122,7 +3151,7 @@ int Live_IsInSystemlinkLobby_d() { return 1; }
 
 //++++++++++++++++++++++++++++++
 // en : Get translation string from text ID (for detour)
-// ja : ƒeƒLƒXƒgID‚©‚ç–|–ó•¶š—ñ‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+// ja : ãƒ†ã‚­ã‚¹ãƒˆIDã‹ã‚‰ç¿»è¨³æ–‡å­—åˆ—ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 const char* SEH_StringEd_GetString_d(const char* str) { return str; }
 
@@ -3130,7 +3159,7 @@ const char* SEH_StringEd_GetString_d(const char* str) { return str; }
 
 //++++++++++++++++++++++++++++++
 // en : Get the user's sign-in status
-// ja : ƒ†[ƒU[‚ÌƒTƒCƒ“ƒCƒ“ó‘Ô‚ğæ“¾‚·‚é
+// ja : ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®ã‚µã‚¤ãƒ³ã‚¤ãƒ³çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
 //++++++++++++++++++++++++++++++
 uintptr_t Live_GetUserSigninState() { return CalcAdr(_adr.xenonUserData_m_guardedUserData_signinState); }
 
@@ -3138,7 +3167,7 @@ uintptr_t Live_GetUserSigninState() { return CalcAdr(_adr.xenonUserData_m_guarde
 
 //++++++++++++++++++++++++++++++
 // en : Live storage event at game start (execute the function)
-// ja : ƒQ[ƒ€ŠJn‚Ìƒ‰ƒCƒuƒXƒgƒŒ[ƒWƒCƒxƒ“ƒg ( ŠÖ”‚ğÀs‚·‚é )
+// ja : ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®ãƒ©ã‚¤ãƒ–ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ ( é–¢æ•°ã‚’å®Ÿè¡Œã™ã‚‹ )
 //++++++++++++++++++++++++++++++
 void LiveStorage_BeginGame_f(LocalClientNum_t localClientNum)
 {
@@ -3152,7 +3181,7 @@ void LiveStorage_BeginGame_f(LocalClientNum_t localClientNum)
 
 //	//++++++++++++++++++++++++++++++
 //	// en : Live storage event at game start (for detour)
-//	// ja : ƒQ[ƒ€ŠJn‚Ìƒ‰ƒCƒuƒXƒgƒŒ[ƒWƒCƒxƒ“ƒg ( ƒfƒBƒg[ƒ‹—p )
+//	// ja : ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã®ãƒ©ã‚¤ãƒ–ã‚¹ãƒˆãƒ¬ãƒ¼ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //	//++++++++++++++++++++++++++++++
 //	void LiveStorage_BeginGame_d(LocalClientNum_t localClientNum)
 //	{
@@ -3164,7 +3193,7 @@ void LiveStorage_BeginGame_f(LocalClientNum_t localClientNum)
 
 //	//++++++++++++++++++++++++++++++
 //	// en : Reads the statistics source for the specified controller index. (for detour)
-//	// ja : w’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰[ƒCƒ“ƒfƒbƒNƒX‚Ì“Œvƒ\[ƒX‚ğ“Ç‚İæ‚é ( ƒfƒBƒg[ƒ‹—p )
+//	// ja : æŒ‡å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®çµ±è¨ˆã‚½ãƒ¼ã‚¹ã‚’èª­ã¿å–ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //	//++++++++++++++++++++++++++++++
 //	void LiveStorage_ReadStats_d(int controllerIndex)
 //	{
@@ -3176,7 +3205,7 @@ void LiveStorage_BeginGame_f(LocalClientNum_t localClientNum)
 
 //	//++++++++++++++++++++++++++++++
 //	// en : Get the player data buffer from the statistics source (for detour)
-//	// ja : “Œvƒ\[ƒX‚©‚çƒvƒŒƒCƒ„[ƒf[ƒ^ƒoƒbƒtƒ@[‚ğæ“¾‚·‚é ( ƒfƒBƒg[ƒ‹—p )
+//	// ja : çµ±è¨ˆã‚½ãƒ¼ã‚¹ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡ãƒ¼ã‚’å–å¾—ã™ã‚‹ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //	//++++++++++++++++++++++++++++++
 //	void LiveStorage_GetPlayerDataBufferForSource_d(int controllerIndex, int a2, StatsGroup statsGroup, StatsSource statsSource)
 //	{
@@ -3578,6 +3607,32 @@ void SkuStylePatch(XUID xuid)
 
 void R_EndFrame_d()
 {
+	//	if (_elapsedFrameCount % 15 == 0)
+	//	{
+	//		/*
+	//		uintptr_t dvar_force_offline_enabled	= 0x7FF6C90E88C8;
+	//		uintptr_t dvar_force_offline_menus		= 0x7FF6C90E88D0;
+	//		uintptr_t dvar_systemlink				= 0x7FF6C90E8640;
+	//	
+	//		
+	//	auto R_EndFrame									= (LPVOID)((uintptr_t)CalcAdr(_adr.R_EndFrame));
+	//	auto LUI_LuaCall_LUIGlobalPackage_DebugPrint	= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint));
+	//	auto LUI_CoD_LuaCall_OfflineDataFetched			= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_CoD_LuaCall_OfflineDataFetched));
+	//	auto LUI_COD_LuaCall_IsPremiumPlayer			= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_COD_LuaCall_IsPremiumPlayer));
+	//	auto LUI_CoD_LuaCall_IsLocalPlayAllowed			= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed));
+	//	auto Content_DoWeHaveContentPack				= (LPVOID)((uintptr_t)CalcAdr(_adr.Content_DoWeHaveContentPack));
+	//	*/
+	//	
+	//		//placeHardwareBP((char*)CalcAdr(_adr.Dvar_RegisterBool)		, 0, Condition::ReadWrite);
+	//		placeHardwareBP(reinterpret_cast<char*>(CalcAdr(_adr.Live_IsUserSignedInToDemonware))	, 0, Condition::ReadWrite);
+	//		placeHardwareBP(reinterpret_cast<char*>(CalcAdr(_adr.Live_IsUserSignedInToBnet))		, 1, Condition::ReadWrite);
+	//		placeHardwareBP(reinterpret_cast<char*>(CalcAdr(_adr.Live_IsUserSignedIn))				, 2, Condition::ReadWrite);
+	//	}
+	//	
+	//	R_EndFrame_h();
+	//	_elapsedFrameCount += 1;
+	//	return;
+
 	if (!_frameCountEnd)
 	{
 		switch (_elapsedFrameCount)
@@ -3652,6 +3707,11 @@ void R_EndFrame_d()
 			_elapsedFrameCount += 1;
 		}*/
 	}
+	//	else
+	//	{
+	//	
+	//		_elapsedFrameCount += 1;
+	//	}
 
 	R_EndFrame_h();
 
@@ -3706,10 +3766,37 @@ void R_EndFrame_d()
 
 //++++++++++++++++++++++++++++++
 // en : Game start (Hook other functions when drawing the game window, etc.)
-// ja : ƒQ[ƒ€ŠJn ( ƒQ[ƒ€ƒEƒBƒ“ƒhƒE•`‰æ‚É‚»‚Ì‘¼ŠÖ”ƒtƒbƒN‚È‚Ç )
+// ja : ã‚²ãƒ¼ãƒ é–‹å§‹ ( ã‚²ãƒ¼ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æç”»æ™‚ã«ãã®ä»–é–¢æ•°ãƒ•ãƒƒã‚¯ãªã© )
 //++++++++++++++++++++++++++++++
 void GameStart()
 {
+	
+	SetupMinHook("GameStart", "R_EndFrame"								, CalcAdr(_adr.R_EndFrame)								, &R_EndFrame_d									, &R_EndFrame_h);
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_OfflineDataFetched"		, CalcAdr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)		, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
+	SetupMinHook("GameStart", "LUI_COD_LuaCall_IsPremiumPlayer"			, CalcAdr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)			, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsLocalPlayAllowed"		, CalcAdr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)		, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
+	SetupMinHook("GameStart", "Content_DoWeHaveContentPack"				, CalcAdr(_adr.Content_DoWeHaveContentPack)				, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
+	//SetupMinHook("GameStart", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"	, CalcAdr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
+
+
+	/*
+
+	memcpy((void*)CalcAdr(_adr.Live_IsUserSignedInToDemonware)	, "\xB0\x01\xC3", 3);
+	memcpy((void*)CalcAdr(_adr.Live_IsUserSignedInToBnet)		, "\xB0\x02\xC3", 3);
+	memcpy((void*)CalcAdr(_adr.Live_IsUserSignedIn)				, "\xB0\x01\xC3", 3);
+
+	placeHardwareBP((char*)CalcAdr(_adr.Live_IsUserSignedIn)	, 0, Condition::ReadWrite);
+	placeHardwareBP((char*)CalcAdr(_adr.Live_IsUserSignedIn)			, 1, Condition::ReadWrite);
+	placeHardwareBP((char*)CalcAdr(_adr.Live_IsUserSignedInToLive)		, 2, Condition::ReadWrite);
+	*/
+
+
+
+	//MH_DisableHook(LoadImageA_v);
+	//MH_RemoveHook(LoadImageA_v);
+
+
+	/*
 	auto R_EndFrame									= (LPVOID)((uintptr_t)CalcAdr(_adr.R_EndFrame));
 	auto LUI_LuaCall_LUIGlobalPackage_DebugPrint	= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint));
 	auto LUI_CoD_LuaCall_OfflineDataFetched			= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_CoD_LuaCall_OfflineDataFetched));
@@ -3722,10 +3809,7 @@ void GameStart()
 	else
 		MH_EnableHook(R_EndFrame);
 
-	if (MH_CreateHook(LUI_LuaCall_LUIGlobalPackage_DebugPrint	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d, reinterpret_cast<LPVOID*>(&LUI_LuaCall_LUIGlobalPackage_DebugPrint_h)) != MH_OK)
-		printf("[Failed] <GameStart> Hook failed : %s\n", "LUI_LuaCall_LUIGlobalPackage_DebugPrint");
-	else
-		MH_EnableHook(LUI_LuaCall_LUIGlobalPackage_DebugPrint);
+	return;
 
 	if (MH_CreateHook(LUI_CoD_LuaCall_OfflineDataFetched		, &LUI_CoD_LuaCall_OfflineDataFetched_d		, reinterpret_cast<LPVOID*>(&LUI_CoD_LuaCall_OfflineDataFetched_h)) != MH_OK)
 		printf("[Failed] <GameStart> Hook failed : %s\n", "LUI_CoD_LuaCall_OfflineDataFetched");
@@ -3746,17 +3830,24 @@ void GameStart()
 		printf("[Failed] <GameStart> Hook failed : %s\n", "Content_DoWeHaveContentPack");
 	else
 		MH_EnableHook(Content_DoWeHaveContentPack);
-
-	memcpy(														(void*)CalcAdr(_adr.Live_IsInSystemlinkLobby)			, "\xB0\x01"	, 2);
+	
+	if (MH_CreateHook(LUI_LuaCall_LUIGlobalPackage_DebugPrint	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d, reinterpret_cast<LPVOID*>(&LUI_LuaCall_LUIGlobalPackage_DebugPrint_h)) != MH_OK)
+		printf("[Failed] <GameStart> Hook failed : %s\n", "LUI_LuaCall_LUIGlobalPackage_DebugPrint");
+	else
+		MH_EnableHook(LUI_LuaCall_LUIGlobalPackage_DebugPrint);
 
 	
+	memcpy(														(void*)CalcAdr(_adr.Live_IsInSystemlinkLobby)			, "\xB0\x01"	, 2);
+	*/
+
+
 }
 
 
 
 //++++++++++++++++++++++++++++++
 // en : Entry point (calling the DiscordCreate function when drawing the game window)
-// ja : ƒGƒ“ƒgƒŠ[ƒ|ƒCƒ“ƒg ( ƒQ[ƒ€ƒEƒBƒ“ƒhƒE•`‰æ‚Ì DiscordCreate ŠÖ”ŒÄ‚Ño‚µ )
+// ja : ã‚¨ãƒ³ãƒˆãƒªãƒ¼ãƒã‚¤ãƒ³ãƒˆ ( ã‚²ãƒ¼ãƒ ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æç”»æ™‚ã® DiscordCreate é–¢æ•°å‘¼ã³å‡ºã— )
 //++++++++++++++++++++++++++++++
 void entry_point()
 {
@@ -3769,7 +3860,7 @@ void entry_point()
 
 //++++++++++++++++++++++++++++++
 // en : Game setup (Hooking various functions at splash screen timing)
-// ja : ƒQ[ƒ€ƒZƒbƒgƒAƒbƒv ( ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ“ƒ^ƒCƒ~ƒ“ƒO‚ÅŠeíŠÖ”ƒtƒbƒN )
+// ja : ã‚²ãƒ¼ãƒ ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ— ( ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§å„ç¨®é–¢æ•°ãƒ•ãƒƒã‚¯ )
 //++++++++++++++++++++++++++++++
 void GameSetup()
 {
@@ -3777,10 +3868,24 @@ void GameSetup()
 
 	//_dumpGSC = true;
 	
+	//SetupMinHook("GameSetup", "DB_LoadXFile"		, CalcAdr(_adr.DB_LoadXFile)		, &DB_LoadXFile_d		, &DB_LoadXFile_h);
+	//SetupMinHook("GameSetup", "Load_ScriptFile"		, CalcAdr(_adr.Load_ScriptFile)		, &Load_ScriptFile_d	, &Load_ScriptFile_h);
+	//SetupMinHook("GameSetup", "LUI_ReportError"		, CalcAdr(_adr.LUI_ReportError)		, &LUI_ReportError_d	, &LUI_ReportError_h);
+	SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcAdr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d	, &Dvar_RegisterBool_h);
+
+	/*
+
 	auto DB_LoadXFile		= (LPVOID)((uintptr_t)CalcAdr(_adr.DB_LoadXFile));
 	auto Load_ScriptFile	= (LPVOID)((uintptr_t)CalcAdr(_adr.Load_ScriptFile));
 	auto LUI_ReportError	= (LPVOID)((uintptr_t)CalcAdr(_adr.LUI_ReportError));
 	auto Dvar_RegisterBool	= (LPVOID)((uintptr_t)CalcAdr(_adr.Dvar_RegisterBool));
+	
+
+	if (MH_CreateHook(Dvar_RegisterBool	, &Dvar_RegisterBool_d	, reinterpret_cast<LPVOID*>(&Dvar_RegisterBool_h)) != MH_OK)
+		printf("[Failed] <GameSetup> Hook failed : %s\n", "Dvar_RegisterBool");
+	else
+		MH_EnableHook(Dvar_RegisterBool);
+
 
 	if (MH_CreateHook(DB_LoadXFile		, &DB_LoadXFile_d		, reinterpret_cast<LPVOID*>(&DB_LoadXFile_h)) != MH_OK)
 		printf("[Failed] <GameSetup> Hook failed : %s\n", "DB_LoadXFile");
@@ -3796,14 +3901,7 @@ void GameSetup()
 		printf("[Failed] <GameSetup> Hook failed : %s\n", "LUI_ReportError");
 	else
 		MH_EnableHook(LUI_ReportError);
-
-	if (MH_CreateHook(Dvar_RegisterBool	, &Dvar_RegisterBool_d	, reinterpret_cast<LPVOID*>(&Dvar_RegisterBool_h)) != MH_OK)
-		printf("[Failed] <GameSetup> Hook failed : %s\n", "Dvar_RegisterBool");
-	else
-		MH_EnableHook(Dvar_RegisterBool);
-
-
-
+		*/
 
 	//utils::hook::jump(									CalcAdr(_adr.LUI_CoD_LuaCall_IsUserSignedInToLive)			, LUI_CoD_LuaCall_IsUserSignedInToLive_d);
 	//utils::hook::jump(									CalcAdr(_adr.LUI_CoD_LuaCall_IsUserSignedInToDemonware)		, LUI_CoD_LuaCall_IsUserSignedInToDemonware_d);
@@ -3971,7 +4069,7 @@ void GameSetup()
 
 //++++++++++++++++++++++++++++++
 // en : Splash screen loading (for detour)
-// ja : ƒXƒvƒ‰ƒbƒVƒ…ƒXƒNƒŠ[ƒ““Ç‚İ‚İ ( ƒfƒBƒg[ƒ‹—p )
+// ja : ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚¹ã‚¯ãƒªãƒ¼ãƒ³èª­ã¿è¾¼ã¿ ( ãƒ‡ã‚£ãƒˆãƒ¼ãƒ«ç”¨ )
 //++++++++++++++++++++++++++++++
 HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, int cy, UINT fuLoad)
 {
@@ -3989,7 +4087,7 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 
 //++++++++++++++++++++++++++++++
 // en : Hook into each function from the exe reference module
-// ja : exeQÆƒ‚ƒWƒ…[ƒ‹‚©‚çŠeŠÖ”‚ÉƒtƒbƒN
+// ja : exeå‚ç…§ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‹ã‚‰å„é–¢æ•°ã«ãƒ•ãƒƒã‚¯
 //++++++++++++++++++++++++++++++
 void HookExeModuleFunctions()
 {
@@ -4002,20 +4100,20 @@ void HookExeModuleFunctions()
 	}
 
 
-	void* loadImageA = (void*)GetProcAddress(user32, "LoadImageA");
-	if (!loadImageA)
+	LoadImageA_v = (void*)GetProcAddress(user32, "LoadImageA");
+	if (!LoadImageA_v)
 	{
 		printf("[Failed] <Initialization> Failed to get address of LoadImageA...\n");
 		return;
 	}
 
-	if (MH_CreateHook(loadImageA, &LoadImageA_d, reinterpret_cast<LPVOID*>(&LoadImageA_b)) != MH_OK)
+	if (MH_CreateHook(LoadImageA_v, &LoadImageA_d, reinterpret_cast<LPVOID*>(&LoadImageA_b)) != MH_OK)
 	{
 		printf("[Failed] <Initialization> Failed to create hook for LoadImageA...\n");
 		return;
 	}
 
-	if (MH_EnableHook(loadImageA) != MH_OK)
+	if (MH_EnableHook(LoadImageA_v) != MH_OK)
 	{
 		printf("[Failed] <Initialization> Failed to enable hook for LoadImageA...\n");
 		return;
@@ -4029,7 +4127,7 @@ void HookExeModuleFunctions()
 
 //++++++++++++++++++++++++++++++
 // en : Get player name from profile.ini
-// ja : profile.ini‚©‚çƒvƒŒƒCƒ„[–¼æ“¾
+// ja : profile.iniã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åå–å¾—
 //++++++++++++++++++++++++++++++
 std::string ReadIniPlayerName(const std::string& iniFilePath)
 {
@@ -4042,7 +4140,7 @@ std::string ReadIniPlayerName(const std::string& iniFilePath)
 
 //++++++++++++++++++++++++++++++
 // en : Read profile.ini and load various settings + Asset Path Construction
-// ja : profile.ini‚ğ“Ç‚İ‚ñ‚ÅŠeíİ’è‚ğ“Ç‚İ‚İ + ƒAƒZƒbƒgƒpƒX\’z
+// ja : profile.iniã‚’èª­ã¿è¾¼ã‚“ã§å„ç¨®è¨­å®šã‚’èª­ã¿è¾¼ã¿ + ã‚¢ã‚»ãƒƒãƒˆãƒ‘ã‚¹æ§‹ç¯‰
 //++++++++++++++++++++++++++++++
 void SetupProfile()
 {
@@ -4073,7 +4171,7 @@ void SetupProfile()
 
 //++++++++++++++++++++++++++++++
 // en : Initialization process
-// ja : ‰Šú‰»ˆ—
+// ja : åˆæœŸåŒ–å‡¦ç†
 //++++++++++++++++++++++++++++++
 void Initialization()
 {
@@ -4091,7 +4189,7 @@ void Initialization()
 
 //++++++++++++++++++++++++++++++
 // en : main process
-// ja : ƒƒCƒ“ˆ—
+// ja : ãƒ¡ã‚¤ãƒ³å‡¦ç†
 //++++++++++++++++++++++++++++++
 int main()
 {
@@ -4115,44 +4213,44 @@ int main()
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 	
-	printf( "|| ================================================== ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.57    ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| < Credit >                                         ||\n" );
-	printf( "||   - Project created    : HiNAtyu                   ||\n" );
-	printf( "||   - Special support    : Sku-111                   ||\n" );
-	printf( "||   - Very helpful       : h00dbyair                 ||\n" );
-	printf( "||   - Basic infos        : Project Donetsk           ||\n" );
-	printf( "||   - arxan Bypass infos : mallgrab                  ||\n" );
-	printf( "||   - arxan Bypass infos : momo5502                  ||\n" );
-	printf( "||   - Some debug code    : iw8-mod                   ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "||  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| < About >                                          ||\n" );
-	printf( "|| This proj was made bcs I wanted see Godzilla lol   ||\n" );
-	printf( "|| I'm not a client developer.                        ||\n" );
-	printf( "|| So, I didnft code it skillfully.                  ||\n" );
-	printf( "|| I donft plan to maintain or update it much.       ||\n" );
-	printf( "|| I included basic modding functions.                ||\n" );
-	printf( "|| Enjoy it freely!                                   ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "||  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| < Promotion >                                      ||\n" );
-	printf( "|| Please follow, like, or comment on my SNS.         ||\n" );
-	printf( "|| If you like my work,                               ||\n" );
-	printf( "|| consider donating to support new features & fixes. ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| YouTube : HiNAtyu Studio                           ||\n" );
-	printf( "|| Twitter : @KonataGIF                               ||\n" );
-	printf( "|| Discord : hinatapoko                               ||\n" );
-	printf( "|| Ko-fi : https://ko-fi.com/hinatyustudio            ||\n" );
-	printf( "||   BTC : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR         ||\n" );
-	printf( "||   ETH : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978 ||\n" );
-	printf( "||                                                    ||\n" );
-	printf( "|| ================================================== ||\n" );
+	printf( "|| ==================================================================================================== ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.57                                                      ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "|| < Credit >                                                                                           ||\n" );
+	printf( "||   - Project created    : HiNAtyu                                                                     ||\n" );
+	printf( "||   - Special support    : Sku-111                                                                     ||\n" );
+	printf( "||   - Very helpful       : h00dbyair                                                                   ||\n" );
+	printf( "||   - Basic infos        : Project Donetsk                                                             ||\n" );
+	printf( "||   - arxan Bypass infos : mallgrab                                                                    ||\n" );
+	printf( "||   - arxan Bypass infos : momo5502                                                                    ||\n" );
+	printf( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "|| < About >                                                                                            ||\n" );
+	printf( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
+	printf( "|| I'm not a client developer.                                                                          ||\n" );
+	printf( "|| So, I didnâ€™t code it skillfully.                                                                    ||\n" );
+	printf( "|| I donâ€™t plan to maintain or update it much.                                                         ||\n" );
+	printf( "|| I included basic modding functions.                                                                  ||\n" );
+	printf( "|| Enjoy it freely!                                                                                     ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "|| < Promotion >                                                                                        ||\n" );
+	printf( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
+	printf( "|| If you like my work,                                                                                 ||\n" );
+	printf( "|| consider donating to support new features & fixes.                                                   ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "||   - YouTube : HiNAtyu Studio                                                                         ||\n" );
+	printf( "||   - Twitter : @KonataGIF                                                                             ||\n" );
+	printf( "||   - Discord : hinatapoko                                                                             ||\n" );
+	printf( "||   - Ko-fi   : https://ko-fi.com/hinatyustudio                                                        ||\n" );
+	printf( "||   - BTC     : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR                                                     ||\n" );
+	printf( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
+	printf( "||                                                                                                      ||\n" );
+	printf( "|| ==================================================================================================== ||\n" );
 	printf( "\n" );
 
 	printf("address %llx\n", baseAddr);
