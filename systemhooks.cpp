@@ -563,6 +563,7 @@ void InitializeSystemHooks()
 		{NtAllocateVirtualMemoryAddr, &NtAllocateVirtualMemoryFunc, (LPVOID*)(&NtAllocateVirtualMemoryOrig)},
 	};
 
+	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
 	size_t amountHooks = sizeof(hooks) / sizeof(hook_t);
 	for (int i=0; i < amountHooks; i++)
 	{
@@ -571,5 +572,9 @@ void InitializeSystemHooks()
 
 		if (MH_EnableHook(hooks[i].addr) != MH_OK)
 			printf("system hook %d didn't work\n", i);
+
+
+		printf("system hook %d success!!\n", i);
 	}
+	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
 }
