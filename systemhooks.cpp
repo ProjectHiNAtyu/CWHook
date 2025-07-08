@@ -511,11 +511,15 @@ void RestoreKernel32ThreadInitThunkFunction()
 
 void DisableTlsCallbacks()
 {
+
+	// MW19 1.57 TLS Callback addresses (updated from BOCW)
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
-	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0x6b9220);
-	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0x6d7110);
-	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x6e8480);
-	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x6e9a90);
+	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); // TlsCallback_0
+	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); // TlsCallback_1
+	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); // TlsCallback_2
+	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); // TlsCallback_3
+
+	printf("MW19 TLS Callbacks:\n");
 
 	printf("tls1: %llx\n", tlscallback_1);
 	printf("tls2: %llx\n", tlscallback_2);
