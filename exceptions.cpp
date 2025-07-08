@@ -122,6 +122,17 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 		static int access_violation_counter = 0;
 		access_violation_counter++;
 
+		uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+		uint64_t exceptionAddr = (uint64_t)info->ExceptionRecord->ExceptionAddress;
+		uint64_t idaExceptionAddr = exceptionAddr - baseAddr + StartOfTextSection - 0x1000;
+		uint64_t faultingAddress = (uint64_t)info->ExceptionRecord->ExceptionInformation[1];
+
+		printf("ACCESS VIOLATION #%d at %llx (RVA: %llx), trying to access: %llx\n",
+			access_violation_counter, exceptionAddr, idaExceptionAddr, faultingAddress);
+		fprintf(logFile, "ACCESS VIOLATION #%d at %llx (RVA: %llx), trying to access: %llx\n",
+			access_violation_counter, exceptionAddr, idaExceptionAddr, faultingAddress);
+		fflush(logFile);
+
 		if (access_violation_counter == 2)
 		{
 			printf("something exploded: %llx\n", info->ExceptionRecord->ExceptionCode);
