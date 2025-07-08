@@ -128,19 +128,11 @@ void RtlRestoreContextFunc(PCONTEXT ContextRecord, _EXCEPTION_RECORD* ExceptionR
 */
 int GetSystemMetricsFunc(int nIndex)
 {
-	static bool firstcheckprint = false;
-	if (!firstcheckprint)
-	{
-		printf("GetSystemMetricsFunc calling check\n");
-		firstcheckprint = true;
-	}
-
 	int result = GetSystemMetricsOrig(nIndex);
 	static bool bInit = false;
 
 	if (!bInit)
 	{
-		printf("GetSystemMetricsFunc If evaluation = true\n");
 		static int counter = 0;
 		counter++;
 
