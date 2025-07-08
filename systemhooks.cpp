@@ -124,6 +124,8 @@ void RtlRestoreContextFunc(PCONTEXT ContextRecord, _EXCEPTION_RECORD* ExceptionR
 	MH_RemoveHook(RtlRestoreContextAddr);
 }
 
+/*
+*/
 int GetSystemMetricsFunc(int nIndex)
 {
 	static bool firstcheckprint = false;
@@ -181,81 +183,86 @@ NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 	ULONG AllocationType,
 	ULONG Protect)
 {
-	static bool firstcheckprint = false;
-	if (!firstcheckprint)
-	{
-		printf("NtAllocateVirtualMemoryFunc calling check\n");
-		firstcheckprint = true;
-	}
+	//static bool firstcheckprint = false;
+	//if (!firstcheckprint)
+	//{
+	//	printf("NtAllocateVirtualMemoryFunc calling check\n");
+	//	firstcheckprint = true;
+	//}
 
 	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle, BaseAddress, ZeroBits, RegionSize, AllocationType, Protect);
 	
 	return result;
 }
 
-//	NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
-//		PVOID* BaseAddress,
-//		ULONG_PTR ZeroBits,
-//		SIZE_T RegionSize,
-//		ULONG AllocationType,
-//		ULONG Protect)
-//	{
-//		static bool firstcheckprint = false;
-//		if (!firstcheckprint)
+//		int GetSystemMetricsFunc(int nIndex)
 //		{
-//	
-//			printf("NtAllocateVirtualMemoryFunc calling check\n");
-//			firstcheckprint = true;
+//			return GetSystemMetricsOrig(nIndex);
 //		}
-//	
-//		NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
-//		static bool bInit = false;
-//	
-//		if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
+//		
+//		NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+//			PVOID* BaseAddress,
+//			ULONG_PTR ZeroBits,
+//			SIZE_T RegionSize,
+//			ULONG AllocationType,
+//			ULONG Protect)
 //		{
-//			printf("NtAllocateVirtualMemoryFunc If evaluation = true\n");
-//			static int counter = 0;
-//			counter++;
-//	
-//			/* checksum counts for latest build supported by donetsk defcon
-//				p 57
-//				p 41
-//				p 30
-//			*/
-//			static bool firstTime = true;
-//			if (firstTime)
+//			static bool firstcheckprint = false;
+//			if (!firstcheckprint)
 //			{
-//				clock_t start_time = clock();
-//				CreateInlineAsmStub();
-//				CreateChecksumHealingStub();
-//				
-//				double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-//				printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-//				printf("done hooking\n");
-//				
-//				firstTime = false;
+//		
+//				printf("NtAllocateVirtualMemoryFunc calling check\n");
+//				firstcheckprint = true;
 //			}
-//	
-//			// Arxan does a startup checksum check routine that I didn't bother bypassing, 
-//			// doesn't matter anyways since iirc none of the game's functions gets called anyways.
-//			// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
-//			if (counter == 6)
+//		
+//			NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
+//			static bool bInit = false;
+//		
+//			if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
 //			{
-//				DisableTlsCallbacks();
-//				DisableKiUserApcDispatcherHook();
-//				RestoreKernel32ThreadInitThunkFunction();
-//				RemoveNtdllChecksumChecks();
-//				RestoreNtdllDbgFunctions();
-//	
-//				InitializePluginLoader();
-//				CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
-//	
-//				bInit = true;
+//				printf("NtAllocateVirtualMemoryFunc If evaluation = true\n");
+//				static int counter = 0;
+//				counter++;
+//		
+//				/* checksum counts for latest build supported by donetsk defcon
+//					p 57
+//					p 41
+//					p 30
+//				*/
+//				static bool firstTime = true;
+//				if (firstTime)
+//				{
+//					clock_t start_time = clock();
+//					CreateInlineAsmStub();
+//					CreateChecksumHealingStub();
+//					
+//					double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+//					printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+//					printf("done hooking\n");
+//					
+//					firstTime = false;
+//				}
+//		
+//				// Arxan does a startup checksum check routine that I didn't bother bypassing, 
+//				// doesn't matter anyways since iirc none of the game's functions gets called anyways.
+//				// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
+//				if (counter == 6)
+//				{
+//					DisableTlsCallbacks();
+//					DisableKiUserApcDispatcherHook();
+//					RestoreKernel32ThreadInitThunkFunction();
+//					RemoveNtdllChecksumChecks();
+//					RestoreNtdllDbgFunctions();
+//		
+//					InitializePluginLoader();
+//					CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
+//		
+//					bInit = true;
+//				}
 //			}
+//		
+//			return result;
 //		}
-//	
-//		return result;
-//	}
 
 HWND DialogButton = 0;
 DWORD WINAPI testThread()
