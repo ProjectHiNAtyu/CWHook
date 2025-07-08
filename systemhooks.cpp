@@ -606,7 +606,7 @@ void InitializeSystemHooks()
 	void* NtUserRealChildWindowFromPointAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserRealChildWindowFromPoint");
 	void* NtUserWindowFromDCAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserWindowFromDC");
 	void* NtUserGetClassNameAddr = (void*)GetProcAddress(GetModuleHandle("win32u.dll"), "NtUserGetClassName");
-
+//test
 	struct hook_t
 	{
 		void* addr;
