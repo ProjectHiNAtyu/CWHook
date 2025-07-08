@@ -4260,7 +4260,7 @@ int main()
 	// crashes the game after a while, only good if you want to know what syscalls get called from win32u & friends
 	// initInstrumentation();
 
-	Initialization();
+	//Initialization();
 
 	return 0;
 }
