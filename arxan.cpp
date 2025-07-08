@@ -7,6 +7,7 @@
 #include <ntexapi.h>
 #include <ntpsapi.h>
 #include <minidumpapiset.h>
+#include <psapi.h>
 
 #include <TlHelp32.h>
 #include <mmeapi.h>
@@ -32,6 +33,8 @@
 #include "arxan.h"
 #include "paths.h"
 #include "syscalls.h"
+
+typedef unsigned char byte;
 
 std::vector<intactChecksumHook> intactchecksumHooks;
 std::vector<intactBigChecksumHook> intactBigchecksumHooks;
@@ -690,11 +693,11 @@ void NtdllAsmStub()
 
 void CreateInlineAsmStub()
 {
-	hook::pattern locationsIntact = hook::module_pattern(GetModuleHandle(nullptr), "89 04 8A 83 45 ? FF");
-	hook::pattern locationsIntactBig = hook::module_pattern(GetModuleHandle(nullptr), "89 04 8A 83 85");
-	hook::pattern locationsSplit = hook::module_pattern(GetModuleHandle(nullptr), "89 04 8A E9");
+	hook::pattern locationsIntact = hook::module_pattern(GetModuleHandleA(nullptr), "89 04 8A 83 45 ? FF");
+	hook::pattern locationsIntactBig = hook::module_pattern(GetModuleHandleA(nullptr), "89 04 8A 83 85");
+	hook::pattern locationsSplit = hook::module_pattern(GetModuleHandleA(nullptr), "89 04 8A E9");
 
-	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandleA(nullptr));
 
 	size_t intactCount = locationsIntact.size();
 	size_t intactBigCount = locationsIntactBig.size();
@@ -703,8 +706,12 @@ void CreateInlineAsmStub()
 
 	const size_t allocationSize = sizeof(uint8_t) * 128;
 	inlineStubs = (inlineAsmStub*)malloc(sizeof(inlineAsmStub) * totalCount);
+	if (inlineStubs == nullptr)
+	{
+		return;
+	}
 
-	for (int i=0; i < intactCount; i++)
+	for (int i = 0; i < intactCount; i++)
 	{
 		inlineStubs[stubCounter].functionAddress = locationsIntact.get(i).get<void*>(0);
 		inlineStubs[stubCounter].type = intactSmall;
@@ -712,7 +719,7 @@ void CreateInlineAsmStub()
 		stubCounter++;
 	}
 
-	for (int i=0; i < intactBigCount; i++)
+	for (int i = 0; i < intactBigCount; i++)
 	{
 		inlineStubs[stubCounter].functionAddress = locationsIntactBig.get(i).get<void*>(0);
 		inlineStubs[stubCounter].type = intactBig;
@@ -728,7 +735,7 @@ void CreateInlineAsmStub()
 		stubCounter++;
 	}
 
-	LPVOID asmBigStubLocation = allocate_somewhere_near(GetModuleHandle(nullptr), allocationSize * 0x80);
+	LPVOID asmBigStubLocation = allocate_somewhere_near(GetModuleHandleA(nullptr), allocationSize * 0x80);
 	memset(asmBigStubLocation, 0x90, allocationSize * 0x80);
 
 	// avoid stub generation collision
@@ -741,7 +748,7 @@ void CreateInlineAsmStub()
 
 	// TODO: fix the asm stub that requires a movzx, registers maybe are getting owned?
 
-	for (int i=0; i < stubCounter; i++)
+	for (int i = 0; i < stubCounter; i++)
 	{
 		// we don't know the previous offset yet
 		if (currentStubOffset == nullptr)
@@ -760,12 +767,12 @@ void CreateInlineAsmStub()
 
 		uint32_t instructionBufferJmpDistance = 0;
 		if (instructionBuffer[3] == 0xE9)
-			memcpy(&instructionBufferJmpDistance, (char*)functionAddress+0x4, 4); // 0x4 so we skip 0xE9
+			memcpy(&instructionBufferJmpDistance, (char*)functionAddress + 0x4, 4); // 0x4 so we skip 0xE9
 
 		uint64_t rbpOffset = 0x0;
 		bool jumpDistanceNegative = instructionBufferJmpDistance >> 31; // get sign bit from jump distance
 		int32_t jumpDistance = instructionBufferJmpDistance;
-		
+
 		if (inlineStubs[i].type == split)
 		{
 			// TODO: receive the rbpOffset by going through the jmp instruction
@@ -774,9 +781,9 @@ void CreateInlineAsmStub()
 
 			// TODO: just use jumpDistance once we got a working test case
 			if (jumpDistanceNegative)
-				rbpOffsetPtr = (char*)((uint64_t)functionAddress+jumpDistance+0x8);
+				rbpOffsetPtr = (char*)((uint64_t)functionAddress + jumpDistance + 0x8);
 			else
-				rbpOffsetPtr = (char*)((uint64_t)functionAddress+instructionBufferJmpDistance+0x8);
+				rbpOffsetPtr = (char*)((uint64_t)functionAddress + instructionBufferJmpDistance + 0x8);
 
 			rbpOffsetPtr++;
 
@@ -809,11 +816,11 @@ void CreateInlineAsmStub()
 
 		a.mov(asmjit::x86::qword_ptr(asmjit::x86::rsp, 0x20), asmjit::x86::rax);
 		a.mov(asmjit::x86::rdx, asmjit::x86::rcx);	// offset within text section pointer (ecx*4)
-		
+
 		// we dont use rbpoffset since we only get 1 byte from the 2 byte offset (rbpOffset)
 		// 0x130 is a good starting ptr to decrement downwards so we can find the original checksum
 		if (inlineStubs[i].type == intactBig)
-			a.mov(asmjit::x86::rcx, 0x120); 	
+			a.mov(asmjit::x86::rcx, 0x120);
 		else
 			a.mov(asmjit::x86::rcx, rbpOffset);
 
@@ -831,7 +838,7 @@ void CreateInlineAsmStub()
 
 		a.mov(asmjit::x86::rax, (uint64_t)(void*)FixChecksum);
 		a.call(asmjit::x86::rax);
-		a.add(asmjit::x86::rsp, 0x8*4); // so that r12-r15 registers dont get corrupt
+		a.add(asmjit::x86::rsp, 0x8 * 4); // so that r12-r15 registers dont get corrupt
 
 		popad64WithoutRAX();
 		a.add(asmjit::x86::rsp, 0x32);
@@ -851,7 +858,7 @@ void CreateInlineAsmStub()
 			// push the desired address on to the stack and then perform a 64 bit RET
 			a.add(asmjit::x86::rsp, 0x8); // pop return address off the stack cause we will jump
 			uint64_t addressToJump = (uint64_t)functionAddress + instructionBufferJmpDistance;
-			
+
 			if (inlineStubs[i].type == split)
 			{
 				// TODO: just use jumpDistance once we got a working test case
@@ -862,7 +869,7 @@ void CreateInlineAsmStub()
 			}
 
 			a.mov(asmjit::x86::r11, addressToJump);	// r11 is being used but should be fine based on documentation
-			
+
 			if (inlineStubs[i].type == split)
 				a.add(asmjit::x86::rsp, 0x8); // since we dont pop off rax we need to sub 0x8 the rsp
 
@@ -1180,7 +1187,35 @@ void CreateChecksumHealingStub()
 }
 
 // Offsets found by applying hwbp's on ntdll dbg functions
-ntdllDbgLocations locations[] = {																 // 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F
+ntdllDbgLocations bocw_locations[] = {																 // 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F       A0 E0 15 B1 FA 7F
+	{"DbgBreakPoint",						(void*)0x1BFA100E, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUserBreakPoint",					(void*)0x1E529177, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiConnectToDbg",					(void*)0x07694928, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiContinue",						(void*)0x1EA8F9BA, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiConvertStateChangeStructure",	(void*)0x1DBD8612, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiDebugActiveProcess",				(void*)0x1DFB2F44, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiGetThreadDebugObject",			(void*)0x1BD3FBF2, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiIssueRemoteBreakin",				(void*)0x1DB74F0B, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiRemoteBreakin",					(void*)0x1CB7AFD3, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiSetThreadDebugObject",			(void*)0x1BD63117, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiStopDebugging",					(void*)0x1BDB3908, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgUiWaitStateChange",				(void*)0x1BF02D1B, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgPrintReturnControlC",				(void*)0x05E9DFE8, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+	{"DbgPrompt",							(void*)0x1D24ABA6, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
+};
+
+
+// MW19 1.57 - Offsets found by pattern searching for "0F B6 00 E9 42" 
+ntdllDbgLocations test_locations[] = {																 // 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F
+	{"MW19_Pattern_0",						(void*)0x3DC4F85, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3DC4F85
+	{"MW19_Pattern_1",						(void*)0x3E4C551, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3E4C551
+	{"MW19_Pattern_2",						(void*)0x3EF5B70, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3EF5B70
+	{"MW19_Pattern_3",						(void*)0x3EF6ECE, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3EF6ECE
+	{"MW19_Pattern_4",						(void*)0x3F85E94, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3F85E94
+	{"MW19_Pattern_5",						(void*)0x3F8A31A, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},// RVA=0x3F8A31A
+};
+
+ntdllDbgLocations locations[] = {																 // 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F       A0 E0 15 B1 FA 7F
 	{"DbgBreakPoint",						(void*)0x1BFA100E, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
 	{"DbgUserBreakPoint",					(void*)0x1E529177, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
 	{"DbgUiConnectToDbg",					(void*)0x07694928, {0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0xA0, 0xE0, 0x15, 0xB1, 0xFA, 0x7F, 0x00, 0x00}},
@@ -1227,6 +1262,10 @@ void ReplaceNtdllStackWithOurOwn(uint64_t addr, uint64_t locationCount)
 
 void RemoveNtdllChecksumChecks()
 {
+	printf("RemoveNtdllChecksumChecks return\n");
+
+	return;
+	
 	void* baseModule = GetModuleHandle(nullptr);
 
 	const size_t allocationSize = sizeof(uint8_t) * 0x100 * 1000;
@@ -1326,6 +1365,8 @@ void RemoveNtdllChecksumChecks()
 
 	printf("done applying ntdll\n");
 }
+
+
 
 void DbgRemove()
 {
