@@ -127,8 +127,8 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 		uint64_t idaExceptionAddr = exceptionAddr - baseAddr + StartOfTextSection - 0x1000;
 		uint64_t faultingAddress = (uint64_t)info->ExceptionRecord->ExceptionInformation[1];
 
-		printf("ACCESS VIOLATION #%d at %llx (RVA: %llx), trying to access: %llx\n",
-			access_violation_counter, exceptionAddr, idaExceptionAddr, faultingAddress);
+		//printf("ACCESS VIOLATION #%d at %llx (RVA: %llx), trying to access: %llx\n",
+		//	access_violation_counter, exceptionAddr, idaExceptionAddr, faultingAddress);
 		fprintf(logFile, "ACCESS VIOLATION #%d at %llx (RVA: %llx), trying to access: %llx\n",
 			access_violation_counter, exceptionAddr, idaExceptionAddr, faultingAddress);
 		fflush(logFile);
