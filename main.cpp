@@ -231,6 +231,8 @@ int main()
 
 	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
 
+	/*
+
 	const char* funcStr1 = "DbgBreakPoint";
 	const char* funcStr2 = "DbgUserBreakPoint";
 	const char* funcStr3 = "DbgUiConnectToDbg";
@@ -250,6 +252,156 @@ int main()
 	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 2, funcStr3, funcAddr3, (unsigned int)((char*)funcAddr3 - (char*)moduleNtdll));
 	//printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 3, "RtlRaiseException"	, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
 
+
+	*/
+
+
+
+
+
+
+
+
+
+
+	/*
+	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
+	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
+
+	const char* funcStr4 = "DbgUiDebugActiveProcess";
+	const char* funcStr5 = "DbgUiGetThreadDebugObject";
+	const char* funcStr6 = "DbgUiIssueRemoteBreakin";
+	const char* funcStr7 = "DbgUiRemoteBreakin";
+
+	void* funcAddr4 = GetProcAddress(ntdllModule, funcStr4);
+	void* funcAddr5 = GetProcAddress(ntdllModule, funcStr5);
+	void* funcAddr6 = GetProcAddress(ntdllModule, funcStr6);
+	void* funcAddr7 = GetProcAddress(ntdllModule, funcStr7);
+
+
+	placeHardwareBP((char*)funcAddr4, 0, Condition::Execute);
+	placeHardwareBP((char*)funcAddr5, 1, Condition::Execute);
+	placeHardwareBP((char*)funcAddr6, 2, Condition::Execute);
+	placeHardwareBP((char*)funcAddr7, 3, Condition::Execute);
+
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 0, funcStr4, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 1, funcStr5, funcAddr5, (unsigned int)((char*)funcAddr5 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 2, funcStr6, funcAddr6, (unsigned int)((char*)funcAddr6 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 3, funcStr7, funcAddr7, (unsigned int)((char*)funcAddr7 - (char*)ntdllModule));
+	*/
+	/*
+	
+	*/
+
+
+	/*
+	void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
+	void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
+	void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
+	void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
+	void* ntClose = GetProcAddress(ntdllModule, "NtClose");
+	void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
+	void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
+
+
+	if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
+	if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
+	if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
+	if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
+	if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
+	if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
+	if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
+	*/
+
+
+	/*
+	printf("SetArxanCrashDetectionBreakpoints: Setting up crash detection HWBPs\n");
+
+	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
+	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
+
+	if (!ntdllModule || !kernel32Module) {
+		printf("ERROR: Failed to get module handles for crash detection\n");
+		//return;
+	}
+	else
+	{
+		// 終了系関数のアドレスを取得
+		void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
+		void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
+		void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
+		void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
+		void* ntClose = GetProcAddress(ntdllModule, "NtClose");
+		void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
+		void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
+
+		printf("MW19: Crash detection target functions:\n");
+		if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
+		if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
+		if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
+		if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
+		if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
+		if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
+		if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
+
+		// 現在のHWBP状態を確認
+		CONTEXT ctx = { 0 };
+		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+		GetThreadContext(GetCurrentThread(), &ctx);
+
+		printf("Current HWBP state before crash detection setup:\n");
+		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
+		printf("  Dr7: 0x%llX\n", ctx.Dr7);
+
+		// クラッシュ検出用HWBP設置（優先順位順）
+		std::vector<std::pair<void*, const char*>> crashFunctions = {
+			{exitProcess, "ExitProcess"},
+			{terminateProcess, "TerminateProcess"},
+			{ntTerminateProcess, "NtTerminateProcess"},
+			{ntRaiseHardError, "NtRaiseHardError"}
+		};
+
+		// 利用可能なHWBPスロットを動的に検索
+		int availableSlots[4] = { -1, -1, -1, -1 };
+		int slotCount = 0;
+
+		if (ctx.Dr0 == 0) availableSlots[slotCount++] = 0;
+		if (ctx.Dr1 == 0) availableSlots[slotCount++] = 1;
+		if (ctx.Dr2 == 0) availableSlots[slotCount++] = 2;
+		//if (ctx.Dr3 == 0) availableSlots[slotCount++] = 3;
+
+		printf("Available HWBP slots: %d\n", slotCount);
+		for (int i = 0; i < slotCount; i++) {
+			printf("  Slot %d is available\n", availableSlots[i]);
+		}
+
+		int slotIndex = 0;
+		for (const auto& func : crashFunctions) {
+			if (func.first && slotIndex < slotCount) {
+				int slot = availableSlots[slotIndex];
+
+				// placeHardwareBP関数を使用してHWBPを設置
+				placeHardwareBP(func.first, slot, Condition::Execute);
+				printf("SetArxanCrashDetectionBreakpoints: HWBP %d set on %s at 0x%p\n",
+					slot, func.second, func.first);
+				slotIndex++;
+			}
+		}
+
+		// 設定後のHWBP状態を確認
+		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+		GetThreadContext(GetCurrentThread(), &ctx);
+		printf("HWBP state after crash detection setup:\n");
+		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
+		printf("  Dr7: 0x%llX\n", ctx.Dr7);
+
+		printf("SetArxanCrashDetectionBreakpoints: Crash detection setup completed\n");
+	}
+	*/
+
+
+
+
 	placeHardwareBP((char*)GetProcAddress(moduleNtdll, "NtAllocateVirtualMemory")+0x12, 3, Condition::Execute);
 
 	//HMODULE moduleNtdll = GetModuleHandle("user32.dll");
@@ -259,7 +411,7 @@ int main()
 	NtdllAsmStub();
 
 	// crashes the game after a while, only good if you want to know what syscalls get called from win32u & friends
-	// initInstrumentation();
+	//initInstrumentation();
 
 	//Initialization();
 
