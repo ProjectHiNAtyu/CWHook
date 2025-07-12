@@ -168,7 +168,7 @@ int GetSystemMetricsFunc(int nIndex)
 	return result;
 }
 
-NTSTATUS NtAllocateVirtualMemoryFunc1(HANDLE ProcessHandle,
+NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 	PVOID* BaseAddress,
 	ULONG_PTR ZeroBits,
 	SIZE_T RegionSize,
@@ -186,7 +186,7 @@ NTSTATUS NtAllocateVirtualMemoryFunc1(HANDLE ProcessHandle,
 //	return GetSystemMetricsOrig(nIndex);
 //}
 
-NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+NTSTATUS NtAllocateVirtualMemoryFunc2(HANDLE ProcessHandle,
 	PVOID* BaseAddress,
 	ULONG_PTR ZeroBits,
 	SIZE_T RegionSize,
@@ -638,7 +638,7 @@ void InitializeSystemHooks()
 		
 		{NtAllocateVirtualMemoryAddr, &NtAllocateVirtualMemoryFunc, (LPVOID*)(&NtAllocateVirtualMemoryOrig)},
 
-		//{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
+		{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
 	};
 
 	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
