@@ -223,7 +223,7 @@ NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
 		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
 		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
-		if (counter == 4)
+		if (counter == 6)
 		{
 			DisableTlsCallbacks();
 			DisableKiUserApcDispatcherHook();
