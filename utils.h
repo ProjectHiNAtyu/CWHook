@@ -75,6 +75,7 @@ bool IsWindowBad(HWND hWnd);
 void FilterHwndList(HWND* phwndFirst, PULONG pcHwndNeeded);
 void ManualHookFunction(uint64_t functionAddress, uint64_t setInfoOffset);
 std::string GetLastErrorAsString();
+void NotifyMsg(const char* format, ...);
 
 inline void SetBits(unsigned long& dw, int lowBit, int bits, int newValue)
 {

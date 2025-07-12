@@ -609,3 +609,37 @@ void removeAllHardwareBP()
 
 	printf("removed all hardware bp's\n");
 }
+
+
+
+// NotifyMsg: printfと同様のフォーマットでコンソール出力とファイルログを記録
+void NotifyMsg(const char* format, ...) {
+	// 可変引数リストの処理
+	va_list args;
+	va_start(args, format);
+
+	// コンソールに出力し、即座にフラッシュ
+	vprintf(format, args);
+	//printf("\n"); // 改行を確実に追加
+	fflush(stdout); // 即座にフラッシュ
+
+	// ログファイルに書き込む
+	// 現在のDLLのファイルパスを取得
+	char dllPath[MAX_PATH];
+	GetModuleFileNameA(NULL, dllPath, MAX_PATH);
+
+	// ディレクトリ部分を抽出
+	std::string path(dllPath);
+	std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\debuglog.txt";
+
+	// ファイルに追記し、即座にフラッシュ
+	FILE* fp = fopen(logFilePath.c_str(), "a");
+	if (fp) {
+		vfprintf(fp, format, args);
+		//fprintf(fp, "\n"); // 改行を確実に追加
+		fflush(fp); // 即座にディスクに書き込み
+		fclose(fp);
+	}
+
+	va_end(args);
+}
