@@ -18,9 +18,9 @@ const extern WCHAR* BadProcessnameList[];
 const extern WCHAR* BadWindowTextList[];
 const extern WCHAR* BadWindowClassList[];
 
-const uint64_t EndOfTextSection = 0xd75c000;
-const uint64_t StartOfTextSection = 0x7FF71AA91000;
-const uint64_t StartOfBinary = 0x7FF71AA90000;
+const uint64_t EndOfTextSection		= 0x6F8E000;
+const uint64_t StartOfTextSection	= 0x7FF6AD391000;
+const uint64_t StartOfBinary		= 0x7FF6AD390000;
 
 extern FILE* logFile;
 extern bool suspendNewThreads;
