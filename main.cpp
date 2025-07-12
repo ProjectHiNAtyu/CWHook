@@ -402,7 +402,7 @@ int main()
 
 
 
-	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "NtAllocateVirtualMemory")+0x12, 3, Condition::Execute);
+	placeHardwareBP((char*)GetProcAddress(moduleNtdll, "NtAllocateVirtualMemory")+0x12, 3, Condition::Execute);
 
 	//HMODULE moduleNtdll = GetModuleHandle("user32.dll");
 	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "GetSystemMetrics")+0x12, 3, Condition::Execute);

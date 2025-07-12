@@ -168,7 +168,7 @@ int GetSystemMetricsFunc(int nIndex)
 	return result;
 }
 
-NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+NTSTATUS NtAllocateVirtualMemoryFunc1(HANDLE ProcessHandle,
 	PVOID* BaseAddress,
 	ULONG_PTR ZeroBits,
 	SIZE_T RegionSize,
@@ -186,60 +186,60 @@ NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 //	return GetSystemMetricsOrig(nIndex);
 //}
 
-//NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
-//	PVOID* BaseAddress,
-//	ULONG_PTR ZeroBits,
-//	SIZE_T RegionSize,
-//	ULONG AllocationType,
-//	ULONG Protect)
-//{
-//	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
-//	static bool bInit = false;
-//
-//	if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
-//	{
-//		static int counter = 0;
-//		counter++;
-//
-//		/* checksum counts for latest build supported by donetsk defcon
-//			p 57
-//			p 41
-//			p 30
-//		*/
-//		static bool firstTime = true;
-//		if (firstTime)
-//		{
-//			clock_t start_time = clock();
-//			CreateInlineAsmStub();
-//			CreateChecksumHealingStub();
-//			
-//			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-//			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-//			printf("done hooking\n");
-//			
-//			firstTime = false;
-//		}
-//
-//		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
-//		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
-//		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
-//		if (counter == 4)
-//		{
-//			DisableTlsCallbacks();
-//			DisableKiUserApcDispatcherHook();
-//			RestoreKernel32ThreadInitThunkFunction();
-//			RemoveNtdllChecksumChecks();
-//			RestoreNtdllDbgFunctions();
-//
-//			InitializePluginLoader();
-//			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
-//
-//			bInit = true;
-//		}
-//	}
-//
-//	return result;
-//}
+NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+	PVOID* BaseAddress,
+	ULONG_PTR ZeroBits,
+	SIZE_T RegionSize,
+	ULONG AllocationType,
+	ULONG Protect)
+{
+	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
+	static bool bInit = false;
+
+	if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
+	{
+		static int counter = 0;
+		counter++;
+
+		/* checksum counts for latest build supported by donetsk defcon
+			p 57
+			p 41
+			p 30
+		*/
+		static bool firstTime = true;
+		if (firstTime)
+		{
+			clock_t start_time = clock();
+			CreateInlineAsmStub();
+			CreateChecksumHealingStub();
+			
+			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+			printf("done hooking\n");
+			
+			firstTime = false;
+		}
+
+		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
+		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
+		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
+		if (counter == 4)
+		{
+			DisableTlsCallbacks();
+			DisableKiUserApcDispatcherHook();
+			RestoreKernel32ThreadInitThunkFunction();
+			RemoveNtdllChecksumChecks();
+			RestoreNtdllDbgFunctions();
+
+			InitializePluginLoader();
+			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
+
+			bInit = true;
+		}
+	}
+
+	return result;
+}
 
 HWND DialogButton = 0;
 DWORD WINAPI testThread()
@@ -638,7 +638,7 @@ void InitializeSystemHooks()
 		
 		{NtAllocateVirtualMemoryAddr, &NtAllocateVirtualMemoryFunc, (LPVOID*)(&NtAllocateVirtualMemoryOrig)},
 
-		{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
+		//{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
 	};
 
 	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
