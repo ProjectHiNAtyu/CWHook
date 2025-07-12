@@ -168,30 +168,6 @@ int GetSystemMetricsFunc(int nIndex)
 	return result;
 }
 
-//	NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
-//		PVOID* BaseAddress,
-//		ULONG_PTR ZeroBits,
-//		SIZE_T RegionSize,
-//		ULONG AllocationType,
-//		ULONG Protect)
-//	{
-//		//static bool firstcheckprint = false;
-//		//if (!firstcheckprint)
-//		//{
-//		//	printf("NtAllocateVirtualMemoryFunc calling check\n");
-//		//	firstcheckprint = true;
-//		//}
-//	
-//		NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle, BaseAddress, ZeroBits, RegionSize, AllocationType, Protect);
-//		
-//		return result;
-//	}
-//
-//int GetSystemMetricsFunc(int nIndex)
-//{
-//	return GetSystemMetricsOrig(nIndex);
-//}
-
 NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 	PVOID* BaseAddress,
 	ULONG_PTR ZeroBits,
@@ -199,53 +175,71 @@ NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
 	ULONG AllocationType,
 	ULONG Protect)
 {
-	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
-	static bool bInit = false;
 
-	if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
-	{
-		static int counter = 0;
-		counter++;
-
-		/* checksum counts for latest build supported by donetsk defcon
-			p 57
-			p 41
-			p 30
-		*/
-		static bool firstTime = true;
-		if (firstTime)
-		{
-			clock_t start_time = clock();
-			CreateInlineAsmStub();
-			CreateChecksumHealingStub();
-			
-			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-			printf("done hooking\n");
-			
-			firstTime = false;
-		}
-
-		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
-		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
-		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
-		if (counter == 4)
-		{
-			DisableTlsCallbacks();
-			DisableKiUserApcDispatcherHook();
-			RestoreKernel32ThreadInitThunkFunction();
-			RemoveNtdllChecksumChecks();
-			RestoreNtdllDbgFunctions();
-
-			InitializePluginLoader();
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
-
-			bInit = true;
-		}
-	}
-
+	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle, BaseAddress, ZeroBits, RegionSize, AllocationType, Protect);
+	
 	return result;
 }
+//
+//int GetSystemMetricsFunc(int nIndex)
+//{
+//	return GetSystemMetricsOrig(nIndex);
+//}
+
+//NTSTATUS NtAllocateVirtualMemoryFunc(HANDLE ProcessHandle,
+//	PVOID* BaseAddress,
+//	ULONG_PTR ZeroBits,
+//	SIZE_T RegionSize,
+//	ULONG AllocationType,
+//	ULONG Protect)
+//{
+//	NTSTATUS result = NtAllocateVirtualMemoryOrig(ProcessHandle,BaseAddress,ZeroBits,RegionSize,AllocationType,Protect);
+//	static bool bInit = false;
+//
+//	if (Protect & PAGE_EXECUTE_READWRITE && *(SIZE_T*)RegionSize == ntdllSize && !bInit)
+//	{
+//		static int counter = 0;
+//		counter++;
+//
+//		/* checksum counts for latest build supported by donetsk defcon
+//			p 57
+//			p 41
+//			p 30
+//		*/
+//		static bool firstTime = true;
+//		if (firstTime)
+//		{
+//			clock_t start_time = clock();
+//			CreateInlineAsmStub();
+//			CreateChecksumHealingStub();
+//			
+//			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
+//			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+//			printf("done hooking\n");
+//			
+//			firstTime = false;
+//		}
+//
+//		// Arxan does a startup checksum check routine that I didn't bother bypassing, 
+//		// doesn't matter anyways since iirc none of the game's functions gets called anyways.
+//		// 6 is just an arbitary number so that we create gameplay related hooks a little bit later.
+//		if (counter == 4)
+//		{
+//			DisableTlsCallbacks();
+//			DisableKiUserApcDispatcherHook();
+//			RestoreKernel32ThreadInitThunkFunction();
+//			RemoveNtdllChecksumChecks();
+//			RestoreNtdllDbgFunctions();
+//
+//			InitializePluginLoader();
+//			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DbgRemove, NULL, NULL, NULL);
+//
+//			bInit = true;
+//		}
+//	}
+//
+//	return result;
+//}
 
 HWND DialogButton = 0;
 DWORD WINAPI testThread()
@@ -497,10 +491,16 @@ void DisableTlsCallbacks()
 
 	// MW19 1.57 TLS Callback addresses (updated from BOCW)
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
-	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); // TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
-	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); // TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
-	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
-	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
+	// IW8 1.38
+	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xA5BA50); // TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
+	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xA79500); // TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
+	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xA89F90); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
+	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x2E660A0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
+	// IW8 1.57
+	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); // TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
+	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); // TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
+	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
+	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
 
 	printf("MW19 TLS Callbacks:\n");
 
