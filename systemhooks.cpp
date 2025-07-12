@@ -144,8 +144,8 @@ int GetSystemMetricsFunc(int nIndex)
 			CreateChecksumHealingStub();
 
 			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-			printf("done hooking\n");
+			NotifyMsg("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+			NotifyMsg("done hooking\n");
 
 			firstTime = false;
 		}
@@ -214,8 +214,8 @@ NTSTATUS NtAllocateVirtualMemoryFunc2(HANDLE ProcessHandle,
 			CreateChecksumHealingStub();
 			
 			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-			printf("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-			printf("done hooking\n");
+			NotifyMsg("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+			NotifyMsg("done hooking\n");
 			
 			firstTime = false;
 		}
@@ -277,14 +277,14 @@ HWND CreateWindowExFunc(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName
 
 HWND NtUserFindWindowExFunc(HWND hwndParent, HWND hwndChildAfter, PUNICODE_STRING ucClassName, PUNICODE_STRING ucWindowName)
 {
-	printf("ntuserfindwindowexfunc got called\n");
+	NotifyMsg("ntuserfindwindowexfunc got called\n");
 
 	return 0;
 }
 
 HWND NtUserWindowFromPointFunc(LONG X,LONG Y)
 {
-	printf("window from point got called\n");
+	NotifyMsg("window from point got called\n");
 
 	return 0x0;
 }
@@ -503,26 +503,26 @@ void DisableTlsCallbacks()
 	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
 	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
 
-	printf("MW19 TLS Callbacks:\n");
+	NotifyMsg("MW19 TLS Callbacks:\n");
 
-	printf("tls1: %llx\n", tlscallback_1);
-	printf("tls2: %llx\n", tlscallback_2);
-	printf("tls3: %llx\n", tlscallback_3);
-	printf("tls4: %llx\n", tlscallback_4);
+	NotifyMsg("tls1: %llx\n", tlscallback_1);
+	NotifyMsg("tls2: %llx\n", tlscallback_2);
+	NotifyMsg("tls3: %llx\n", tlscallback_3);
+	NotifyMsg("tls4: %llx\n", tlscallback_4);
 
-	if (MH_CreateHook(tlscallback_1, &generalTlsCallbackFunction, NULL) != MH_OK) { printf("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_1) != MH_OK) { printf("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_1, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_1) != MH_OK) { NotifyMsg("hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_2, &generalTlsCallbackFunction, NULL) != MH_OK) { printf("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_2) != MH_OK) { printf("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_2, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_2) != MH_OK) { NotifyMsg("hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_3, &generalTlsCallbackFunction, NULL) != MH_OK) { printf("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_3) != MH_OK) { printf("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_3, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_3) != MH_OK) { NotifyMsg("hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_4, &generalTlsCallbackFunction, NULL) != MH_OK) { printf("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_4) != MH_OK) { printf("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_4, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_4) != MH_OK) { NotifyMsg("hook didn't work\n"); }
 
-	printf("disabled tls callbacks\n");
+	NotifyMsg("disabled tls callbacks\n");
 }
 
 DWORD WINAPI ConsoleInput(LPVOID lpReserved)
@@ -544,7 +544,7 @@ DWORD WINAPI ConsoleInput(LPVOID lpReserved)
 
 		if (strcmp(input.c_str(), "b") == 0)
 		{
-			printf("set breakpoint\n");
+			NotifyMsg("set breakpoint\n");
 			setHWBP = true;
 		}
 	}
@@ -642,18 +642,18 @@ void InitializeSystemHooks()
 		{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
 	};
 
-	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
+	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
 	size_t amountHooks = sizeof(hooks) / sizeof(hook_t);
 	for (int i=0; i < amountHooks; i++)
 	{
 		if (MH_CreateHook(hooks[i].addr, hooks[i].ourFunction, hooks[i].originalFunction) != MH_OK)
-			printf("system hook %d didn't work\n", i);
+			NotifyMsg("system hook %d didn't work\n", i);
 
 		if (MH_EnableHook(hooks[i].addr) != MH_OK)
-			printf("system hook %d didn't work\n", i);
+			NotifyMsg("system hook %d didn't work\n", i);
 
 
-		printf("system hook %d success!!\n", i);
+		NotifyMsg("system hook %d success!!\n", i);
 	}
-	printf("--------------------[ InitializeSystemHooks() ]--------------------\n");
+	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
 }

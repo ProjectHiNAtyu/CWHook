@@ -59,11 +59,11 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 			static int counter = 0;
 			counter++;
 
-			printf("bp1: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
+			NotifyMsg("bp1: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fprintf(logFile, "bp1: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fflush(logFile);
 
-			printf("loc %llx\n", info->ContextRecord->Rax);
+			NotifyMsg("loc %llx\n", info->ContextRecord->Rax);
 		}
 		
 		if (info->ContextRecord->Dr6 & 0x2)
@@ -78,11 +78,11 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 			static int counter = 0;
 			counter++;
 
-			printf("bp2: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
+			NotifyMsg("bp2: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fprintf(logFile, "bp2: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fflush(logFile);
 
-			printf("loc %llx\n", info->ContextRecord->Rax);
+			NotifyMsg("loc %llx\n", info->ContextRecord->Rax);
 		}
 		
 		if (info->ContextRecord->Dr6 & 0x4)
@@ -97,11 +97,11 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 			static int counter = 0;
 			counter++;
 
-			printf("bp3: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
+			NotifyMsg("bp3: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fprintf(logFile, "bp3: %llx %llx %d\n", exceptionAddr, idaExceptionAddr, counter);
 			fflush(logFile);
 
-			printf("loc %llx\n", info->ContextRecord->Rax);
+			NotifyMsg("loc %llx\n", info->ContextRecord->Rax);
 		}
 		
 		if (info->ContextRecord->Dr6 & 0x8)
@@ -135,7 +135,7 @@ LONG WINAPI exceptionHandler(const LPEXCEPTION_POINTERS info)
 
 		if (access_violation_counter == 2)
 		{
-			printf("something exploded: %llx\n", info->ExceptionRecord->ExceptionCode);
+			NotifyMsg("something exploded: %llx\n", info->ExceptionRecord->ExceptionCode);
 			fprintf(logFile, "something exploded: %llx\n", info->ExceptionRecord->ExceptionCode);
 			fflush(logFile);
 

@@ -954,9 +954,9 @@ void CreateInlineAsmStub()
 		previousStubOffset = currentStubOffset + sizeof(uint8_t) * code.codeSize() + 0x8;
 	}
 
-	printf("p %d\n", intactCount);
-	printf("p %d\n", intactBigCount);
-	printf("p %d\n", splitCount);
+	NotifyMsg("p %d\n", intactCount);
+	NotifyMsg("p %d\n", intactBigCount);
+	NotifyMsg("p %d\n", splitCount);
 }
 
 bool arxanHealingChecksum(uint64_t rbp)
