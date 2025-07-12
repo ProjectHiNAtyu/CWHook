@@ -65,7 +65,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)intactchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				printf("%llx %llx got changed\n", idaAddress, (uint64_t)intactchecksumHooks[i].functionAddress);
+				NotifyMsg("%llx %llx got changed\n", idaAddress, (uint64_t)intactchecksumHooks[i].functionAddress);
 				fprintf(logFile, "%llx got changed\n", idaAddress);
 				fflush(logFile);
 			}
@@ -84,7 +84,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)intactBigchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				printf("%llx %llx got changed\n", idaAddress, (uint64_t)intactBigchecksumHooks[i].functionAddress);
+				NotifyMsg("%llx %llx got changed\n", idaAddress, (uint64_t)intactBigchecksumHooks[i].functionAddress);
 				fprintf(logFile, "%llx got changed\n", idaAddress);
 				fflush(logFile);
 			}
@@ -103,7 +103,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)splitchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				printf("%llx %llx got changed\n", idaAddress, (uint64_t)splitchecksumHooks[i].functionAddress);
+				NotifyMsg("%llx %llx got changed\n", idaAddress, (uint64_t)splitchecksumHooks[i].functionAddress);
 				fprintf(logFile, "%llx got changed\n", idaAddress);
 				fflush(logFile);
 			}
@@ -299,7 +299,7 @@ NTSTATUS NTAPI ntdllSyscallNtClose(HANDLE Handle)
 	{
 		if (flags.ProtectFromClose)
 		{
-			printf("not closable\n");
+			NotifyMsg("not closable\n");
 			return STATUS_HANDLE_NOT_CLOSABLE;
 		}
 
@@ -307,7 +307,7 @@ NTSTATUS NTAPI ntdllSyscallNtClose(HANDLE Handle)
 		return 0x1337;
 	}
 
-	printf("invalid handle: %llx\n", Handle);
+	NotifyMsg("invalid handle: %llx\n", Handle);
 	return STATUS_INVALID_HANDLE;
 }
 
@@ -366,10 +366,10 @@ void ntdllQuerySystemInformation(SYSTEM_INFORMATION_CLASS SystemInformationClass
 			break;
 		case SystemHandleInformation:
 		case SystemExtendedHandleInformation:
-			printf("\nchecked for handle information\n");
+			NotifyMsg("\nchecked for handle information\n");
 			break;
 		case SystemObjectInformation:
-			printf("checked for object information\n");
+			NotifyMsg("checked for object information\n");
 			break;
 		default:
 			break;
@@ -381,13 +381,13 @@ void NtdllAsmStub()
 	hook::pattern syscallLocations = hook::module_pattern(GetModuleHandle("ntdll.dll"), "4C 8B D1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 0F 05");
 	size_t syscallCount = syscallLocations.size();
 
-	printf("ntdll syscallCount %d\n", syscallCount);
+	NotifyMsg("ntdll syscallCount %d\n", syscallCount);
 
 	// allocate asm stub rwx page
 	const size_t allocationSize = sizeof(uint8_t) * 128;
 	ntdllAsmStubLocation = allocate_somewhere_near(GetModuleHandle("ntdll.dll"), allocationSize);
 	memset(ntdllAsmStubLocation, 0x90, allocationSize);
-	printf("ntdll stub location %llx\n", ntdllAsmStubLocation);
+	NotifyMsg("ntdll stub location %llx\n", ntdllAsmStubLocation);
 
 	// assembly stub
 	static asmjit::JitRuntime runtime;
@@ -682,13 +682,13 @@ void NtdllAsmStub()
 		if (c != 0)
 			memcpy(functionAddress, jmpInstructionBuffer, callInstructionLength);
 		else
-			printf("couldnt change page protection at %llx\n", functionAddress);
+			NotifyMsg("couldnt change page protection at %llx\n", functionAddress);
 		
 		//int d = VirtualProtect(functionAddress, callInstructionLength, old_protect, &old_protect);
 		FlushInstructionCache(GetCurrentProcess(), functionAddress, callInstructionLength);
 	}
 
-	//printf("done\n");
+	//NotifyMsg("done\n");
 }
 
 void CreateInlineAsmStub()
@@ -1137,7 +1137,7 @@ void CreateChecksumHealingStub()
 					a.ret();
 					break;
 				default:
-					printf("Error: We shouldn't be here");
+					NotifyMsg("Error: We shouldn't be here");
 					getchar();
 					abort();
 			}
@@ -1181,7 +1181,7 @@ void CreateChecksumHealingStub()
 			
 			// debugging printf
 			if (i == 0)
-				printf("type: %d %llx\n", type, functionAddress);
+				NotifyMsg("type: %d %llx\n", type, functionAddress);
 		}
 	}
 }
@@ -1262,7 +1262,7 @@ void ReplaceNtdllStackWithOurOwn(uint64_t addr, uint64_t locationCount)
 
 void RemoveNtdllChecksumChecks()
 {
-	printf("RemoveNtdllChecksumChecks return\n");
+	NotifyMsg("RemoveNtdllChecksumChecks return\n");
 
 	return;
 	
@@ -1363,13 +1363,16 @@ void RemoveNtdllChecksumChecks()
 		previousStubOffset = currentStubOffset + sizeof(uint8_t) * code.codeSize() + 0x8;
 	}
 
-	printf("done applying ntdll\n");
+	NotifyMsg("done applying ntdll\n");
 }
 
 
 
 void DbgRemove()
 {
+	NotifyMsg("DbgRemove return\n");
+
+	return;
 	bool forceDebuggedNum = false;
 	bool setOneTime = false;
 	while (true)
