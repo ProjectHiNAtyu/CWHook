@@ -653,7 +653,7 @@ void InitializeSystemHooks()
 			NotifyMsg("system hook %d didn't work\n", i);
 
 
-		NotifyMsg("system hook %d success!!\n", i);
+		//NotifyMsg("system hook %d success!!\n", i);
 	}
 	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
 }
