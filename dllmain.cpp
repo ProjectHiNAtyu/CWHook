@@ -394,34 +394,55 @@ void setupFunctions() {
 }
 #pragma endregion
 
-//	
-//	extern "C" __declspec(dllexport) int DiscordCreate()
-//	{
-//		CreateThread(0, 0xA0, (LPTHREAD_START_ROUTINE)entry_point, 0, 0, 0);
-//	
-//		//puts(__FUNCTION__ " done.");
-//		return 1;
-//	}
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
-	switch (ul_reason_for_call) {
-	case DLL_PROCESS_ATTACH:
-		char path[MAX_PATH];
-		GetWindowsDirectory(path, sizeof(path));
+extern "C" __declspec(dllexport) int DiscordCreate()
+{
+	CreateThread(0, 0xA0, (LPTHREAD_START_ROUTINE)entry_point, 0, 0, 0);
 
-		strcat_s(path, "\\System32\\powrprof.dll");
-		powrprof.dll = LoadLibrary(path);
-		setupFunctions();
-		module = hModule;
-
-		DisableThreadLibraryCalls(hModule);
-		main();
-		//CreateThread(nullptr, 0, main, hModule, 0, nullptr);
-
-		break;
-	case DLL_PROCESS_DETACH:
-		FreeLibrary(powrprof.dll);
-		break;
-	}
+	//puts(__FUNCTION__ " done.");
 	return 1;
 }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : main process
+// ja : ÉÅÉCÉìèàóù
+//++++++++++++++++++++++++++++++
+BOOL WINAPI DllMain(HMODULE hModule, DWORD Reason, LPVOID lpVoid)
+{
+	if (Reason == DLL_PROCESS_ATTACH)
+	{
+		main2();
+	}
+	else if (Reason == DLL_PROCESS_DETACH)
+	{
+	}
+
+	return TRUE;
+}
+
+//	
+//	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+//		switch (ul_reason_for_call) {
+//		case DLL_PROCESS_ATTACH:
+//			char path[MAX_PATH];
+//			GetWindowsDirectory(path, sizeof(path));
+//	
+//			strcat_s(path, "\\System32\\powrprof.dll");
+//			powrprof.dll = LoadLibrary(path);
+//			setupFunctions();
+//			module = hModule;
+//	
+//			DisableThreadLibraryCalls(hModule);
+//			main();
+//			//CreateThread(nullptr, 0, main, hModule, 0, nullptr);
+//	
+//			break;
+//		case DLL_PROCESS_DETACH:
+//			FreeLibrary(powrprof.dll);
+//			break;
+//		}
+//		return 1;
+//	}
+//	

@@ -148,6 +148,107 @@
 
 
 //++++++++++++++++++++++++++++++
+// en : Entry point (calling the DiscordCreate function when drawing the game window)
+// ja : エントリーポイント ( ゲームウィンドウ描画時の DiscordCreate 関数呼び出し )
+//++++++++++++++++++++++++++++++
+void entry_point()
+{
+	//GameStart();
+
+	puts(__FUNCTION__ " done.");
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : main process
+// ja : メイン処理
+//++++++++++++++++++++++++++++++
+int main2()
+{
+	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+
+	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
+		FILE_SHARE_READ, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
+	LARGE_INTEGER size;
+	GetFileSizeEx(hFile, &size);
+	ntdllSize = 4096 * ceil(size.QuadPart / 4096.0f);
+
+	// 1.67 broken
+	// exceptionHandle = AddVectoredExceptionHandler(true, exceptionHandler);
+
+	auto* const peb = reinterpret_cast<PPEB>(__readgsqword(0x60));
+	peb->BeingDebugged = false;
+	*reinterpret_cast<PDWORD>(LPSTR(peb) + 0xBC) &= ~0x70;
+
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	
+	NotifyMsg( "|| ==================================================================================================== ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.57                                                      ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < Credit >                                                                                           ||\n" );
+	NotifyMsg( "||   - Project created    : HiNAtyu                                                                     ||\n" );
+	NotifyMsg( "||   - Special support    : Sku-111                                                                     ||\n" );
+	NotifyMsg( "||   - Very helpful       : h00dbyair                                                                   ||\n" );
+	NotifyMsg( "||   - Basic infos        : Project Donetsk                                                             ||\n" );
+	NotifyMsg( "||   - arxan Bypass infos : mallgrab                                                                    ||\n" );
+	NotifyMsg( "||   - arxan Bypass infos : momo5502                                                                    ||\n" );
+	NotifyMsg( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < About >                                                                                            ||\n" );
+	NotifyMsg( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
+	NotifyMsg( "|| I'm not a client developer.                                                                          ||\n" );
+	NotifyMsg( "|| So, I didn’t code it skillfully.                                                                    ||\n" );
+	NotifyMsg( "|| I don’t plan to maintain or update it much.                                                         ||\n" );
+	NotifyMsg( "|| I included basic modding functions.                                                                  ||\n" );
+	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
+	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
+	NotifyMsg( "|| If you like my work,                                                                                 ||\n" );
+	NotifyMsg( "|| consider donating to support new features & fixes.                                                   ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||   - YouTube : HiNAtyu Studio                                                                         ||\n" );
+	NotifyMsg( "||   - Twitter : @KonataGIF                                                                             ||\n" );
+	NotifyMsg( "||   - Discord : hinatapoko                                                                             ||\n" );
+	NotifyMsg( "||   - Ko-fi   : https://ko-fi.com/hinatyustudio                                                        ||\n" );
+	NotifyMsg( "||   - BTC     : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR                                                     ||\n" );
+	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| ==================================================================================================== ||\n" );
+	NotifyMsg( "\n" );
+
+	NotifyMsg("address %llx\n", baseAddr);
+
+	SetSyscallsFromNtdll();
+	RestoreNtdllDbgFunctions();
+	MH_Initialize();
+	InitializeSystemHooks();
+
+	logFile = fopen("log.txt", "w+");
+
+	// disable audio being turned on
+	DWORD dwVolume;
+	if (waveOutGetVolume(NULL, &dwVolume) == MMSYSERR_NOERROR)
+		waveOutSetVolume(NULL, 0);
+
+	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
+
+	return 0;
+}
+
+
+
+//++++++++++++++++++++++++++++++
 // en : main process
 // ja : メイン処理
 //++++++++++++++++++++++++++++++
@@ -230,6 +331,9 @@ int main()
 		waveOutSetVolume(NULL, 0);
 
 	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
+
+	// arxan applies checksum checks & healing to INT2D
+	NtdllAsmStub();
 
 	/*
 
