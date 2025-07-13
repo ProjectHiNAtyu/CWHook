@@ -1381,6 +1381,18 @@ typedef bool(__fastcall* Content_DoWeHaveContentPack_t)(int controllerIndex);
 Content_DoWeHaveContentPack_t Content_DoWeHaveContentPack_h;
 
 
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef void(__fastcall* GetUsername_t)();
+GetUsername_t GetUsername_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef char(* Live_IsInSystemlinkLobby_t)();
+Live_IsInSystemlinkLobby_t Live_IsInSystemlinkLobby_h;
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -2093,16 +2105,26 @@ void GetAddressOffset(GameTitle title)
 			_adr.controllerStatData								= _TEXT_SEC_LEN + 0x137A1F64;	// 0x7FF696CC2F64	LUI_CoD_LuaCall_StatsResetGetState -> LiveStorage_GetStatsResetState -> controllerResetStatData -> under arg controllerStatData
 			_adr.LiveStorage_StatsInit							= _TEXT_SEC_LEN + 0x3905EB0;	// 0x7FF686E26EB0	ddl/mp/playerdata.ddl
 			_adr.LiveStorage_ReadStats							= _TEXT_SEC_LEN + 0x39039B0;	// 0x7FF686E249B0	playerdata_available
-			
-			
 
 			
+			_adr.GetUsername									= _TEXT_SEC_LEN + 0x3F8C6C0;	// 0x7FF6874AD6C0	UnnamedPlayer or LUI_LuaCall_Social_GetPlayerCrossplayGamertag
 
-
+			// LUA util optional
+			_adr.lua_tolstring									= _TEXT_SEC_LEN + 0x72799C0;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
+			
+			// Debug
+			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
+			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
+			
 
 			
 
 
+
+			
+			// unused
+			_adr.Live_IsUserSignedInToDemonware					= _TEXT_SEC_LEN + 0x431BB80;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+			
 			_adr.CurrentRegion_IssueFix2						= _TEXT_SEC_LEN + 0x4CB31F0;	// 0x7FF6881D41F0	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
 			
 
@@ -2158,12 +2180,10 @@ void GetAddressOffset(GameTitle title)
 			_adr.CurrentRegion_IssueFix1						= 0x7FF6B1A13ADE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+9
 			_adr.unk_BNetClass									= 0x7FF6CB13C860;	// 83 3D ? ? ? ? ? 74 ? B8 ? ? ? ? C3
 			_adr.GamerProfile_IsProfileLoggedIn					= 0x7FF6B1654460;	// hit_marker_3d
-			_adr.GetUsername									= 0x7FF6B0D9DB70;	// UnnamedPlayer
 			_adr.s_OnlineServicesFenceData_state				= 0x7FF6C87D3E18;	// LUI_CoD_LuaCall_OnlineServicesGetState -> Live_OnlineServicesFence_GetState
 			_adr.dwGetLogOnStatus								= 0x7FF6B3194330;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
 			_adr.dwLogOnHSM_base_HSM_IsInState					= 0x7FF6AFC4B3C0;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
 			_adr.Live_IsUserSignedIn							= 0x7FF6B0D9E0C0;	// 48 83 EC 28 E8 ?? ?? ?? ?? 85 C0 0F 9F C0 48 83 C4 28 C3 = x2
-			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// E8 ? ? ? ? 83 4F ? ? 48 8D 0D
 			_adr.Live_IsUserSignedInToBnet						= 0x7FF6B01A9E30;	// 48 89 5C 24 08 57 48 83 EC 20 48 63 F9 48 8B DA 8B CF E8 ?? ?? ?? ?? 84 C0
 			_adr.Live_IsUserSignedInToLive						= 0x7FF6B0D9E0E0;	// LUI_CoD_LuaCall_IsUserSignedInToDemonware
 			_adr.Live_OnlineServicesFence_GetState				= 0x7FF6B0077B30;	// LUI_CoD_LuaCall_OnlineServicesGetState
@@ -2178,11 +2198,7 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_CoD_LuaCall_IsUserSignedInToLive			= 0x7FF6B36E0660;	// 
 			_adr.LUI_CoD_LuaCall_IsUserSignedInToDemonware		= 0x7FF6B36E0760;	// 
 			
-			_adr.LUI_ReportError								= 0x7FF6B3640DF0;	// 48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
-			_adr.lua_tolstring									= 0x7FF6B3FC0450;	// 48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
-			
-			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x7FF6B363D8E0;	// DebugPrint
-			
+
 			_adr.Dvar_SetBool_Internal							= 0x7FF6B0D626E0;	// LUA_MENU/PATCH_UPDATE_SUCCESS
 
 			_adr.DDL_Lookup_MoveToNameHash						= 0x7FF6B3F8A8F0;	// 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 30 45 8B D1 49 8B F0 48 8B DA 4C 8B D9 48 85 C9 0F 84
@@ -2854,10 +2870,9 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "con_minicon", "LMSLLSMONN" }, true },
 		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"	}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"	}, true },
-		//{ { "force_offline_enabled"										, "MPSSOTQQPM"	}, true },
 
-		//{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
-
+		//	{ { "force_offline_enabled"										, "MPSSOTQQPM"	}, true },
+		//	{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
 		//	{ { "systemlink_host"											, "LLPNKKORPT"	}, true }, // Local client is hosting system link game
 		//	{ { "systemlink"												, "LPSPMQSNPQ"	}, true },
 		//	{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"	}, true },
@@ -3487,7 +3502,7 @@ int LiveStorage_GetActiveStatsSource_d() { return 1; }
 // en : Get whether you are in a system link lobby (for detour)
 // ja : システムリンクロビーにいるかどうかを取得する ( ディトール用 )
 //++++++++++++++++++++++++++++++
-int Live_IsInSystemlinkLobby_d() { return 1; }
+char Live_IsInSystemlinkLobby_d() { return 1; }
 
 
 
@@ -3982,7 +3997,20 @@ void R_EndFrame_d()
 void GameStart()
 {
 	
-	SetupMinHook("GameStart", "R_EndFrame"	, CalcPtr(_adr.R_EndFrame)	, &R_EndFrame_d	, &R_EndFrame_h);
+	SetupMinHook("GameStart", "R_EndFrame"									, CalcPtr(_adr.R_EndFrame)									, &R_EndFrame_d									, &R_EndFrame_h);
+	
+	//	SetupMinHook("GameSetup", "GetUsername"									, CalcPtr(_adr.GetUsername)									, &GetUsername_d								, &GetUsername_h);
+	SetupMinHook("GameSetup", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
+	SetupMinHook("GameSetup", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
+	
+	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
+	SetupMinHook("GameSetup", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
+	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
+	
+	SetupMinHook("GameSetup", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
+	
+	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
+	
 }
 
 
@@ -4006,17 +4034,11 @@ void entry_point()
 //++++++++++++++++++++++++++++++
 void GameSetup()
 {
-	SetupMinHook("GameSetup", "Dvar_RegisterBool"						, CalcPtr(_adr.Dvar_RegisterBool)						, &Dvar_RegisterBool_d							, &Dvar_RegisterBool_h);
 	
-	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_OfflineDataFetched"		, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)		, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
-	SetupMinHook("GameSetup", "LUI_COD_LuaCall_IsPremiumPlayer"			, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)			, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
-	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_IsLocalPlayAllowed"		, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)		, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
+	SetupMinHook("GameSetup", "Dvar_RegisterBool"							, CalcPtr(_adr.Dvar_RegisterBool)							, &Dvar_RegisterBool_d							, &Dvar_RegisterBool_h);
 	
-	SetupMinHook("GameSetup", "Content_DoWeHaveContentPack"				, CalcPtr(_adr.Content_DoWeHaveContentPack)				, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
-	
-	memcpy(																(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)			, "\xB0\x01"	, 2);
-	
-	
+	//SetupMinHook("GameSetup", "Live_IsInSystemlinkLobby"					, CalcPtr(_adr.Live_IsInSystemlinkLobby)					, &Live_IsInSystemlinkLobby_d					, &Live_IsInSystemlinkLobby_h);
+
 	//_hooks.LUI_LuaCall_LUIGlobalPackage_DebugPrint_h.create(	CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)	, LUI_LuaCall_LUIGlobalPackage_DebugPrint_d);
 
 	//BreakpointSetup();
@@ -4314,6 +4336,11 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 {
 	if (!_splashed)
 	{
+		NotifyMsg("\n");
+		NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+		NotifyMsg("-----------------  [ Game moddded logs ]  -----------------\n");
+		NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+		NotifyMsg("\n");
 		NotifyMsg("Splash screen image load detected!\n");
 		NotifyMsg("[Notice] Base Address: 0x%p\n", _ImageBase);
 		SetupProfile();
@@ -4423,6 +4450,7 @@ int main2()
 	NotifyMsg( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	Sleep(1000);
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| < About >                                                                                            ||\n" );
 	NotifyMsg( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
@@ -4433,6 +4461,7 @@ int main2()
 	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	Sleep(1000);
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
 	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
@@ -4447,7 +4476,15 @@ int main2()
 	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| ==================================================================================================== ||\n" );
+	Sleep(1000);
+	
 	NotifyMsg( "\n" );
+	NotifyMsg("\n");
+	NotifyMsg("\n");
+	NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+	NotifyMsg("----- ----------[ Arxan bypass logs ]---------- -----\n");
+	NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+	NotifyMsg("\n");
 
 	NotifyMsg("address %llx\n", baseAddr);
 
