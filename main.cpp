@@ -243,6 +243,9 @@ int main2()
 
 	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
 
+	// arxan applies checksum checks & healing to INT2D
+	//NtdllAsmStub();
+
 	return 0;
 }
 
@@ -332,8 +335,6 @@ int main()
 
 	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
 
-	// arxan applies checksum checks & healing to INT2D
-	NtdllAsmStub();
 
 	/*
 
