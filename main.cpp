@@ -4450,7 +4450,7 @@ int main2()
 	NotifyMsg( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	Sleep(1000);
+	Sleep(1500);
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| < About >                                                                                            ||\n" );
 	NotifyMsg( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
@@ -4461,7 +4461,7 @@ int main2()
 	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	Sleep(1000);
+	Sleep(1500);
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
 	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
@@ -4476,7 +4476,7 @@ int main2()
 	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
 	NotifyMsg( "||                                                                                                      ||\n" );
 	NotifyMsg( "|| ==================================================================================================== ||\n" );
-	Sleep(1000);
+	Sleep(1500);
 	
 	NotifyMsg( "\n" );
 	NotifyMsg("\n");
