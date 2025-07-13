@@ -2108,9 +2108,16 @@ void GetAddressOffset(GameTitle title)
 
 			
 			_adr.GetUsername									= _TEXT_SEC_LEN + 0x3F8C6C0;	// 0x7FF6874AD6C0	UnnamedPlayer or LUI_LuaCall_Social_GetPlayerCrossplayGamertag
-
+			
+			// XAsset
+			_adr.DB_FindXAssetHeader							= _TEXT_SEC_LEN + 0x3757070;	// 0x7FF686C78070	E8 ?? ?? ?? ?? 44 8B C5 8D 4D
+			
 			// LUA util optional
 			_adr.lua_tolstring									= _TEXT_SEC_LEN + 0x72799C0;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
+			
+			// LUA customize
+			_adr.luaL_loadbuffer								= _TEXT_SEC_LEN + 0x727EE00;	// 0x7FF68A79FE00	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
+			_adr.luaL_loadfile									= _TEXT_SEC_LEN + 0x727EF90;	// 0x7FF68A79FF90	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
 			
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
@@ -2212,13 +2219,10 @@ void GetAddressOffset(GameTitle title)
 			_adr.lua_pushinteger								= 0x7FF6B3FBFAE0;	// LUI_CoD_LuaCall_OnlineServicesGetState
 			_adr.file_fopen										= 0x7FF6B41995BC;	// luaL_loadfile
 			_adr.file_fclose									= 0x7FF6B41999FC;	// luaL_loadfile
-			_adr.luaL_loadbuffer								= 0x7FF6B3FC5890;	// 4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
 			_adr.unk_EncryptionKey								= 0x7FF6CD96A370;	// 48 33 15 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B 57
 			_adr.luaL_openlib									= 0x7FF6B3FC3A10;	// 48 89 5C 24 ?? 55 56 41 56 48 83 EC ?? 48 8B 41
 			_adr.LiveStorage_GetActiveStatsSource				= 0x7FF6B0721390;	// ddl/mp/cpdata.ddl
-			_adr.DB_FindXAssetHeader							= 0x7FF6B057B8C0;	// E8 ?? ?? ?? ?? 44 8B C5 8D 4D
 			_adr.DB_LoadXFile									= 0x7FF6B05788B0;	// E8 ?? ?? ?? ?? 8B F8 33 ED 40 38 B3
-			_adr.luaL_loadfile									= 0x7FF6B3FC5A20;	// 40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
 			_adr.CL_Mgr_IsControllerActive						= 0x7FF6AFB23D20;	// LUI_CoD_LuaCall_SetDesiredLobbyTeamSelection
 			_adr.CL_Mgr_GetClientFromController					= 0x7FF6AFB23B90;	// LUI_CoD_LuaCall_SetDesiredLobbyTeamSelection
 			_adr.Com_DDL_LoadAsset								= 0x7FF6B3F88080;	// ddl/mp/playerdata.ddl
@@ -2679,20 +2683,24 @@ void LoadCustomLua(lua_State* s, const char* file)
 	ReplaceAll(luapath, "/", "\\");
 	std::string lua_path = _documentPath + "\\customassets\\lua\\" + luapath.c_str();
 
-	std::ifstream lua_file(lua_path);
-	if (lua_file.is_open())
+	if (file_exists(lua_path.c_str()))
 	{
-		std::string line;
-		while (std::getline(lua_file, line))
+		std::ifstream lua_file(lua_path);
+		if (lua_file.is_open())
 		{
-			custom_code += line + "\n";
+			std::string line;
+			while (std::getline(lua_file, line))
+			{
+				custom_code += line + "\n";
+			}
+			lua_file.close();
 		}
-		lua_file.close();
+		else
+		{
+			// NotifyMsg("[Notice] <luaL_loadfile> Loaded official Lua script : %s\n", file);
+		}
 	}
-	else
-	{
-		// NotifyMsg("[Notice] <luaL_loadfile> Loaded official Lua script : %s\n", file);
-	}
+
 
 	if (0 < custom_code.size())
 	{
@@ -2700,8 +2708,8 @@ void LoadCustomLua(lua_State* s, const char* file)
 		NotifyMsg("[Success] <luaL_loadfile> Injecting custom Lua code from file : %s\n", lua_path.c_str());
 	}
 
-	return;
-	ExtractLuaScript(file);
+	//return;
+	// ExtractLuaScript(file);
 }
 
 
@@ -4002,7 +4010,9 @@ void GameStart()
 	//	SetupMinHook("GameSetup", "GetUsername"									, CalcPtr(_adr.GetUsername)									, &GetUsername_d								, &GetUsername_h);
 	SetupMinHook("GameSetup", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
 	SetupMinHook("GameSetup", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
-	
+	SetupMinHook("GameSetup", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
+
+
 	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
 	SetupMinHook("GameSetup", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
 	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
