@@ -134,11 +134,13 @@ int GetSystemMetricsFunc(int nIndex)
 	if (!bInit)
 	{
 		static int counter = 0;
+		NotifyMsg("GetSystemMetricsFunc counter %d\n", counter);
 		counter++;
 
 		static bool firstTime = true;
 		if (firstTime)
 		{
+			NotifyMsg("GetSystemMetricsFunc patch start\n");
 			clock_t start_time = clock();
 			CreateInlineAsmStub();
 			CreateChecksumHealingStub();
@@ -209,6 +211,7 @@ NTSTATUS NtAllocateVirtualMemoryFunc2(HANDLE ProcessHandle,
 		static bool firstTime = true;
 		if (firstTime)
 		{
+			NotifyMsg("NtAllocateVirtualMemoryOrig patch start\n");
 			clock_t start_time = clock();
 			CreateInlineAsmStub();
 			CreateChecksumHealingStub();
@@ -665,7 +668,7 @@ void InitializeSystemHooks()
 			NotifyMsg("system hook %d didn't work\n", i);
 
 
-		//NotifyMsg("system hook %d success!!\n", i);
+		NotifyMsg("system hook %d success!!\n", i);
 	}
 	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
 }
