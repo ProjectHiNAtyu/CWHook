@@ -491,17 +491,29 @@ void DisableTlsCallbacks()
 
 	// MW19 1.57 TLS Callback addresses (updated from BOCW)
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+
+	// TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
+	// TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
+	// TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
+	// TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
+
 	// IW8 1.38
-	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xA5BA50); // TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
-	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xA79500); // TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
-	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xA89F90); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
-	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x2E660A0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
+	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xA5BA50); 
+	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xA79500); 
+	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xA89F90); 
+	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x2E660A0);
 	
-	// IW8 1.57
-	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); // TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
-	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); // TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
-	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); // TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
-	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); // TlsCallback_3 1.57 - 0xACA0F0 / 1.38 - 0x2E660A0
+	//	// IW8 1.57
+	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); 
+	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); 
+	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); 
+	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); 
+	
+	// IW8 1.67
+	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB20A80);	//	0x7FF684041A80
+	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB56410);	//	0x7FF684077410
+	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0x19A5930);	//	0x7FF684EC6930
+	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB1EF00);	//	0x7FF68403FF00
 
 	NotifyMsg("MW19 TLS Callbacks:\n");
 
