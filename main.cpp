@@ -8,10 +8,11 @@
 // 
 // Main coding                    : HiNAtyu Studio    ( https://github.com/ProjectHiNAtyu )
 // Special support                : Sku-111           ( https://github.com/Sku-111 )
-// Very helpful                   : h00dbyair         ( https://pastebin.com/uNWFy651 )
+// Some support                   : rektinator & mjkzy & WantedDeviation & zhm86
+// Very helpful base source       : h00dbyair         ( https://pastebin.com/uNWFy651 )
 // Basic system and documentation : Project Donetsk   ( https://github.com/ProjectDonetsk/IW8-1.20 )
 // arxan Bypass base project      : mallgrab / CWHook ( https://github.com/mallgrab/CWHook )
-// arxan Integrity Checks Infos   : momo5502          ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
+// arxan Integrity Checks Infos   : momo5502 blogs    ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
 // Some debugging reference       : iw8-mod           ( https://github.com/xifil/iw8-mod )
 // 
 //=================================================================//
@@ -21,7 +22,7 @@
 // [ Contact ]
 // 
 // Creator       : HiNAtyu Studio
-// Update date   : 2024/07/06
+// Update date   : 2024/07/14
 // YouTube       : https://www.youtube.com/channel/UCmxJAnVPtkStQVKrvAVMZSw
 // Twitter 1     : @KonataGIF ( https://x.com/KonataGIF )
 // Twitter 2     : @H1NAtyu ( https://twitter.com/H1NAtyu )
