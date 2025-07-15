@@ -2939,17 +2939,25 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "cl_waterMarkEnabled", "LRKNROSQPM" }, true },
 		//{ { "con_bindableGrave", "OKLQKPPKPQ" }, false },
 		//{ { "con_minicon", "LMSLLSMONN" }, true },
+		//{ { "frontEndScene_force_disable_blackout"						, "frontEndScene_force_disable_blackout"	}, true },
+
+		//{ { "lui_enable_magma_blade_layout", "LRKPTLNQTT" }, false },
+		//{ { "lui_force_online_menus", "LMMRONPQMO" }, false },
+		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
+		//{ { "ui_onlineRequired", "MTSTMKPMRM" }, false }
+		//{ { "ShouldBlackOutFrontEndScene"								, "MTOPOKPPLN"								}, false },
 		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"	}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"	}, true },
-
-		//	{ { "force_offline_enabled"										, "MPSSOTQQPM"	}, true },
-		//	{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
-		//	{ { "systemlink_host"											, "LLPNKKORPT"	}, true }, // Local client is hosting system link game
+		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
+		{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"								}, true },
+		{ { "xp_dec_dc"													, "NTTRLOPQKS"								}, false }, // This causes clients to disconnect themselves from servers if their xp decreases.
+		//	{ { "xblive_privatematch"										, "LSTLQTSSRM"								}, true },
 		//	{ { "systemlink"												, "LPSPMQSNPQ"	}, true },
-		//	{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"	}, true },
-		//	{ { "com_force_premium"											, "MROLPRPTPO"	}, true },
+		//	{ { "systemlink_host"											, "LLPNKKORPT"								}, true }, // Local client is hosting system link game
+		//	{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
 		//	{ { "onlinegame"												, "LTSNLQNRKO"	}, true },
 		//	{ { "online_lan_cross_play"										, "LTOQRQMMLQ"	}, true },
+		//	{ { "com_force_premium"											, "MROLPRPTPO"	}, true },
 		//	{ { "con_minicon"												, "LMSLLSMONN"	}, true },
 		//	{ { "lui_enable_stats_reset"									, "MPTMQQNLNT"	}, true }, // Enables stats reset on bad file version
 		//	{ { "cg_drawBuildName"											, "LSSSQMQPNL"	}, true },
@@ -2966,11 +2974,6 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//	{ { "ui_onlineRequired"											, "MTSTMKPMRM"	}, false },
 		//	{ { "lui_force_online_menus"									, "LMMRONPQMO"	}, false },
 		//	{ { "lui_cod_points_enabled"									, "LNTOKPTKS"	}, false },
-
-		//{ { "lui_enable_magma_blade_layout", "LRKPTLNQTT" }, false },
-		//{ { "lui_force_online_menus", "LMMRONPQMO" }, false },
-		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
-		//{ { "ui_onlineRequired", "MTSTMKPMRM" }, false }
 	};
 
 
