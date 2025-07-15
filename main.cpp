@@ -1384,6 +1384,78 @@ typedef char(* Live_IsInSystemlinkLobby_t)();
 Live_IsInSystemlinkLobby_t Live_IsInSystemlinkLobby_h;
 
 
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsUserSignedInToLive_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsUserSignedInToLive_t LUI_CoD_LuaCall_IsUserSignedInToLive_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsUserSignedInToDemonware_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsUserSignedInToDemonware_t LUI_CoD_LuaCall_IsUserSignedInToDemonware_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsBattleNetAuthReady_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsBattleNetAuthReady_t LUI_CoD_LuaCall_IsBattleNetAuthReady_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_COD_LuaCall_IsBattleNet_t)(lua_State* luaVM);
+LUI_COD_LuaCall_IsBattleNet_t LUI_COD_LuaCall_IsBattleNet_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsConnectedToGameServer_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsConnectedToGameServer_t LUI_CoD_LuaCall_IsConnectedToGameServer_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsGameModeAvailable_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsGameModeAvailable_t LUI_CoD_LuaCall_IsGameModeAvailable_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_CoD_LuaCall_IsGameModeAllowed_t)(lua_State* luaVM);
+LUI_CoD_LuaCall_IsGameModeAllowed_t LUI_CoD_LuaCall_IsGameModeAllowed_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* LUI_COD_LuaCall_IsPremiumPlayerReady_t)(lua_State* luaVM);
+LUI_COD_LuaCall_IsPremiumPlayerReady_t LUI_COD_LuaCall_IsPremiumPlayerReady_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef bool(__fastcall* Live_IsUserSignedIn_t)();
+Live_IsUserSignedIn_t Live_IsUserSignedIn_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef bool(__fastcall* GamerProfile_IsProfileLoggedIn_t)(int controllerIndex);
+GamerProfile_IsProfileLoggedIn_t GamerProfile_IsProfileLoggedIn_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef bool(__fastcall* Live_IsUserSignedInToBnet_t)(int controllerIndex, int* onlinePlayFailReason);
+Live_IsUserSignedInToBnet_t Live_IsUserSignedInToBnet_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef bool(__fastcall* Live_IsUserSignedInToDemonware_t)(int controllerIndex);
+Live_IsUserSignedInToDemonware_t Live_IsUserSignedInToDemonware_h;
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
