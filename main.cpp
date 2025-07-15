@@ -520,13 +520,13 @@ struct XenonUserData
 {
 	int signinState;                    // 4バイト
 	char gamertag[36];                  // 36バイト
-	unsigned int gamertagSuffix;        // 4バイト
-	unsigned int hashOfGamertag;        // 4バイト
+	int gamertagSuffix;					// 4バイト
+	int hashOfGamertag;					// 4バイト
 	char platformGamertag[36];          // 36バイト
 	char fullGamertag[64];              // 64バイト
 	uint64_t xuid;                      // 8バイト
 	char xuidString[21];                // 21バイト
-	unsigned __int64 platformId;        // 8バイト
+	uint64_t platformId;				// 8バイト
 	char platformIdString[21];           // 21バイト
 	voiceCommunicationSetting voiceCommunicationSetting;
 	bool isGuest;
