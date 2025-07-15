@@ -2468,8 +2468,15 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 {
 	std::size_t str_sz = 0;
 	const char* str = lua_tolstring(lua_vm, 1, &str_sz);
+	std::string strResult = ( ( str && str_sz ) ? std::string(str, str_sz).c_str() : "<null>" );
 
-	NotifyMsg("[Debug] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", str && str_sz ? std::string(str, str_sz).c_str() : "<null>");
+	if (strstr(strResult.c_str(), "AAR match data: IsMatchClientDataAvailable") != nullptr)
+	{
+		// systemlink , systemlink_host , xp_dec_dc
+		Cbuf_AddText("set LPSPMQSNPQ 1;set LLPNKKORPT 1;set NTTRLOPQKS 0;");
+	}
+
+	NotifyMsg("[Debug] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
 	return LUI_LuaCall_LUIGlobalPackage_DebugPrint_h(lua_vm);
 }
 
@@ -2773,7 +2780,7 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
 		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
 		{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"								}, true },
-		{ { "xp_dec_dc"													, "NTTRLOPQKS"								}, false }, // This causes clients to disconnect themselves from servers if their xp decreases.
+		//	{ { "xp_dec_dc"													, "NTTRLOPQKS"								}, false }, // This causes clients to disconnect themselves from servers if their xp decreases.
 		//	{ { "xblive_privatematch"										, "LSTLQTSSRM"								}, true },
 		//	{ { "systemlink"												, "LPSPMQSNPQ"								}, true },
 		//	{ { "systemlink_host"											, "LLPNKKORPT"								}, true }, // Local client is hosting system link game
@@ -3430,7 +3437,7 @@ void R_EndFrame_d()
 	{
 		switch (_elapsedFrameCount)
 		{
-			case 4:
+			case 10:
 				{
 					_xuid.RandomXUID();
 					_xuid.m_id = 123456789;
