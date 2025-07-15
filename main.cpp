@@ -2351,19 +2351,19 @@ XAssetHeader DB_FindXAssetHeader_d(XAssetType type, const char* given_name, int 
 	}
 
 	if (type == XAssetType::ASSET_TYPE_LOCALIZE && res.data != nullptr)
-	{
-		//NotifyMsg("[Notice] <DB_FindXAssetHeader> Find asset : %d' - %s'\n", type, given_name);
-		//res.localize->value = localize_string(given_name, res.localize->value);
-		if (!_loadMainMenu)
-		{
-			if (strcmp(given_name, "MENU/STATUS") == 0)
 			{
 				NotifyMsg("[Notice] <DB_FindXAssetHeader> Find asset : %d' - %s'\n", type, given_name);
-				//GeneralPatches();
-				//NotifyMsg("** Success ** <DB_FindXAssetHeader> Stats loaded!\n");
-				_loadMainMenu = true;
-			}
-		}
+		//res.localize->value = localize_string(given_name, res.localize->value);
+		//	if (!_loadMainMenu)
+		//	{
+		//		if (strcmp(given_name, "MENU/STATUS") == 0)
+		//		{
+		//			NotifyMsg("[Notice] <DB_FindXAssetHeader> Find asset : %d' - %s'\n", type, given_name);
+		//			//GeneralPatches();
+		//			//NotifyMsg("** Success ** <DB_FindXAssetHeader> Stats loaded!\n");
+		//			_loadMainMenu = true;
+		//		}
+		//	}
 	}
 
 	return res;
