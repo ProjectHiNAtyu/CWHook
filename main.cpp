@@ -2246,6 +2246,24 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			
+			// GSC
+			_adr.Load_ScriptFile								= _TEXT_SEC_LEN + 0x2E735B0;	// 
+			_adr.DB_PatchMem_PushAsset							= _TEXT_SEC_LEN + 0x2DF0930;	// 
+			_adr.Load_Stream									= _TEXT_SEC_LEN + 0x375FAE0;	// 
+			_adr.DB_PushStreamPos								= _TEXT_SEC_LEN + 0x375F6D0;	// 
+			_adr.Load_XString									= _TEXT_SEC_LEN + 0x2E44CC0;	// 
+			_adr.DB_PopStreamPos								= _TEXT_SEC_LEN + 0x375F620;	// 
+			_adr.DB_PatchMem_PopAsset							= _TEXT_SEC_LEN + 0x2DF0700;	// 
+			_adr.DB_ReadXFile									= _TEXT_SEC_LEN + 0x3754EA0;	// 
+			_adr.Load_ConstCharArray							= _TEXT_SEC_LEN + 0;	// 
+			_adr.Load_byteArray									= _TEXT_SEC_LEN + 0;	// 
+			_adr.varScriptFile									= _TEXT_SEC_LEN + 0xBCE8000;	// 
+			_adr.varXString										= _TEXT_SEC_LEN + 0xBCE6800;	// 
+			_adr.varConstChar									= _TEXT_SEC_LEN + 0xBCE67F0;	// 
+			_adr.varbyte										= _TEXT_SEC_LEN + 0xBCE6620;	// 
+			_adr.AllocLoad_ConstChar							= _TEXT_SEC_LEN + 0;	// 
+			_adr.AllocLoad_byte									= _TEXT_SEC_LEN + 0;	// 
+			_adr.g_streamPosGlob_pos							= _TEXT_SEC_LEN + 0x13606170;	// 
 
 			
 
@@ -2348,23 +2366,6 @@ void GetAddressOffset(GameTitle title)
 			_adr.LiveStorage_BeginGame							= 0x7FF6B0727D40;	// playerdata_available
 			
 			
-			_adr.Load_ScriptFile								= 0x7FF6AFCC80B0;
-			_adr.DB_PatchMem_PushAsset							= 0x7FF6AFC467D0;
-			_adr.Load_Stream									= 0x7FF6B0584200;
-			_adr.DB_PushStreamPos								= 0x7FF6B0583DF0;
-			_adr.Load_XString									= 0x7FF6AFC997C0;
-			_adr.DB_PopStreamPos								= 0x7FF6B0583D40;
-			_adr.DB_PatchMem_PopAsset							= 0x7FF6AFC465A0;
-			_adr.DB_ReadXFile									= 0x7FF6B05796F0;
-			_adr.Load_ConstCharArray							= 0x7FF6AFC97650;
-			_adr.Load_byteArray									= 0x7FF6AFC99C00;
-			_adr.varScriptFile									= 0x7FF6B8997A40;
-			_adr.varXString										= 0x7FF6B8996240;
-			_adr.varConstChar									= 0x7FF6B8996230;
-			_adr.varbyte										= 0x7FF6B8996060;
-			_adr.AllocLoad_ConstChar							= 0x7FF6AFC956E0;
-			_adr.AllocLoad_byte									= 0x7FF6AFC959E0;
-			_adr.g_streamPosGlob_pos							= 0x7FF6C8EA1F20;
 		}
 		break;
 	}
@@ -3553,10 +3554,9 @@ void entry_point()
 //++++++++++++++++++++++++++++++
 void GameSetup()
 {
-	
 	SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcPtr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d		, &Dvar_RegisterBool_h);
+	SetupMinHook("GameSetup", "Load_ScriptFile"		, CalcPtr(_adr.Load_ScriptFile)		, &Load_ScriptFile_d		, &Load_ScriptFile_h);
 	SetupMinHook("GameSetup", "DB_LoadXFile"		, CalcPtr(_adr.DB_LoadXFile)		, &DB_LoadXFile_d			, &DB_LoadXFile_h);
-
 }
 
 
