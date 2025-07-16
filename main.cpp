@@ -5,15 +5,15 @@
 //=================================================================//
 // 
 // [ Credits ]
-// 
-// Main coding                    : HiNAtyu Studio    ( https://github.com/ProjectHiNAtyu )
-// Special support                : Sku-111           ( https://github.com/Sku-111 )
-// Some support                   : rektinator & mjkzy & WantedDeviation & zhm86 & Lebta2
-// Very helpful base source       : h00dbyair         ( https://pastebin.com/uNWFy651 )
-// Basic system and documentation : Project Donetsk   ( https://github.com/ProjectDonetsk/IW8-1.20 )
-// arxan Bypass base project      : mallgrab / CWHook ( https://github.com/mallgrab/CWHook )
-// arxan Integrity Checks Infos   : momo5502 blogs    ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
-// Some debugging reference       : iw8-mod           ( https://github.com/xifil/iw8-mod )
+// 								           
+// Main coding                             : HiNAtyu Studio    ( https://github.com/ProjectHiNAtyu )
+// Special support                         : Sku-111           ( https://github.com/Sku-111 )
+// Some support                            : rektinator & mjkzy & WantedDeviation & zhm86
+// Very helpful base source                : h00dbyair         ( https://pastebin.com/uNWFy651 )
+// Basic system and documentation          : Project Donetsk   ( https://github.com/ProjectDonetsk/IW8-1.20 )
+// arxan Bypass base project               : mallgrab / CWHook ( https://github.com/mallgrab/CWHook )
+// arxan Integrity Checks Infos            : momo5502 blogs    ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
+// Some debugging reference & good support : Lebta2 / iw8-mod  ( https://github.com/xifil/iw8-mod )
 // 
 //=================================================================//
 
@@ -22,7 +22,7 @@
 // [ Contact ]
 // 
 // Creator       : HiNAtyu Studio
-// Update date   : 2024/07/14
+// Update date   : 2024/07/16
 // YouTube       : https://www.youtube.com/channel/UCmxJAnVPtkStQVKrvAVMZSw
 // Twitter 1     : @KonataGIF ( https://x.com/KonataGIF )
 // Twitter 2     : @H1NAtyu ( https://twitter.com/H1NAtyu )
@@ -52,7 +52,7 @@
 // Game code          : IW8 / CoD16 / MW19 / MW2019 / CoD2019 / CoD:MW
 // Game released year : 2019
 // Platform           : PC ( BattleNet )
-// Build version      : 1.57 / 1.67
+// Build version      : 1.67
 // Game mode          : CP / MP ( Co-op / Multiplayer )
 // 
 //=================================================================//
@@ -75,7 +75,7 @@
 // * I, the developer, take no responsibility for any serious actions, such as Call of Duty BAN (account ban), that may occur while using this project. All responsibility lies with the user himself.
 // 
 // * This project is designed to work with the game "Call of Duty Modern Warfare (IW8 / CoD16 / MW19 / MW2019 / CoD2019 / CoD:MW)".
-// * This project is designed to work with the "PC BattleNet version 1.57 build" of the above game.
+// * This project is designed to work with the "PC BattleNet version 1.67 build" of the above game.
 // * This project is not intended for use with game titles, environments, or platforms other than the above games.
 // * If you use this project in an environment other than the recommended environment or for purposes other than the recommended purpose, I, the developer, will not be held responsible in any case, so please use at your own risk.
 // 
@@ -83,15 +83,38 @@
 
 //=================================================================//
 // 
+// [ About ]
+// 
+// This project was originally started for MW2019 1.57
+// That's because I genuinely wanted to see Godzilla again lol
+// However, the behavior of arxan in 1.57 is very mysterious and not immediately clear.
+// Also, I am not a good client developer like Sku.
+// 
+// So I changed course and started work on 1.67.
+// But with everyone's help, and with my own efforts, I didn't give up.
+// I don't like waiting for someone to release something :P
+// So I decided to learn this offline build technique myself.
+// This project was completed thanks to the efforts of many people, as mentioned above.
+// And this source is based on Sku and combined with the h00dbyair code.
+// Don't forget their accomplishments.                                                       
+// 
+// This project only supports MW2019 1.67.
+// You can play CP, but MP lobby data has not been initialized, so bots will not appear.
+// There may still be many problems.
+// Feel free to play around with it, but if you send me feedback I won't know if I'll fix it.
+// I don't intend to run any client with this, I'm just making it for my own enjoyment.
+// Enjoy it freely!
+// 
+//=================================================================//
+
+//=================================================================//
+// 
 // [ Issue ]
 // 
-// This project does not yet include arxan Bypass.
-// I need to port CWHook created by mallgrab to MW19...
-// Please understand that this project is only meant to bypass FenceOnline and give you access to the Local Multiplayer frontend.
-// For more information about arxan Bypass, please refer to the following:
-// 
-// mallgrab : CWHook                                              ( https://github.com/mallgrab/CWHook )
-// momo5502 : Reverse Engineering Integrity Checks in Black Ops 3 ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
+// I have already tried this, but even if you update only the CWHook, which is the core part of this source, i.e. the arxan Bypass address, to another version such as 1.57, it may not work properly.
+// Be careful, arxan's behavior varies greatly depending on the build.
+// Also, I haven't checked SP yet, but it probably won't work (I haven't found the SP Patch flag that h00dbyair posted...)
+// MP bots are currently under investigation (regarding lobby data initialization)
 // 
 //=================================================================//
 
@@ -3437,7 +3460,7 @@ void R_EndFrame_d()
 	{
 		switch (_elapsedFrameCount)
 		{
-			case 10:
+			case 15:
 				{
 					_xuid.RandomXUID();
 					_xuid.m_id = 123456789;
@@ -3653,6 +3676,72 @@ void Initialization()
 
 
 //++++++++++++++++++++++++++++++
+// en : Show intro message
+// ja : イントロメッセージを表示
+//++++++++++++++++++++++++++++++
+void ShowIntroMessage()
+{
+
+	NotifyMsg( "|| ==================================================================================================== ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.67                                                      ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < Credit >                                                                                           ||\n" );
+	NotifyMsg( "||   - Project created                : HiNAtyu                                                         ||\n" );
+	NotifyMsg( "||   - Special support                : Sku-111                                                         ||\n" );
+	NotifyMsg( "||   - Some support                   : rektinator & mjkzy & WantedDeviation & zhm86                    ||\n" );
+	NotifyMsg( "||   - Very helpful base              : h00dbyair                                                       ||\n" );
+	NotifyMsg( "||   - Basic infos                    : Project Donetsk                                                 ||\n" );
+	NotifyMsg( "||   - arxan Bypass infos             : mallgrab                                                        ||\n" );
+	NotifyMsg( "||   - arxan Bypass infos             : momo5502                                                        ||\n" );
+	NotifyMsg( "||   - Some debug code & good support : Lebta                                                           ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	Sleep(1500);
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < About >                                                                                            ||\n" );
+	NotifyMsg( "|| This project was originally started for MW2019 1.57                                                  ||\n" );
+	NotifyMsg( "|| That's because I genuinely wanted to see Godzilla again lol                                          ||\n" );
+	NotifyMsg( "|| However, the behavior of arxan in 1.57 is very mysterious and not immediately clear.                 ||\n" );
+	NotifyMsg( "|| Also, I am not a good client developer like Sku.                                                     ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| So I changed course and started work on 1.67.                                                        ||\n" );
+	NotifyMsg( "|| But with everyone's help, and with my own efforts, I didn't give up.                                 ||\n" );
+	NotifyMsg( "|| I don't like waiting for someone to release something :P                                             ||\n" );
+	NotifyMsg( "|| So I decided to learn this offline build technique myself.                                           ||\n" );
+	NotifyMsg( "|| This project was completed thanks to the efforts of many people, as mentioned above.                 ||\n" );
+	NotifyMsg( "|| And this source is based on Sku and combined with the h00dbyair code.                                ||\n" );
+	NotifyMsg( "|| Don't forget their accomplishments.                                                                  ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| This project only supports MW2019 1.67.                                                              ||\n" );
+	NotifyMsg( "|| You can play CP, but MP lobby data has not been initialized, so bots will not appear.                ||\n" );
+	NotifyMsg( "|| There may still be many problems.                                                                    ||\n" );
+	NotifyMsg( "|| Feel free to play around with it, but if you send me feedback I won't know if I'll fix it.           ||\n" );
+	NotifyMsg( "|| I don't intend to run any client with this, I'm just making it for my own enjoyment.                 ||\n" );
+	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
+	Sleep(1500);
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
+	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
+	NotifyMsg( "|| If you like my work,                                                                                 ||\n" );
+	NotifyMsg( "|| consider donating to support new features & fixes.                                                   ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "||   - YouTube : HiNAtyu Studio                                                                         ||\n" );
+	NotifyMsg( "||   - Twitter : @KonataGIF                                                                             ||\n" );
+	NotifyMsg( "||   - Discord : hinatapoko                                                                             ||\n" );
+	NotifyMsg( "||   - Ko-fi   : https://ko-fi.com/hinatyustudio                                                        ||\n" );
+	NotifyMsg( "||   - BTC     : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR                                                     ||\n" );
+	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
+	NotifyMsg( "||                                                                                                      ||\n" );
+	NotifyMsg( "|| ==================================================================================================== ||\n" );
+	Sleep(1500);
+}
+
+
+
+//++++++++++++++++++++++++++++++
 // en : main process
 // ja : メイン処理
 //++++++++++++++++++++++++++++++
@@ -3679,48 +3768,7 @@ int main2()
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 
-	NotifyMsg( "|| ==================================================================================================== ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.67                                                      ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < Credit >                                                                                           ||\n" );
-	NotifyMsg( "||   - Project created    : HiNAtyu                                                                     ||\n" );
-	NotifyMsg( "||   - Special support    : Sku-111                                                                     ||\n" );
-	NotifyMsg( "||   - Some support       : rektinator & mjkzy & WantedDeviation & zhm86 & Lebta                        ||\n" );
-	NotifyMsg( "||   - Very helpful base  : h00dbyair                                                                   ||\n" );
-	NotifyMsg( "||   - Basic infos        : Project Donetsk                                                             ||\n" );
-	NotifyMsg( "||   - arxan Bypass infos : mallgrab                                                                    ||\n" );
-	NotifyMsg( "||   - arxan Bypass infos : momo5502                                                                    ||\n" );
-	NotifyMsg( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	Sleep(1500);
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < About >                                                                                            ||\n" );
-	NotifyMsg( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
-	NotifyMsg( "|| I'm not a client developer.                                                                          ||\n" );
-	NotifyMsg( "|| So, I didn’t code it skillfully.                                                                    ||\n" );
-	NotifyMsg( "|| I don’t plan to maintain or update it much.                                                         ||\n" );
-	NotifyMsg( "|| I included basic modding functions.                                                                  ||\n" );
-	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	Sleep(1500);
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
-	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
-	NotifyMsg( "|| If you like my work,                                                                                 ||\n" );
-	NotifyMsg( "|| consider donating to support new features & fixes.                                                   ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||   - YouTube : HiNAtyu Studio                                                                         ||\n" );
-	NotifyMsg( "||   - Twitter : @KonataGIF                                                                             ||\n" );
-	NotifyMsg( "||   - Discord : hinatapoko                                                                             ||\n" );
-	NotifyMsg( "||   - Ko-fi   : https://ko-fi.com/hinatyustudio                                                        ||\n" );
-	NotifyMsg( "||   - BTC     : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR                                                     ||\n" );
-	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| ==================================================================================================== ||\n" );
-	Sleep(1500);
+	ShowIntroMessage();
 	
 	NotifyMsg( "\n" );
 	NotifyMsg("\n");
@@ -3781,46 +3829,8 @@ int main()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-	
-	NotifyMsg( "|| ==================================================================================================== ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| [ MW2019/IW8 ] Project Donetsk Returned - V1.57                                                      ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < Credit >                                                                                           ||\n" );
-	NotifyMsg( "||   - Project created    : HiNAtyu                                                                     ||\n" );
-	NotifyMsg( "||   - Special support    : Sku-111                                                                     ||\n" );
-	NotifyMsg( "||   - Very helpful       : h00dbyair                                                                   ||\n" );
-	NotifyMsg( "||   - Basic infos        : Project Donetsk                                                             ||\n" );
-	NotifyMsg( "||   - arxan Bypass infos : mallgrab                                                                    ||\n" );
-	NotifyMsg( "||   - arxan Bypass infos : momo5502                                                                    ||\n" );
-	NotifyMsg( "||   - Some debug code    : iw8-mod                                                                     ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < About >                                                                                            ||\n" );
-	NotifyMsg( "|| This proj was made bcs I wanted see Godzilla lol                                                     ||\n" );
-	NotifyMsg( "|| I'm not a client developer.                                                                          ||\n" );
-	NotifyMsg( "|| So, I didn’t code it skillfully.                                                                    ||\n" );
-	NotifyMsg( "|| I don’t plan to maintain or update it much.                                                         ||\n" );
-	NotifyMsg( "|| I included basic modding functions.                                                                  ||\n" );
-	NotifyMsg( "|| Enjoy it freely!                                                                                     ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ----- ----- ----- -----  ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| < Promotion >                                                                                        ||\n" );
-	NotifyMsg( "|| Please follow, like, or comment on my SNS.                                                           ||\n" );
-	NotifyMsg( "|| If you like my work,                                                                                 ||\n" );
-	NotifyMsg( "|| consider donating to support new features & fixes.                                                   ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "||   - YouTube : HiNAtyu Studio                                                                         ||\n" );
-	NotifyMsg( "||   - Twitter : @KonataGIF                                                                             ||\n" );
-	NotifyMsg( "||   - Discord : hinatapoko                                                                             ||\n" );
-	NotifyMsg( "||   - Ko-fi   : https://ko-fi.com/hinatyustudio                                                        ||\n" );
-	NotifyMsg( "||   - BTC     : 32J66dfWi9dqqWHS2RYR9rFCUNBL88vgUR                                                     ||\n" );
-	NotifyMsg( "||   - ETH     : 0xaE5D5b3e8E865B2bA676a24eF41d5f4CBD315978                                             ||\n" );
-	NotifyMsg( "||                                                                                                      ||\n" );
-	NotifyMsg( "|| ==================================================================================================== ||\n" );
-	NotifyMsg( "\n" );
+
+	ShowIntroMessage();
 
 	NotifyMsg("address %llx\n", baseAddr);
 	//inputHandle = CreateThread(nullptr, 0, ConsoleInput, module, 0, &inputThreadId);
