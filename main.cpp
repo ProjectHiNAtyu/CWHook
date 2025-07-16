@@ -109,6 +109,19 @@
 
 //=================================================================//
 // 
+// [ How to use ]
+// 
+// 1 - Purchase and install MW2019 BattleNet Version 1.67 build
+// 2 - Move all of the files from your MW2019 1.67 installation into the included "Call of Duty" folder
+// 3 - At this point your MW2019 1.67 file path should look something like this:
+// 4 - C:\Users\tatsu\OneDrive\Desktop\PHA_IW8_167_OBFP\Call of Duty\ModernWarfare.exe
+// 5 - Next, run "!install.bat" in the same directory as an administrator.
+// 6 - You're now ready to go, just double-click "!StartGame.bat" to start the game!
+// 
+//=================================================================//
+
+//=================================================================//
+// 
 // [ Issue ]
 // 
 // I have already tried this, but even if you update only the CWHook, which is the core part of this source, i.e. the arxan Bypass address, to another version such as 1.57, it may not work properly.
