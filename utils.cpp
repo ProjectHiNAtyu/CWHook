@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "systemhooks.h"
 #include "restorentdll.h"
+#include <regex>
 
 const WCHAR* BadProcessnameList[] =
 {
@@ -612,8 +613,30 @@ void removeAllHardwareBP()
 
 
 
+std::string RemoveAnsiSequences(const std::string& input)
+{
+	std::regex ansi_regex("\x1b\\[[0-9;]*m");
+	return std::regex_replace(input, ansi_regex, "");
+}
+
+
+
 // NotifyMsg: printfと同様のフォーマットでコンソール出力とファイルログを記録
-void NotifyMsg(const char* format, ...) {
+void NotifyMsg(const char* format, ...)
+{
+	// ANSIエスケープシーケンスを有効化（初回のみ）
+	static bool consoleInitialized = false;
+	if (!consoleInitialized)
+	{
+		// コンソールのANSIエスケープシーケンスを有効化
+		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		DWORD dwMode = 0;
+		GetConsoleMode(hOut, &dwMode);
+		dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		SetConsoleMode(hOut, dwMode);
+		consoleInitialized = true;
+	}
+
 	// 可変引数リストの処理
 	va_list args;
 	va_start(args, format);
@@ -632,13 +655,18 @@ void NotifyMsg(const char* format, ...) {
 	std::string path(dllPath);
 	std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\debuglog.txt";
 
+	std::string clean_format = RemoveAnsiSequences(format);
+
 	// ファイルに追記し、即座にフラッシュ
 	FILE* fp = fopen(logFilePath.c_str(), "a");
 	if (fp) {
-		vfprintf(fp, format, args);
+		va_list args_copy;
+		va_copy(args_copy, args);
+		vfprintf(fp, clean_format.c_str(), args_copy);
 		//fprintf(fp, "\n"); // 改行を確実に追加
-		fflush(fp); // 即座にディスクに書き込み
+		fflush(fp);// 即座にディスクに書き込み
 		fclose(fp);
+		va_end(args_copy);
 	}
 
 	va_end(args);
