@@ -134,20 +134,20 @@ int GetSystemMetricsFunc(int nIndex)
 	if (!bInit)
 	{
 		static int counter = 0;
-		NotifyMsg("GetSystemMetricsFunc counter %d\n", counter);
+		NotifyMsg("[Arxan Info] GetSystemMetricsFunc counter %d\n", counter);
 		counter++;
 
 		static bool firstTime = true;
 		if (firstTime)
 		{
-			NotifyMsg("GetSystemMetricsFunc patch start\n");
+			NotifyMsg("[Arxan Info] GetSystemMetricsFunc patch start\n");
 			clock_t start_time = clock();
 			CreateInlineAsmStub();
 			CreateChecksumHealingStub();
 
 			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-			NotifyMsg("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-			NotifyMsg("done hooking\n");
+			NotifyMsg("[Arxan Info] creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+			NotifyMsg("[Arxan Info] done hooking\n");
 
 			firstTime = false;
 		}
@@ -211,14 +211,14 @@ NTSTATUS NtAllocateVirtualMemoryFunc2(HANDLE ProcessHandle,
 		static bool firstTime = true;
 		if (firstTime)
 		{
-			NotifyMsg("NtAllocateVirtualMemoryOrig patch start\n");
+			NotifyMsg("[Arxan Info] NtAllocateVirtualMemoryOrig patch start\n");
 			clock_t start_time = clock();
 			CreateInlineAsmStub();
 			CreateChecksumHealingStub();
 			
 			double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-			NotifyMsg("creating inline hooks for checksums took: %f seconds\n", elapsed_time);
-			NotifyMsg("done hooking\n");
+			NotifyMsg("[Arxan Info] creating inline hooks for checksums took: %f seconds\n", elapsed_time);
+			NotifyMsg("[Arxan Info] done hooking\n");
 			
 			firstTime = false;
 		}
@@ -280,14 +280,14 @@ HWND CreateWindowExFunc(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName
 
 HWND NtUserFindWindowExFunc(HWND hwndParent, HWND hwndChildAfter, PUNICODE_STRING ucClassName, PUNICODE_STRING ucWindowName)
 {
-	NotifyMsg("ntuserfindwindowexfunc got called\n");
+	NotifyMsg("[Arxan Info] ntuserfindwindowexfunc got called\n");
 
 	return 0;
 }
 
 HWND NtUserWindowFromPointFunc(LONG X,LONG Y)
 {
-	NotifyMsg("window from point got called\n");
+	NotifyMsg("[Arxan Info] window from point got called\n");
 
 	return 0x0;
 }
@@ -518,26 +518,26 @@ void DisableTlsCallbacks()
 	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0x19A5930);	//	0x7FF684EC6930
 	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB1EF00);	//	0x7FF68403FF00
 
-	NotifyMsg("MW19 TLS Callbacks:\n");
+	NotifyMsg("[Arxan Info] MW19 TLS Callbacks:\n");
 
-	NotifyMsg("tls1: %llx\n", tlscallback_1);
-	NotifyMsg("tls2: %llx\n", tlscallback_2);
-	NotifyMsg("tls3: %llx\n", tlscallback_3);
-	NotifyMsg("tls4: %llx\n", tlscallback_4);
+	NotifyMsg("[Arxan Info] tls1: %llx\n", tlscallback_1);
+	NotifyMsg("[Arxan Info] tls2: %llx\n", tlscallback_2);
+	NotifyMsg("[Arxan Info] tls3: %llx\n", tlscallback_3);
+	NotifyMsg("[Arxan Info] tls4: %llx\n", tlscallback_4);
 
-	if (MH_CreateHook(tlscallback_1, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_1) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_1, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_1) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_2, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_2) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_2, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_2) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_3, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_3) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_3, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_3) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
 
-	if (MH_CreateHook(tlscallback_4, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("hook didn't work\n"); }
-	if (MH_EnableHook(tlscallback_4) != MH_OK) { NotifyMsg("hook didn't work\n"); }
+	if (MH_CreateHook(tlscallback_4, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
+	if (MH_EnableHook(tlscallback_4) != MH_OK) { NotifyMsg("[Arxan Info] hook didn't work\n"); }
 
-	NotifyMsg("disabled tls callbacks\n");
+	NotifyMsg("[Arxan Info] disabled tls callbacks\n");
 }
 
 DWORD WINAPI ConsoleInput(LPVOID lpReserved)
@@ -559,7 +559,7 @@ DWORD WINAPI ConsoleInput(LPVOID lpReserved)
 
 		if (strcmp(input.c_str(), "b") == 0)
 		{
-			NotifyMsg("set breakpoint\n");
+			NotifyMsg("[Arxan Info] set breakpoint\n");
 			setHWBP = true;
 		}
 	}
@@ -657,18 +657,18 @@ void InitializeSystemHooks()
 		{GetSystemMetricsAddr, &GetSystemMetricsFunc, (LPVOID*)(&GetSystemMetricsOrig)},
 	};
 
-	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
+	NotifyMsg("[Arxan Info] --------------------[ InitializeSystemHooks() ]--------------------\n");
 	size_t amountHooks = sizeof(hooks) / sizeof(hook_t);
 	for (int i=0; i < amountHooks; i++)
 	{
 		if (MH_CreateHook(hooks[i].addr, hooks[i].ourFunction, hooks[i].originalFunction) != MH_OK)
-			NotifyMsg("system hook %d didn't work\n", i);
+			NotifyMsg("[Arxan Info] system hook %d didn't work\n", i);
 
 		if (MH_EnableHook(hooks[i].addr) != MH_OK)
-			NotifyMsg("system hook %d didn't work\n", i);
+			NotifyMsg("[Arxan Info] system hook %d didn't work\n", i);
 
 
-		NotifyMsg("system hook %d success!!\n", i);
+		NotifyMsg("[Arxan Info] system hook %d success!!\n", i);
 	}
-	NotifyMsg("--------------------[ InitializeSystemHooks() ]--------------------\n");
+	NotifyMsg("[Arxan Info] --------------------[ InitializeSystemHooks() ]--------------------\n");
 }

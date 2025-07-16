@@ -3845,7 +3845,7 @@ int main()
 
 	ShowIntroMessage();
 
-	NotifyMsg("address %llx\n", baseAddr);
+	NotifyMsg("[Arxan Info] address %llx\n", baseAddr);
 	//inputHandle = CreateThread(nullptr, 0, ConsoleInput, module, 0, &inputThreadId);
 	//printf("inputThreadId: %llx\n", inputThreadId);
 
