@@ -1955,6 +1955,33 @@ bool SetupMinHook(const char* callName, const char* funcName, size_t address, LP
 	}
 
 	NotifyMsg("[ \x1b[32m Success \x1b[39m ] <%s> Hooked successfully! : %s\n", callName, funcName);
+	return true;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Simplified MinHook settings
+// ja : MinHook設定簡略化
+//++++++++++++++++++++++++++++++
+bool ClearMinHook(const char* callName, const char* funcName, size_t address)
+{
+	LPVOID baseFunc = (LPVOID)((uintptr_t)address);
+
+	if (MH_DisableHook(baseFunc) != MH_OK)
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <%s> Disable hook failed : %s\n", callName, funcName);
+		return false;
+	}
+
+	if (MH_RemoveHook(baseFunc) != MH_OK)
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <%s> Disable hook failed : %s\n", callName, funcName);
+		return false;
+	}
+
+	NotifyMsg("[ \x1b[32m Success \x1b[39m ] <%s> Unhooked successfully! : %s\n", callName, funcName);
+	return true;
 }
 
 
