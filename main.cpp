@@ -2536,11 +2536,17 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 
 	if (strstr(strResult.c_str(), "AAR match data: IsMatchClientDataAvailable") != nullptr)
 	{
-		// systemlink , systemlink_host , xp_dec_dc
-		Cbuf_AddText("set LPSPMQSNPQ 1;set LLPNKKORPT 1;set NTTRLOPQKS 0;");
+		// LNTTTLKMKR (party_testclients_in_private_party)
+		// LTSNLQNRKO (onlinegame) - Current game is an online game with stats, custom classes, unlocks
+		// NLTTMLSQRQ (sv_running) - Server is running
+		// systemlink      , systemlink_host , xp_dec_dc       , xblive_privatematch , sv_running      , onlinegame      , party_testclients_in_private_party , xblive_loggedin , online_lan_cross_play , bot_spawnControlledByDvar
+		// set LPSPMQSNPQ 1; set LLPNKKORPT 1; set NTTRLOPQKS 0; set LSTLQTSSRM 1;     set NLTTMLSQRQ 1; set LTSNLQNRKO 1; set LNTTTLKMKR 1;                  , set LLOKQOSPPP 1; set LTOQRQMMLQ 1;
+		//Cbuf_AddText("set LPSPMQSNPQ 1;set LLPNKKORPT 1;set NTTRLOPQKS 0;set LSTLQTSSRM 1;set NLTTMLSQRQ 1;set LTSNLQNRKO 1;set LNTTTLKMKR 1;");//set MSLNRKRRKK 1;
+		//Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;LSTLQTSSRM 1;NLTTMLSQRQ 1;LTSNLQNRKO 1;LNTTTLKMKR 1;LLOKQOSPPP 1;LTOQRQMMLQ 1;");//set MSLNRKRRKK 1;
+		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;");//set MSLNRKRRKK 1;
 	}
 
-	NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
+	//NotifyMsgOnlyLog("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
 	return LUI_LuaCall_LUIGlobalPackage_DebugPrint_h(lua_vm);
 }
 
@@ -3243,13 +3249,15 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 		DB_PatchMem_PopAsset();
 
 
-		//	if (lastScript)
-		//	{
-		//	    _isHookLoadScriptFile = false;
-		//	    CreateDumpText(gscPath, "gscinjected");
-		//	    MW19_MP_Load_ScriptFile.clear();
-		//	    DisableHookThread(nullptr, nullptr);
-		//	}
+		if (lastScript)
+		{
+			//NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <Load_ScriptFile> This is last script, function unhooked.\n");
+			//ClearMinHook("Load_ScriptFile_d", "Load_ScriptFile", CalcPtr(_adr.Load_ScriptFile));
+		    //_isHookLoadScriptFile = false;
+		    //CreateDumpText(gscPath, "gscinjected");
+		    //MW19_MP_Load_ScriptFile.clear();
+		    //DisableHookThread(nullptr, nullptr);
+		}
 
 	}
 }
@@ -3598,6 +3606,7 @@ void entry_point()
 //++++++++++++++++++++++++++++++
 void GameSetup()
 {
+	//_dumpGSC = true;
 	SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcPtr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d		, &Dvar_RegisterBool_h);
 	SetupMinHook("GameSetup", "Load_ScriptFile"		, CalcPtr(_adr.Load_ScriptFile)		, &Load_ScriptFile_d		, &Load_ScriptFile_h);
 	SetupMinHook("GameSetup", "DB_LoadXFile"		, CalcPtr(_adr.DB_LoadXFile)		, &DB_LoadXFile_d			, &DB_LoadXFile_h);
@@ -4283,22 +4292,22 @@ LiveStorage_DoWeHaveStatsForSource_f(0, StatsSource::STATS_OFFLINE);
 LiveStorage_DoWeHaveStatsForSource_f(1, StatsSource::STATS_ONLINE);
 LiveStorage_DoWeHaveStatsForSource_f(1, StatsSource::STATS_OFFLINE);
 
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> force_offline_menus            : %s\n", (Dvar_GetBoolSafe_f("LSTQOKLTRN") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> systemlink                     : %s\n", (Dvar_GetBoolSafe_f("LPSPMQSNPQ") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> systemlink_host                : %s\n", (Dvar_GetBoolSafe_f("LLPNKKORPT") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> com_lan_lobby_enabled          : %s\n", (Dvar_GetBoolSafe_f("LPNMMPKRL") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> xblive_privatematch            : %s\n", (Dvar_GetBoolSafe_f("LSTLQTSSRM") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> xblive_loggedin                : %s\n", (Dvar_GetBoolSafe_f("LLOKQOSPPP") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> onlinegame                     : %s\n", (Dvar_GetBoolSafe_f("LTSNLQNRKO") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> online_lan_cross_play          : %s\n", (Dvar_GetBoolSafe_f("LTOQRQMMLQ") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> com_force_premium              : %s\n", (Dvar_GetBoolSafe_f("MROLPRPTPO") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> lui_enable_stats_reset         : %s\n", (Dvar_GetBoolSafe_f("MPTMQQNLNT") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> com_checkIfGameModeInstalled   : %s\n", (Dvar_GetBoolSafe_f("RLSPOOTTT") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> online_challenge_fence_enabled : %s\n", (Dvar_GetBoolSafe_f("LKQRNQSSQS") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> ui_onlineRequired              : %s\n", (Dvar_GetBoolSafe_f("MTSTMKPMRM") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> lui_force_online_menus         : %s\n", (Dvar_GetBoolSafe_f("LMMRONPQMO") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> net_require_demonware          : %s\n", (Dvar_GetBoolSafe_f("LMMRKMKSOR") ? "true" : "false"));
-NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <Dvar> force_offline_enabled          : %s\n", (Dvar_GetBoolSafe_f("MPSSOTQQPM") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> force_offline_menus            : %s\n", (Dvar_GetBoolSafe_f("LSTQOKLTRN") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> systemlink                     : %s\n", (Dvar_GetBoolSafe_f("LPSPMQSNPQ") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> systemlink_host                : %s\n", (Dvar_GetBoolSafe_f("LLPNKKORPT") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> com_lan_lobby_enabled          : %s\n", (Dvar_GetBoolSafe_f("LPNMMPKRL") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> xblive_privatematch            : %s\n", (Dvar_GetBoolSafe_f("LSTLQTSSRM") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> xblive_loggedin                : %s\n", (Dvar_GetBoolSafe_f("LLOKQOSPPP") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> onlinegame                     : %s\n", (Dvar_GetBoolSafe_f("LTSNLQNRKO") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> online_lan_cross_play          : %s\n", (Dvar_GetBoolSafe_f("LTOQRQMMLQ") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> com_force_premium              : %s\n", (Dvar_GetBoolSafe_f("MROLPRPTPO") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> lui_enable_stats_reset         : %s\n", (Dvar_GetBoolSafe_f("MPTMQQNLNT") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> com_checkIfGameModeInstalled   : %s\n", (Dvar_GetBoolSafe_f("RLSPOOTTT") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> online_challenge_fence_enabled : %s\n", (Dvar_GetBoolSafe_f("LKQRNQSSQS") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> ui_onlineRequired              : %s\n", (Dvar_GetBoolSafe_f("MTSTMKPMRM") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> lui_force_online_menus         : %s\n", (Dvar_GetBoolSafe_f("LMMRONPQMO") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> net_require_demonware          : %s\n", (Dvar_GetBoolSafe_f("LMMRKMKSOR") ? "true" : "false"));
+NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar> force_offline_enabled          : %s\n", (Dvar_GetBoolSafe_f("MPSSOTQQPM") ? "true" : "false"));
 
 LiveStorage_GetActiveStatsSource_exec();
 Live_IsInSystemlinkLobby_exec();
@@ -4919,7 +4928,7 @@ int luaL_loadbuffer_d(lua_State* s, const char* buf, size_t size, const char* na
 		std::filesystem::create_directories(directory);
 	}
 
-	NotifyMsg("[ \x1b[37m Debug \x1b[39m ] <luaL_loadbuffer> name = %s\n", name);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <luaL_loadbuffer> name = %s\n", name);
 
 	return luaL_loadbuffer_h(s, buf, size, name);
 }
