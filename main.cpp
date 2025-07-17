@@ -3844,10 +3844,10 @@ int main2()
 
 	logFile = fopen("log.txt", "w+");
 
-	// disable audio being turned on
-	DWORD dwVolume;
-	if (waveOutGetVolume(NULL, &dwVolume) == MMSYSERR_NOERROR)
-		waveOutSetVolume(NULL, 0);
+	//// disable audio being turned on
+	//DWORD dwVolume;
+	//if (waveOutGetVolume(NULL, &dwVolume) == MMSYSERR_NOERROR)
+	//	waveOutSetVolume(NULL, 0);
 
 	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
 
