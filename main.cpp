@@ -3522,6 +3522,23 @@ void R_EndFrame_d()
 		}
 		_elapsedFrameCount += 1;
 	}
+	else
+	{
+		_mathStr = _documentPath + "\\rtm\\gschookon";
+		if (file_exists(_mathStr.c_str()))
+		{
+			SetupMinHook("R_EndFrame", "Load_ScriptFile" , CalcPtr(_adr.Load_ScriptFile) , &Load_ScriptFile_d , &Load_ScriptFile_h);
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Load_ScriptFile Hooked.\n");
+			std::filesystem::remove(_mathStr);
+		}
+		_mathStr = _documentPath + "\\rtm\\gschookoff";
+		if (file_exists(_mathStr.c_str()))
+		{
+			ClearMinHook("R_EndFrame", "Load_ScriptFile", CalcPtr(_adr.Load_ScriptFile));
+			NotifyMsg("[ \x1b[31m Disabled \x1b[39m ] <R_EndFrame> Load_ScriptFile Unhooked.\n");
+			std::filesystem::remove(_mathStr);
+		}
+	}
 
 	R_EndFrame_h();
 }
