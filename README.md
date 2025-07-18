@@ -19,7 +19,7 @@
 
 // Special support                         : Sku-111           ( https://github.com/Sku-111 )
 
-// Some support                            : rektinator & mjkzy & WantedDeviation & zhm86
+// Some support                            : rektinator & WantedDeviation & zhm86
 
 // Very helpful base source                : h00dbyair         ( https://pastebin.com/uNWFy651 )
 
