@@ -3896,53 +3896,71 @@ void R_EndFrame_d()
 
 
 	_mathStr = _documentPath + "\\rtm\\debuglogon";
-	if (file_exists(_mathStr.c_str()) && !_showDebugLogs)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+		if (!_showDebugLogs)
+		{
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+			_showDebugLogs = true;
+		}
 		std::filesystem::remove(_mathStr);
-		_showDebugLogs = true;
 	}
 
 	_mathStr = _documentPath + "\\rtm\\debuglogoff";
-	if (file_exists(_mathStr.c_str()) && _showDebugLogs)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+		if (_showDebugLogs)
+		{
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+			_showDebugLogs = false;
+		}
 		std::filesystem::remove(_mathStr);
-		_showDebugLogs = false;
 	}
 
 
 	_mathStr = _documentPath + "\\rtm\\luadumpon";
-	if (file_exists(_mathStr.c_str()) && !_enableLuaDump)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+		if (!_enableLuaDump)
+		{
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+			_enableLuaDump = true;
+		}
 		std::filesystem::remove(_mathStr);
-		_enableLuaDump = true;
 	}
 
 	_mathStr = _documentPath + "\\rtm\\luadumpoff";
-	if (file_exists(_mathStr.c_str()) && _enableLuaDump)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+		if (_enableLuaDump)
+		{
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+			_enableLuaDump = false;
+		}
 		std::filesystem::remove(_mathStr);
-		_enableLuaDump = false;
 	}
 
 
 	_mathStr = _documentPath + "\\rtm\\gscdumpon";
-	if (file_exists(_mathStr.c_str()) && !_enableGscDump)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+		if (!_enableGscDump)
+		{
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+			_enableGscDump = true;
+		}
 		std::filesystem::remove(_mathStr);
-		_enableGscDump = true;
 	}
 
 	_mathStr = _documentPath + "\\rtm\\gscdumpoff";
-	if (file_exists(_mathStr.c_str()) && _enableGscDump)
+	if (file_exists(_mathStr.c_str()))
 	{
-		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+		if (_enableGscDump)
+		{
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+			_enableGscDump = false;
+		}
 		std::filesystem::remove(_mathStr);
-		_enableGscDump = false;
 	}
 
 
