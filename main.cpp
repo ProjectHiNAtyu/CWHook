@@ -8,7 +8,7 @@
 // 								           
 // Main coding                             : HiNAtyu Studio    ( https://github.com/ProjectHiNAtyu )
 // Special support                         : Sku-111           ( https://github.com/Sku-111 )
-// Some support                            : rektinator & mjkzy & WantedDeviation & zhm86
+// Some support                            : rektinator & WantedDeviation & zhm86
 // Very helpful base source                : h00dbyair         ( https://pastebin.com/uNWFy651 )
 // Basic system and documentation          : Project Donetsk   ( https://github.com/ProjectDonetsk/IW8-1.20 )
 // arxan Bypass base project               : mallgrab / CWHook ( https://github.com/mallgrab/CWHook )
@@ -53,7 +53,7 @@
 // Game released year : 2019
 // Platform           : PC ( BattleNet )
 // Build version      : 1.67
-// Game mode          : CP / MP ( Co-op / Multiplayer )
+// Game mode          : SP / CP / MP ( Singleplayer / Co-op / Multiplayer )
 // 
 //=================================================================//
 
@@ -180,6 +180,7 @@
 #include <map>
 #include <shlobj.h>
 #include "zlib.h"
+#include <mutex>
 #pragma comment(lib, "DbgHelp.lib")
 
 
@@ -325,6 +326,8 @@ struct AdrOffsets
 	uintptr_t unk_PlatformPatch_flag1;
 	uintptr_t dwLogOnHSM_base_HSM_IsInState;
 	uintptr_t Dvar_GetBoolSafe;
+	uintptr_t g_partyData;
+	uintptr_t Lobby_GetLobbyData;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1210,6 +1213,26 @@ enum StatsGroup
 };
 
 
+//++++++++++++++++++++++++++++++
+// en : gEntity_s
+// ja : gEntity_s
+//++++++++++++++++++++++++++++++
+struct gentity_s
+{
+
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : Lobby data
+// ja : ロビーデータ
+//++++++++++++++++++++++++++++++
+struct LobbyData
+{
+	
+};
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1503,6 +1526,12 @@ typedef bool(__fastcall* Live_IsUserSignedInToDemonware_t)(int controllerIndex);
 Live_IsUserSignedInToDemonware_t Live_IsUserSignedInToDemonware_h;
 
 
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef LobbyData*(__fastcall* Lobby_GetLobbyData_t)();
+Lobby_GetLobbyData_t Lobby_GetLobbyData_h;
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1768,6 +1797,233 @@ void RtmNop(void* place, const size_t length)
 void RtmNop(const size_t place, const size_t length)
 {
 	RtmNop(reinterpret_cast<void*>(place), length);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Jump hook class (ported from Donetsk)
+// ja : ジャンプフック用クラス（Donetskから移植）
+//++++++++++++++++++++++++++++++
+template <typename T, typename MutexType = std::mutex>
+class container
+{
+public:
+	template <typename R = void, typename F>
+	R access(F&& accessor) const
+	{
+		std::lock_guard<MutexType> _{ mutex_ };
+		return accessor(object_);
+	}
+
+	template <typename R = void, typename F>
+	R access(F&& accessor)
+	{
+		std::lock_guard<MutexType> _{ mutex_ };
+		return accessor(object_);
+	}
+
+	template <typename R = void, typename F>
+	R access_with_lock(F&& accessor) const
+	{
+		std::unique_lock<MutexType> lock{ mutex_ };
+		return accessor(object_, lock);
+	}
+
+	template <typename R = void, typename F>
+	R access_with_lock(F&& accessor)
+	{
+		std::unique_lock<MutexType> lock{ mutex_ };
+		return accessor(object_, lock);
+	}
+
+	T& get_raw() { return object_; }
+	const T& get_raw() const { return object_; }
+
+private:
+	mutable MutexType mutex_{};
+	T object_{};
+};
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Jump hook class (ported from Donetsk)
+// ja : ジャンプフック用クラス（Donetskから移植）
+//++++++++++++++++++++++++++++++
+class memory
+{
+public:
+	memory() = default;
+
+	memory(const void* ptr)
+		: memory()
+	{
+		this->length_ = 0x1000;
+		this->buffer_ = allocate_somewhere_near(ptr, this->length_);
+		if (!this->buffer_)
+		{
+			throw std::runtime_error("Failed to allocate");
+		}
+	}
+
+	~memory()
+	{
+		if (this->buffer_)
+		{
+			VirtualFree(this->buffer_, 0, MEM_RELEASE);
+		}
+	}
+
+	memory(memory&& obj) noexcept
+		: memory()
+	{
+		this->operator=(std::move(obj));
+	}
+
+	memory& operator=(memory&& obj) noexcept
+	{
+		if (this != &obj)
+		{
+			this->~memory();
+			this->buffer_ = obj.buffer_;
+			this->length_ = obj.length_;
+			this->offset_ = obj.offset_;
+
+			obj.buffer_ = nullptr;
+			obj.length_ = 0;
+			obj.offset_ = 0;
+		}
+
+		return *this;
+	}
+
+	void* allocate(const size_t length)
+	{
+		if (!this->buffer_)
+		{
+			return nullptr;
+		}
+
+		if (this->offset_ + length > this->length_)
+		{
+			return nullptr;
+		}
+
+		const auto ptr = this->get_ptr();
+		this->offset_ += length;
+		return ptr;
+	}
+
+	void* get_ptr() const
+	{
+		return this->buffer_ + this->offset_;
+	}
+
+private:
+	uint8_t* buffer_{};
+	size_t length_{};
+	size_t offset_{};
+};
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get free memory space around the specified address
+// ja : 指定アドレスの周辺から空きがあるメモリ空間を取得する
+//++++++++++++++++++++++++++++++
+void* get_memory_near(const void* address, const size_t size)
+{
+	static container<std::vector<memory>> memory_container{};
+
+	return memory_container.access<void*>([&](std::vector<memory>& memories)
+		{
+			for (auto& memory : memories)
+			{
+				if (!is_relatively_far(address, memory.get_ptr()))
+				{
+					const auto buffer = memory.allocate(size);
+					if (buffer)
+					{
+						return buffer;
+					}
+				}
+			}
+
+			memories.emplace_back(address);
+			return memories.back().allocate(size);
+		});
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Install a jump hook
+// ja : ジャンプフックを設置する
+//++++++++++++++++++++++++++++++
+void JumpHook(const char* callName, const char* funcName, void* pointer, void* data, const bool use_far, const bool use_safe)
+{
+	static const unsigned char jump_data[] = {
+		0x48, 0xb8, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0xff, 0xe0
+	};
+
+	static const unsigned char jump_data_safe[] = {
+		0xFF, 0x25, 0x00, 0x00, 0x00, 0x00
+	};
+
+	if (!use_far && is_relatively_far(pointer, data))
+	{
+		auto* trampoline = get_memory_near(pointer, 14);
+		if (!trampoline)
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <%s> Failed create jump hook : %s\n", callName, funcName);
+			throw std::runtime_error("Too far away to create 32bit relative branch");
+		}
+		JumpHook(callName, funcName, pointer, trampoline, false, false);
+		JumpHook(callName, funcName, trampoline, data, true, true);
+		NotifyMsg("[ \x1b[32m Success \x1b[39m ] <%s> Jump hooked successfully! : %s\n", callName, funcName);
+		return;
+	}
+
+	auto* patch_pointer = PBYTE(pointer);
+
+	if (use_far)
+	{
+		if (use_safe)
+		{
+			uint8_t copy_data[sizeof(jump_data_safe) + sizeof(data)];
+			memcpy(copy_data, jump_data_safe, sizeof(jump_data_safe));
+			memcpy(copy_data + sizeof(jump_data_safe), &data, sizeof(data));
+
+			RtmCopyMemory(patch_pointer, copy_data, sizeof(copy_data));
+		}
+		else
+		{
+			uint8_t copy_data[sizeof(jump_data)];
+			memcpy(copy_data, jump_data, sizeof(jump_data));
+			memcpy(copy_data + 2, &data, sizeof(data));
+
+			RtmCopyMemory(patch_pointer, copy_data, sizeof(copy_data));
+		}
+	}
+	else
+	{
+		uint8_t copy_data[5];
+		copy_data[0] = 0xE9;
+		*reinterpret_cast<int32_t*>(&copy_data[1]) = int32_t(size_t(data) - (size_t(pointer) + 5));
+
+		RtmCopyMemory(patch_pointer, copy_data, sizeof(copy_data));
+	}
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Install a jump hook
+// ja : ジャンプフックを設置する
+void JumpHookTo(const char* callName, const char* funcName, const size_t pointer, void* data, const bool use_far = false, const bool use_safe = false)
+{
+	JumpHook(callName, funcName, reinterpret_cast<void*>(pointer), data, use_far, use_safe);
 }
 
 
@@ -2246,8 +2502,10 @@ void GetAddressOffset(GameTitle title)
 
 
 
-
 			
+			
+			_adr.g_partyData									= _TEXT_SEC_LEN + 0x1345E678;	// 0x7FF69697F678	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
+			_adr.Lobby_GetLobbyData								= _TEXT_SEC_LEN + 0x36C5390;	// 0x7FF686BE6390	SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
 			
 			// Cbuf
 			_adr.xpartydisband									= _TEXT_SEC_LEN + 0x762B528;	// 0x7FF68AB4C528	xpartydisbandafterround\n
@@ -2543,7 +2801,7 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 		// set LPSPMQSNPQ 1; set LLPNKKORPT 1; set NTTRLOPQKS 0; set LSTLQTSSRM 1;     set NLTTMLSQRQ 1; set LTSNLQNRKO 1; set LNTTTLKMKR 1;                  , set LLOKQOSPPP 1; set LTOQRQMMLQ 1;
 		//Cbuf_AddText("set LPSPMQSNPQ 1;set LLPNKKORPT 1;set NTTRLOPQKS 0;set LSTLQTSSRM 1;set NLTTMLSQRQ 1;set LTSNLQNRKO 1;set LNTTTLKMKR 1;");//set MSLNRKRRKK 1;
 		//Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;LSTLQTSSRM 1;NLTTMLSQRQ 1;LTSNLQNRKO 1;LNTTTLKMKR 1;LLOKQOSPPP 1;LTOQRQMMLQ 1;");//set MSLNRKRRKK 1;
-		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;");//set MSLNRKRRKK 1;
+		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");//set MSLNRKRRKK 1;
 	}
 
 	//NotifyMsgOnlyLog("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
@@ -3266,6 +3524,25 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// Ingame patched
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get party data (for detour)
+// ja : パーティーデータを取得する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+LobbyData* Lobby_GetLobbyData_d()
+{
+	return reinterpret_cast<LobbyData*>(CalcPtr(_adr.g_partyData));
+}
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // Authentication
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -3546,6 +3823,12 @@ void R_EndFrame_d()
 			NotifyMsg("[ \x1b[31m Disabled \x1b[39m ] <R_EndFrame> Load_ScriptFile Unhooked.\n");
 			std::filesystem::remove(_mathStr);
 		}
+		_mathStr = _documentPath + "\\rtm\\createlobby";
+		if (file_exists(_mathStr.c_str()))
+		{
+			Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");
+			std::filesystem::remove(_mathStr);
+		}
 	}
 
 	R_EndFrame_h();
@@ -3580,6 +3863,8 @@ void GameStart()
 
 	SetupMinHook("GameSetup", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
 	SetupMinHook("GameSetup", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
+	
+	SetupMinHook("GameSetup", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
 	
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
@@ -3755,7 +4040,7 @@ void ShowIntroMessage()
 	NotifyMsg( "|| < Credit >                                                                                           ||\n" );
 	NotifyMsg( "||   - Project created                : HiNAtyu                                                         ||\n" );
 	NotifyMsg( "||   - Special support                : Sku-111                                                         ||\n" );
-	NotifyMsg( "||   - Some support                   : rektinator & mjkzy & WantedDeviation & zhm86                    ||\n" );
+	NotifyMsg( "||   - Some support                   : rektinator & WantedDeviation & zhm86                            ||\n" );
 	NotifyMsg( "||   - Very helpful base              : h00dbyair                                                       ||\n" );
 	NotifyMsg( "||   - Basic infos                    : Project Donetsk                                                 ||\n" );
 	NotifyMsg( "||   - arxan Bypass infos             : mallgrab                                                        ||\n" );
