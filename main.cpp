@@ -1330,6 +1330,21 @@ std::optional<std::pair<void*, void*>> SetUnhandledExceptionFilter_h;
 XUID _xuid;
 
 
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showDebugLogs = true;
+
+
+// en : Whether to dump LUA (with RTM Tool)
+// ja : LUAをdumpするかどうか（RTM Tool併用）
+bool _enableLuaDump = false;
+
+
+// en : Whether to dump GSC (with RTM Tool)
+// ja : GSCをdumpするかどうか（RTM Tool併用）
+bool _enableGscDump = false;
+
+
 // en : Disposable variables for calculations
 // ja : 演算用の使い捨て変数
 std::string _mathStr;
@@ -2738,7 +2753,8 @@ XAssetHeader DB_FindXAssetHeader_f(XAssetType type, const char* given_name, int 
 //++++++++++++++++++++++++++++++
 int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* asset_list, unsigned int zone_flags, bool was_paused, DB_FastFileFailureMode failure_mode, DB_AuthSignature* out_signature)
 {
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_LoadXFile> Loading FastFile '%s'\n", zone_name == nullptr ? "<null>" : zone_name);
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_LoadXFile> Loading FastFile '%s'\n", zone_name == nullptr ? "<null>" : zone_name);
 
 	int res = DB_LoadXFile_h(zone_name, zone_mem, asset_list, zone_flags, was_paused, failure_mode, out_signature);
 	if (res != 0)
@@ -2804,7 +2820,8 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");//set MSLNRKRRKK 1;
 	}
 
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
 	return LUI_LuaCall_LUIGlobalPackage_DebugPrint_h(lua_vm);
 }
 
@@ -2978,11 +2995,12 @@ void LoadCustomLua(lua_State* s, const char* file)
 	}
 	else
 	{
-		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <luaL_loadfile> Loaded official Lua script : %s\n", file);
+		if (_showDebugLogs)
+			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <luaL_loadfile> Loaded official Lua script : %s\n", file);
 	}
 
-	//return;
-	// ExtractLuaScript(file);
+	if (_enableLuaDump)
+		ExtractLuaScript(file);
 }
 
 
@@ -3135,7 +3153,8 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	};
 
 
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
 
 	bool value_patched = value;
 	std::uint32_t flags_patched = flags;
@@ -3274,7 +3293,7 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 	// for Dump
 	// ========================================================================================== //
 
-	if (_dumpGSC)
+	if (_enableGscDump)
 	{
 		Load_ScriptFile_h(streamStart);
 
@@ -3499,7 +3518,8 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 			}
 			*varbyte = backup;
 
-			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
+			if (_showDebugLogs)
+				NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
 		}
 
 		DB_PopStreamPos();
@@ -3809,25 +3829,55 @@ void R_EndFrame_d()
 	}
 	else
 	{
-		_mathStr = _documentPath + "\\rtm\\gschookon";
-		if (file_exists(_mathStr.c_str()))
+
+		_mathStr = _documentPath + "\\rtm\\debuglogon";
+		if (file_exists(_mathStr.c_str()) && !_showDebugLogs)
 		{
-			SetupMinHook("R_EndFrame", "Load_ScriptFile" , CalcPtr(_adr.Load_ScriptFile) , &Load_ScriptFile_d , &Load_ScriptFile_h);
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Load_ScriptFile Hooked.\n");
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
 			std::filesystem::remove(_mathStr);
+			_showDebugLogs = true;
 		}
-		_mathStr = _documentPath + "\\rtm\\gschookoff";
-		if (file_exists(_mathStr.c_str()))
+
+		_mathStr = _documentPath + "\\rtm\\debuglogoff";
+		if (file_exists(_mathStr.c_str()) && _showDebugLogs)
 		{
-			ClearMinHook("R_EndFrame", "Load_ScriptFile", CalcPtr(_adr.Load_ScriptFile));
-			NotifyMsg("[ \x1b[31m Disabled \x1b[39m ] <R_EndFrame> Load_ScriptFile Unhooked.\n");
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
 			std::filesystem::remove(_mathStr);
+			_showDebugLogs = false;
 		}
-		_mathStr = _documentPath + "\\rtm\\createlobby";
-		if (file_exists(_mathStr.c_str()))
+
+
+		_mathStr = _documentPath + "\\rtm\\luadumpon";
+		if (file_exists(_mathStr.c_str()) && !_enableLuaDump)
 		{
-			Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
 			std::filesystem::remove(_mathStr);
+			_enableLuaDump = true;
+		}
+
+		_mathStr = _documentPath + "\\rtm\\luadumpoff";
+		if (file_exists(_mathStr.c_str()) && _enableLuaDump)
+		{
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+			std::filesystem::remove(_mathStr);
+			_enableLuaDump = false;
+		}
+
+
+		_mathStr = _documentPath + "\\rtm\\gscdumpon";
+		if (file_exists(_mathStr.c_str()) && !_enableGscDump)
+		{
+			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+			std::filesystem::remove(_mathStr);
+			_enableGscDump = true;
+		}
+
+		_mathStr = _documentPath + "\\rtm\\gscdumpoff";
+		if (file_exists(_mathStr.c_str()) && _enableGscDump)
+		{
+			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+			std::filesystem::remove(_mathStr);
+			_enableGscDump = false;
 		}
 	}
 
