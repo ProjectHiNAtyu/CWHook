@@ -3893,72 +3893,70 @@ void R_EndFrame_d()
 		}
 		_elapsedFrameCount += 1;
 	}
-	else
+
+
+	_mathStr = _documentPath + "\\rtm\\debuglogon";
+	if (file_exists(_mathStr.c_str()) && !_showDebugLogs)
 	{
+		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+		std::filesystem::remove(_mathStr);
+		_showDebugLogs = true;
+	}
 
-		_mathStr = _documentPath + "\\rtm\\debuglogon";
-		if (file_exists(_mathStr.c_str()) && !_showDebugLogs)
+	_mathStr = _documentPath + "\\rtm\\debuglogoff";
+	if (file_exists(_mathStr.c_str()) && _showDebugLogs)
+	{
+		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+		std::filesystem::remove(_mathStr);
+		_showDebugLogs = false;
+	}
+
+
+	_mathStr = _documentPath + "\\rtm\\luadumpon";
+	if (file_exists(_mathStr.c_str()) && !_enableLuaDump)
+	{
+		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+		std::filesystem::remove(_mathStr);
+		_enableLuaDump = true;
+	}
+
+	_mathStr = _documentPath + "\\rtm\\luadumpoff";
+	if (file_exists(_mathStr.c_str()) && _enableLuaDump)
+	{
+		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+		std::filesystem::remove(_mathStr);
+		_enableLuaDump = false;
+	}
+
+
+	_mathStr = _documentPath + "\\rtm\\gscdumpon";
+	if (file_exists(_mathStr.c_str()) && !_enableGscDump)
+	{
+		NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+		std::filesystem::remove(_mathStr);
+		_enableGscDump = true;
+	}
+
+	_mathStr = _documentPath + "\\rtm\\gscdumpoff";
+	if (file_exists(_mathStr.c_str()) && _enableGscDump)
+	{
+		NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+		std::filesystem::remove(_mathStr);
+		_enableGscDump = false;
+	}
+
+
+	_mathStr = _documentPath + "\\rtm\\luacmd";
+	if (file_exists(_mathStr.c_str()))
+	{
+		std::string sendCmd = ReadContent("\\rtm\\luacmd");
+		if (!sendCmd.empty())
 		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-			std::filesystem::remove(_mathStr);
-			_showDebugLogs = true;
+			LUI_OpenMenu(0 , sendCmd.c_str() , true , false , false );
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> LUI_OpenMenu command sended!\n");
 		}
-
-		_mathStr = _documentPath + "\\rtm\\debuglogoff";
-		if (file_exists(_mathStr.c_str()) && _showDebugLogs)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-			std::filesystem::remove(_mathStr);
-			_showDebugLogs = false;
-		}
-
-
-		_mathStr = _documentPath + "\\rtm\\luadumpon";
-		if (file_exists(_mathStr.c_str()) && !_enableLuaDump)
-		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-			std::filesystem::remove(_mathStr);
-			_enableLuaDump = true;
-		}
-
-		_mathStr = _documentPath + "\\rtm\\luadumpoff";
-		if (file_exists(_mathStr.c_str()) && _enableLuaDump)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-			std::filesystem::remove(_mathStr);
-			_enableLuaDump = false;
-		}
-
-
-		_mathStr = _documentPath + "\\rtm\\gscdumpon";
-		if (file_exists(_mathStr.c_str()) && !_enableGscDump)
-		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-			std::filesystem::remove(_mathStr);
-			_enableGscDump = true;
-		}
-
-		_mathStr = _documentPath + "\\rtm\\gscdumpoff";
-		if (file_exists(_mathStr.c_str()) && _enableGscDump)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-			std::filesystem::remove(_mathStr);
-			_enableGscDump = false;
-		}
-
-
-		_mathStr = _documentPath + "\\rtm\\luacmd";
-		if (file_exists(_mathStr.c_str()))
-		{
-			std::string sendCmd = ReadContent("\\rtm\\luacmd");
-			if (!sendCmd.empty())
-			{
-				LUI_OpenMenu(0 , sendCmd.c_str() , true , false , false );
-				NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> LUI_OpenMenu command sended!\n");
-			}
-			std::filesystem::remove(_mathStr);
-			_enableGscDump = true;
-		}
+		std::filesystem::remove(_mathStr);
+		_enableGscDump = true;
 	}
 
 	R_EndFrame_h();
