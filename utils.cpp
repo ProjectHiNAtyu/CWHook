@@ -624,6 +624,10 @@ std::string RemoveAnsiSequences(const std::string& input)
 // NotifyMsg: printfと同様のフォーマットでコンソール出力とファイルログを記録
 void NotifyMsg(const char* format, ...)
 {
+	static int _fflushCount = 100;
+	static int callCount = 0;
+	static std::string buffer;
+
 	// ANSIエスケープシーケンスを有効化（初回のみ）
 	static bool consoleInitialized = false;
 	if (!consoleInitialized)
@@ -641,33 +645,32 @@ void NotifyMsg(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 
-	// コンソールに出力し、即座にフラッシュ
-	vprintf(format, args);
-	//printf("\n"); // 改行を確実に追加
-	fflush(stdout); // 即座にフラッシュ
-
-	// ログファイルに書き込む
-	// 現在のDLLのファイルパスを取得
-	char dllPath[MAX_PATH];
-	GetModuleFileNameA(NULL, dllPath, MAX_PATH);
-
-	// ディレクトリ部分を抽出
-	std::string path(dllPath);
-	std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\debuglog.txt";
-
-	std::string clean_format = RemoveAnsiSequences(format);
-
-	// ファイルに追記し、即座にフラッシュ
-	FILE* fp = fopen(logFilePath.c_str(), "a");
-	if (fp) {
-		va_list args_copy;
-		va_copy(args_copy, args);
-		vfprintf(fp, clean_format.c_str(), args_copy);
-		//fprintf(fp, "\n"); // 改行を確実に追加
-		fflush(fp);// 即座にディスクに書き込み
-		fclose(fp);
-		va_end(args_copy);
-	}
+	// コンソールに出力、バッファに追記
+	char temp[2048];
+	vsnprintf(temp, sizeof(temp), format, args);
+	buffer += temp;
 
 	va_end(args);
+
+	callCount++;
+	if (callCount >= _fflushCount)
+	{
+		// ログファイルパス生成
+		char dllPath[MAX_PATH];
+		GetModuleFileNameA(NULL, dllPath, MAX_PATH);
+		// ディレクトリ部分を抽出
+		std::string path(dllPath);
+		std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\debuglog.txt";
+
+		// ファイルにまとめて書き込み
+		FILE* fp = fopen(logFilePath.c_str(), "a");
+		if (fp)
+		{
+			fwrite(buffer.c_str(), 1, buffer.size(), fp);
+			fflush(fp);
+			fclose(fp);
+		}
+		buffer.clear();
+		callCount = 0;
+	}
 }

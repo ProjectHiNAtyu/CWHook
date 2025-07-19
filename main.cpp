@@ -2738,7 +2738,7 @@ XAssetHeader DB_FindXAssetHeader_f(XAssetType type, const char* given_name, int 
 //++++++++++++++++++++++++++++++
 int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* asset_list, unsigned int zone_flags, bool was_paused, DB_FastFileFailureMode failure_mode, DB_AuthSignature* out_signature)
 {
-	NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <DB_LoadXFile> Loading FastFile '%s'\n", zone_name == nullptr ? "<null>" : zone_name);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_LoadXFile> Loading FastFile '%s'\n", zone_name == nullptr ? "<null>" : zone_name);
 
 	int res = DB_LoadXFile_h(zone_name, zone_mem, asset_list, zone_flags, was_paused, failure_mode, out_signature);
 	if (res != 0)
@@ -2804,7 +2804,7 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");//set MSLNRKRRKK 1;
 	}
 
-	//NotifyMsgOnlyLog("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
 	return LUI_LuaCall_LUIGlobalPackage_DebugPrint_h(lua_vm);
 }
 
@@ -2968,10 +2968,6 @@ void LoadCustomLua(lua_State* s, const char* file)
 			}
 			lua_file.close();
 		}
-		else
-		{
-			// NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <luaL_loadfile> Loaded official Lua script : %s\n", file);
-		}
 	}
 
 
@@ -2979,6 +2975,10 @@ void LoadCustomLua(lua_State* s, const char* file)
 	{
 		luaL_loadbuffer_f(s, custom_code.c_str(), custom_code.size(), file);
 		NotifyMsg("[ \x1b[32m Success \x1b[39m ] <luaL_loadfile> Injecting custom Lua code from file : %s\n", lua_path.c_str());
+	}
+	else
+	{
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <luaL_loadfile> Loaded official Lua script : %s\n", file);
 	}
 
 	//return;
@@ -3135,7 +3135,7 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	};
 
 
-	//NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s'\n", dvar_name);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
 
 	bool value_patched = value;
 	std::uint32_t flags_patched = flags;
@@ -3499,7 +3499,7 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 			}
 			*varbyte = backup;
 
-			NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
+			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
 		}
 
 		DB_PopStreamPos();
@@ -3855,7 +3855,7 @@ void GameStart()
 	
 	SetupMinHook("GameSetup", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
 	SetupMinHook("GameSetup", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
-	//SetupMinHook("GameSetup", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
+	SetupMinHook("GameSetup", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
 
 	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
 	SetupMinHook("GameSetup", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
