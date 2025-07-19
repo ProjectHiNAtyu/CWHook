@@ -645,7 +645,11 @@ void NotifyMsg(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 
-	// コンソールに出力、バッファに追記
+	// 毎回コンソールに出力
+	vprintf(format, args);
+	fflush(stdout);
+
+	// バッファに追記
 	char temp[2048];
 	vsnprintf(temp, sizeof(temp), format, args);
 	buffer += temp;
