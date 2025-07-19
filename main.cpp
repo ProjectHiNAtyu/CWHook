@@ -3967,7 +3967,7 @@ void R_EndFrame_d()
 		if (!sendCmd.empty())
 		{
 			Cbuf_AddText(sendCmd.c_str());
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Cbuf_AddText command sended!\n");
+			//NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Cbuf_AddText command sended!\n");
 		}
 		std::filesystem::remove(_mathStr);
 		_enableGscDump = true;
