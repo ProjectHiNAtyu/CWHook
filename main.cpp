@@ -3959,6 +3959,20 @@ void R_EndFrame_d()
 		_enableGscDump = true;
 	}
 
+
+	_mathStr = _documentPath + "\\rtm\\cbufcmd";
+	if (file_exists(_mathStr.c_str()))
+	{
+		std::string sendCmd = ReadContent("\\rtm\\cbufcmd");
+		if (!sendCmd.empty())
+		{
+			Cbuf_AddText(sendCmd.c_str());
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Cbuf_AddText command sended!\n");
+		}
+		std::filesystem::remove(_mathStr);
+		_enableGscDump = true;
+	}
+
 	R_EndFrame_h();
 }
 
