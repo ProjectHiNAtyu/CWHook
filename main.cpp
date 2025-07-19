@@ -2206,6 +2206,60 @@ inline bool file_exists(const char* name)
 
 
 //++++++++++++++++++++++++++++++
+// en : Reads one line of text from the specified file.
+// ja : 指定したファイルから文字列を1行分読み取る
+//++++++++++++++++++++++++++++++
+std::string ReadContent( const char* path )
+{
+	std::string filepath = _documentPath + path;
+	std::string filetext = "";
+
+
+	if (std::filesystem::exists(filepath))
+	{
+		auto file_size = std::filesystem::file_size(filepath);
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <ReadContent> File exists, size: %zu bytes\n", file_size);
+
+		std::ifstream file(filepath);
+		if (file.is_open())
+		{
+			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <ReadContent> File opened successfully\n");
+
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			if (buffer.fail())
+			{
+				NotifyMsg("[ \x1b[31m Error \x1b[39m ] <ReadContent> Failed to read file content\n");
+				filetext = "";
+			}
+			else
+			{
+				filetext = buffer.str();
+				NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <ReadContent> File read, length: %zu\n", filetext.length());
+
+				std::string log_text = filetext.substr(0, std::min(filetext.length(), size_t(100)));
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] <ReadContent> Successfully readed line (length: %zu): '%s'...\n", filetext.length(), log_text.c_str());
+			}
+			file.close();
+		}
+		else
+		{
+			filetext = "";
+			NotifyMsg("[ \x1b[31m Failed \x1b[39m ] <ReadContent> Failed to open file '%s'\n", filepath.c_str());
+		}
+	}
+	else
+	{
+		NotifyMsg("[ \x1b[31m Error \x1b[39m ] <ReadContent> File does not exist: '%s'\n", filepath.c_str());
+		filetext = "";
+	}
+
+	return filetext;
+}
+
+
+
+//++++++++++++++++++++++++++++++
 // en : Simplified MinHook settings
 // ja : MinHook設定簡略化
 //++++++++++++++++++++++++++++++
@@ -2518,7 +2572,7 @@ void GetAddressOffset(GameTitle title)
 
 
 			
-			
+			// bot
 			_adr.g_partyData									= _TEXT_SEC_LEN + 0x1345E678;	// 0x7FF69697F678	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
 			_adr.Lobby_GetLobbyData								= _TEXT_SEC_LEN + 0x36C5390;	// 0x7FF686BE6390	SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
 			
@@ -2541,7 +2595,8 @@ void GetAddressOffset(GameTitle title)
 			// LUA customize
 			_adr.luaL_loadbuffer								= _TEXT_SEC_LEN + 0x727EE00;	// 0x7FF68A79FE00	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
 			_adr.luaL_loadfile									= _TEXT_SEC_LEN + 0x727EF90;	// 0x7FF68A79FF90	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
-			
+			_adr.LUI_OpenMenu									= _TEXT_SEC_LEN + 0x6DBD160;	// 0x7FF68A2DE160	48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
@@ -2600,7 +2655,6 @@ void GetAddressOffset(GameTitle title)
 			_adr.Dvar_RegisterBool_call_2						= 0x7FF6B07982AA;	// LSTQOKLTRN
 			_adr.GamerProfile_SetDataByName						= 0x7FF6B16681A0;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B F1 0F 29 74 24
 			_adr.holdrand										= 0x7FF6B71641E8;	// I_irand
-			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
 			
 			_adr.LuaShared_LuaCall_IsDemoBuild					= 0x7FF6B36276B0;	// 
 			_adr.dvar_force_offline_enabled						= 0x7FF6C90E88C8;	// MPSSOTQQPM
@@ -2723,6 +2777,18 @@ bool Cbuf_AddText(const char* fmt, ...)
 	NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Cbuf_AddText> Custom command sended : %s\n", cmd);
 	//NotifyMsg("<OK> Success exec Cbuf.\n");
 	return true;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Opens the specified LUI menu.
+// ja : 指定したLUIメニューを開く
+//++++++++++++++++++++++++++++++
+void LUI_OpenMenu(uintptr_t localclientnum, const char* menuName, int isPopup, int isModal, int isExclusive)
+{
+	auto func = reinterpret_cast<void(*)(uintptr_t localclientnum, const char* menuName, int isPopup, int isModal, int isExclusive)>(CalcPtr(_adr.LUI_OpenMenu));
+	func(localclientnum, menuName, isPopup, isModal, isExclusive);
 }
 
 
@@ -3878,6 +3944,20 @@ void R_EndFrame_d()
 			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
 			std::filesystem::remove(_mathStr);
 			_enableGscDump = false;
+		}
+
+
+		_mathStr = _documentPath + "\\rtm\\luacmd";
+		if (file_exists(_mathStr.c_str()))
+		{
+			std::string sendCmd = ReadContent("\\rtm\\luacmd");
+			if (!sendCmd.empty())
+			{
+				LUI_OpenMenu(0 , sendCmd.c_str() , true , false , false );
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> LUI_OpenMenu command sended!\n");
+			}
+			std::filesystem::remove(_mathStr);
+			_enableGscDump = true;
 		}
 	}
 
@@ -5059,18 +5139,6 @@ dvar_t* Dvar_RegisterBool_f(const char* dvarName, bool value, int flags, const c
 {
 	auto func = reinterpret_cast<dvar_t * (*)(const char* dvarName, bool value, int flags, const char* desc)>(0x39F4ED0_b);
 	return func(dvarName, value, flags, desc);
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Opens the specified LUI menu.
-// ja : 指定したLUIメニューを開く
-//++++++++++++++++++++++++++++++
-void LUI_OpenMenu(uintptr_t localclientnum, const char* menuName, int isPopup, int isModal, int isExclusive)
-{
-	auto func = reinterpret_cast<void(*)(uintptr_t localclientnum, const char* menuName, int isPopup, int isModal, int isExclusive)>(CalcPtr(_adr.LUI_OpenMenu));
-	func(localclientnum, menuName, isPopup, isModal, isExclusive);
 }
 
 
