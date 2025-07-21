@@ -2815,6 +2815,295 @@ void LUI_OpenMenu(uintptr_t localclientnum, const char* menuName, int isPopup, i
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// GSC Injection
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Dump the script file onto the PC disk
+// ja : スクリプトファイルをPCディスク上にダンプする
+//++++++++++++++++++++++++++++++
+void dump_gsc_script(std::ofstream& stream, ScriptFile* scriptfile)
+{
+	std::string buffer;
+	buffer.append(scriptfile->name, strlen(scriptfile->name) + 1);
+
+	buffer.append(reinterpret_cast<char*>(&scriptfile->compressedLen), 4);
+	buffer.append(reinterpret_cast<char*>(&scriptfile->len), 4);
+	buffer.append(reinterpret_cast<char*>(&scriptfile->bytecodeLen), 4);
+	buffer.append(scriptfile->buffer, scriptfile->compressedLen);
+	buffer.append((char*)scriptfile->bytecode, scriptfile->bytecodeLen);
+
+	stream << buffer;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Loading a script file (for detour)
+// ja : スクリプトファイルをロードする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+void Load_ScriptFile_d(DBStreamStart streamStart)
+{
+	//NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <Load_ScriptFile> ");
+
+	// ========================================================================================== //
+	// for Dump
+	// ========================================================================================== //
+
+	if (_enableGscDump)
+	{
+		Load_ScriptFile_h(streamStart);
+
+		ScriptFile** varScriptFile = reinterpret_cast<ScriptFile**>(CalcPtr(_adr.varScriptFile));
+
+		ScriptFile* scriptfile = *varScriptFile;
+
+		std::string directory;
+
+		std::string scriptFileStr = "";
+		if (isSubStr(scriptfile->name, ".gsc"))
+		{
+			scriptFileStr = _documentPath + "\\dumpdata\\gsc\\" + std::string(scriptfile->name) + "bin";
+		}
+		else
+		{
+			scriptFileStr = _documentPath + "\\dumpdata\\gsc\\" + std::string(scriptfile->name) + ".gscbin";
+		}
+
+		ReplaceAll(scriptFileStr, "/", "\\");
+		//NotifyMsg("path '%s' -> ", scriptFileStr.c_str());
+
+		size_t lastSlash = scriptFileStr.find_last_of("\\");
+		if (lastSlash != std::string::npos && isSubStr(scriptFileStr, "\\"))
+		{
+			directory = scriptFileStr.substr(0, lastSlash);
+
+			std::filesystem::create_directories(directory);
+		}
+
+		std::ofstream gscbin_file(scriptFileStr, std::ios::out | std::ios::binary);
+		if (gscbin_file.is_open())
+		{
+			//NotifyMsg("gsc dumped!");
+			NotifyMsg("[Sucess] <Load_ScriptFile> GSCBIN dumped : %s\n", scriptFileStr.c_str());
+			dump_gsc_script(gscbin_file, scriptfile);
+			gscbin_file.close();
+		}
+		else
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Load_ScriptFile> Failed GSCBIN dump ... : %s\n", scriptFileStr.c_str());
+		}
+		//NotifyMsg("\n");
+	}
+
+	// ========================================================================================== //
+	// for Inject
+	// ========================================================================================== //
+
+	else
+	{
+	    auto DB_PatchMem_PushAsset	= reinterpret_cast<void(*)(size_t len, ScriptFile *script)>(            CalcPtr( _adr.DB_PatchMem_PushAsset ) );
+	    auto Load_Stream			= reinterpret_cast<void(*)(int streamStart, void *ptr, size_t size)>(   CalcPtr( _adr.Load_Stream           ) );
+	    auto DB_PushStreamPos		= reinterpret_cast<void(*)(int param_1)>(                               CalcPtr( _adr.DB_PushStreamPos      ) );
+	    auto Load_XString			= reinterpret_cast<void(*)(int param_1)>(                               CalcPtr( _adr.Load_XString          ) );
+	    auto DB_PopStreamPos		= reinterpret_cast<void(*)(void)>(                                      CalcPtr( _adr.DB_PopStreamPos       ) );
+	    auto DB_PatchMem_PopAsset	= reinterpret_cast<void(*)(void)>(                                      CalcPtr( _adr.DB_PatchMem_PopAsset  ) );
+	    auto DB_ReadXFile			= reinterpret_cast<void(*)(void *ptr, size_t size)>(                    CalcPtr( _adr.DB_ReadXFile          ) );
+	    auto Load_ConstCharArray	= reinterpret_cast<void(*)(void* ptr, size_t size)>(					CalcPtr( _adr.Load_ConstCharArray   ) );
+	    auto Load_byteArray			= reinterpret_cast<void(*)(void* ptr, size_t size)>(					CalcPtr( _adr.Load_byteArray        ) );
+	    ScriptFile **varScriptFile	= reinterpret_cast<ScriptFile **>(                                      CalcPtr( _adr.varScriptFile         ) );
+	    char **varXString			= reinterpret_cast<char **>(                                            CalcPtr( _adr.varXString            ) );
+	    char **varConstChar			= reinterpret_cast<char **>(                                            CalcPtr( _adr.varConstChar          ) );
+	    char **varbyte				= reinterpret_cast<char **>(                                            CalcPtr( _adr.varbyte               ) );
+	    char** AllocLoad_ConstChar	= reinterpret_cast<char **>(										    CalcPtr( _adr.AllocLoad_ConstChar   ) );
+	    char** AllocLoad_byte		= reinterpret_cast<char **>(											CalcPtr( _adr.AllocLoad_byte        ) );
+        char** g_streamPosGlob_pos = reinterpret_cast<char**>(                                              CalcPtr( _adr.g_streamPosGlob_pos   ) );
+
+
+		char* backup;
+		ScriptFile* scriptfile;
+
+
+		DB_PatchMem_PushAsset(52, *varScriptFile);
+		Load_Stream(streamStart, *varScriptFile, sizeof(ScriptFile));
+		DB_PushStreamPos(5);
+
+		char* xStringBackup = *varXString;
+		*varXString = reinterpret_cast<char*>(*varScriptFile);
+		Load_XString(1);
+		*varXString = xStringBackup;
+		DB_PushStreamPos(6);
+
+
+		scriptfile = *varScriptFile;
+
+		backup = *varConstChar;
+
+		std::string filepath = _documentPath + "\\customassets\\gsc\\" + "script.gscbin";
+		std::string scriptname = "";
+		std::string fixpath = "";
+		std::string directory;
+		std::string filepathtmp = "";
+		bool scriptgscbin = false;
+		bool lastScript = false;
+
+
+		if (scriptfile)
+		{
+			scriptname = std::string(scriptfile->name);
+			//NotifyMsg("GSC '%s' -> ", scriptfile->name);
+
+			if (isSubStr(scriptfile->name, ".gsc"))
+			{
+				filepath = _documentPath + "\\customassets\\gsc\\" + scriptname + "bin";
+			}
+			else // numbered scriptfiles like "1892"
+			{
+				filepath = _documentPath + "\\customassets\\gsc\\" + scriptname + ".gscbin";
+			}
+
+			ReplaceAll(filepath, "/", "\\");
+
+			if (file_exists(filepath.c_str()))
+			{
+				//NotifyMsg("Custom GSC found!");
+				scriptgscbin = true;
+			}
+
+			//NotifyMsg("\n");
+
+			if (!strcmp(scriptfile->name, "scripts/mp/killstreaks/supply_sweep.gsc"))
+			{
+				lastScript = true;
+			}
+			if (!strcmp(scriptfile->name, "scripts/cp/maps/cp_pierro/cp_fake_stealth.gsc"))
+			{
+				lastScript = true;
+			}
+
+			//if (!strcmp(scriptfile->name, "scripts/mp/vehicles/vehicle_damage_mp.gsc") && (currentGame == GameTitle::MW2019_Donetsk))
+			//{
+			//    lastScript = true;
+			//}
+			//if (!strcmp(scriptfile->name, "scripts/mp/gametypes/war.gsc") && ( (currentGame == GameTitle::MW2019_138) || (currentGame == GameTitle::MW2019_144) ) )
+			//{
+			//    lastScript = true;
+			//}
+
+		}
+
+		if (scriptgscbin)
+		{
+			std::ifstream script;
+			script.open(filepath, std::ios::binary | std::ios::ate);
+			int size = (int)script.tellg();
+			script.seekg(0, std::ios::beg);
+
+			char* customScript = new char[size];
+			script.read(customScript, size);
+			script.seekg(0, std::ios::beg);
+
+			while (script.get() != '\0'); // read past the name
+			int vars[3] = { 0 };
+			script.read((char*)vars, sizeof(int) * 3); //read header info
+
+
+			if (scriptfile->buffer != NULL)
+			{
+				*varConstChar = *g_streamPosGlob_pos;
+				scriptfile->buffer = *varConstChar;
+
+				char* dummyMem = new char[scriptfile->compressedLen];
+				DB_ReadXFile(dummyMem, scriptfile->compressedLen);
+				delete[scriptfile->compressedLen] dummyMem;
+
+				memmove(*g_streamPosGlob_pos, customScript + (int)script.tellg(), vars[0]);
+
+				*g_streamPosGlob_pos = *g_streamPosGlob_pos + vars[0];
+				scriptfile->compressedLen = vars[0];
+			}
+			*varConstChar = backup;
+			scriptfile->len = vars[1];
+
+			DB_PopStreamPos();
+			DB_PushStreamPos(6);
+
+			scriptfile = *varScriptFile;
+			backup = *varbyte;
+
+			if (scriptfile->bytecode != NULL)
+			{
+				*varbyte = *g_streamPosGlob_pos;
+				scriptfile->bytecode = (unsigned char*)*varbyte;
+
+				char* dummyMem = new char[scriptfile->bytecodeLen];
+				DB_ReadXFile(dummyMem, scriptfile->bytecodeLen);
+				delete[scriptfile->bytecodeLen] dummyMem;
+
+				memmove(*g_streamPosGlob_pos, customScript + vars[0] + (int)script.tellg(), vars[2]);
+
+				*g_streamPosGlob_pos = *g_streamPosGlob_pos + vars[2];
+				scriptfile->bytecodeLen = vars[2];
+			}
+			*varbyte = backup;
+
+			delete[] customScript;
+			script.close();
+
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Load_ScriptFile> Custom GSC Injected!! : %s\n", filepath.c_str());
+		}
+		else
+		{
+			if (scriptfile->buffer != NULL)
+			{
+				*varConstChar = *g_streamPosGlob_pos;
+				scriptfile->buffer = *varConstChar;
+				Load_Stream(0, *varConstChar, scriptfile->compressedLen);
+			}
+			*varConstChar = backup;
+
+			DB_PopStreamPos();
+			DB_PushStreamPos(6);
+
+			scriptfile = *varScriptFile;
+			backup = *varbyte;
+			if (scriptfile->bytecode != NULL)
+			{
+				*varbyte = *g_streamPosGlob_pos;
+				scriptfile->bytecode = (unsigned char*)*varbyte;
+				Load_Stream(0, *varbyte, scriptfile->bytecodeLen);
+			}
+			*varbyte = backup;
+
+			if (_showDebugLogs)
+				NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
+		}
+
+		DB_PopStreamPos();
+		DB_PopStreamPos();
+		DB_PatchMem_PopAsset();
+
+
+		if (lastScript)
+		{
+			//NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <Load_ScriptFile> This is last script, function unhooked.\n");
+			//ClearMinHook("Load_ScriptFile_d", "Load_ScriptFile", CalcPtr(_adr.Load_ScriptFile));
+		    //_isHookLoadScriptFile = false;
+		    //CreateDumpText(gscPath, "gscinjected");
+		    //MW19_MP_Load_ScriptFile.clear();
+		    //DisableHookThread(nullptr, nullptr);
+		}
+
+	}
+}
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // XAsset
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -2853,7 +3142,7 @@ int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* ass
 
 
 //++++++++++++++++++++++++++++++
-// en :Get the XAsset with the specified number from the asset pool
+// en : Get the XAsset with the specified number from the asset pool
 // ja : アセットプールから指定した番号の該当のXAssetを取得する
 //++++++++++++++++++++++++++++++
 DB_AssetPool* GetAssetPool(int assetNum)
@@ -2864,6 +3153,10 @@ DB_AssetPool* GetAssetPool(int assetNum)
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Inject the XAsset with the specified number from the asset pool (dump only for debugging purposes)
+// ja : アセットプールから指定した番号の該当のXAssetをInjectする（デバッグ用途の為ダンプのみ）
+//++++++++++++++++++++++++++++++
 void AssetPoolInjection( )
 {
 	//	for (int i = 0; i < XAssetType::ASSET_TYPE_MAXCOUNT; i++)
@@ -3082,6 +3375,7 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 		//Cbuf_AddText("set LPSPMQSNPQ 1;set LLPNKKORPT 1;set NTTRLOPQKS 0;set LSTLQTSSRM 1;set NLTTMLSQRQ 1;set LTSNLQNRKO 1;set LNTTTLKMKR 1;");//set MSLNRKRRKK 1;
 		//Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;LSTLQTSSRM 1;NLTTMLSQRQ 1;LTSNLQNRKO 1;LNTTTLKMKR 1;LLOKQOSPPP 1;LTOQRQMMLQ 1;");//set MSLNRKRRKK 1;
 		Cbuf_AddText("LPSPMQSNPQ 1;LLPNKKORPT 1;NTTRLOPQKS 0;xstartprivateparty;xpartygo;");//set MSLNRKRRKK 1;
+		//RtmSetMemory<unsigned int>(CalcPtr(_adr.s_currentMatchId), 0);
 	}
 
 	if (_showDebugLogs)
@@ -3513,295 +3807,6 @@ bool Dvar_SetBool_Internal_f(dvar_t** dvar, bool setFlag, int setValue, const ch
 	}
 
 	return true;
-}
-
-
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// GSC Injection
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Dump the script file onto the PC disk
-// ja : スクリプトファイルをPCディスク上にダンプする
-//++++++++++++++++++++++++++++++
-void dump_gsc_script(std::ofstream& stream, ScriptFile* scriptfile)
-{
-	std::string buffer;
-	buffer.append(scriptfile->name, strlen(scriptfile->name) + 1);
-
-	buffer.append(reinterpret_cast<char*>(&scriptfile->compressedLen), 4);
-	buffer.append(reinterpret_cast<char*>(&scriptfile->len), 4);
-	buffer.append(reinterpret_cast<char*>(&scriptfile->bytecodeLen), 4);
-	buffer.append(scriptfile->buffer, scriptfile->compressedLen);
-	buffer.append((char*)scriptfile->bytecode, scriptfile->bytecodeLen);
-
-	stream << buffer;
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Loading a script file (for detour)
-// ja : スクリプトファイルをロードする ( ディトール用 )
-//++++++++++++++++++++++++++++++
-void Load_ScriptFile_d(DBStreamStart streamStart)
-{
-	//NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <Load_ScriptFile> ");
-
-	// ========================================================================================== //
-	// for Dump
-	// ========================================================================================== //
-
-	if (_enableGscDump)
-	{
-		Load_ScriptFile_h(streamStart);
-
-		ScriptFile** varScriptFile = reinterpret_cast<ScriptFile**>(CalcPtr(_adr.varScriptFile));
-
-		ScriptFile* scriptfile = *varScriptFile;
-
-		std::string directory;
-
-		std::string scriptFileStr = "";
-		if (isSubStr(scriptfile->name, ".gsc"))
-		{
-			scriptFileStr = _documentPath + "\\dumpdata\\gsc\\" + std::string(scriptfile->name) + "bin";
-		}
-		else
-		{
-			scriptFileStr = _documentPath + "\\dumpdata\\gsc\\" + std::string(scriptfile->name) + ".gscbin";
-		}
-
-		ReplaceAll(scriptFileStr, "/", "\\");
-		//NotifyMsg("path '%s' -> ", scriptFileStr.c_str());
-
-		size_t lastSlash = scriptFileStr.find_last_of("\\");
-		if (lastSlash != std::string::npos && isSubStr(scriptFileStr, "\\"))
-		{
-			directory = scriptFileStr.substr(0, lastSlash);
-
-			std::filesystem::create_directories(directory);
-		}
-
-		std::ofstream gscbin_file(scriptFileStr, std::ios::out | std::ios::binary);
-		if (gscbin_file.is_open())
-		{
-			//NotifyMsg("gsc dumped!");
-			NotifyMsg("[Sucess] <Load_ScriptFile> GSCBIN dumped : %s\n", scriptFileStr.c_str());
-			dump_gsc_script(gscbin_file, scriptfile);
-			gscbin_file.close();
-		}
-		else
-		{
-			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Load_ScriptFile> Failed GSCBIN dump ... : %s\n", scriptFileStr.c_str());
-		}
-		//NotifyMsg("\n");
-	}
-
-	// ========================================================================================== //
-	// for Inject
-	// ========================================================================================== //
-
-	else
-	{
-	    auto DB_PatchMem_PushAsset	= reinterpret_cast<void(*)(size_t len, ScriptFile *script)>(            CalcPtr( _adr.DB_PatchMem_PushAsset ) );
-	    auto Load_Stream			= reinterpret_cast<void(*)(int streamStart, void *ptr, size_t size)>(   CalcPtr( _adr.Load_Stream           ) );
-	    auto DB_PushStreamPos		= reinterpret_cast<void(*)(int param_1)>(                               CalcPtr( _adr.DB_PushStreamPos      ) );
-	    auto Load_XString			= reinterpret_cast<void(*)(int param_1)>(                               CalcPtr( _adr.Load_XString          ) );
-	    auto DB_PopStreamPos		= reinterpret_cast<void(*)(void)>(                                      CalcPtr( _adr.DB_PopStreamPos       ) );
-	    auto DB_PatchMem_PopAsset	= reinterpret_cast<void(*)(void)>(                                      CalcPtr( _adr.DB_PatchMem_PopAsset  ) );
-	    auto DB_ReadXFile			= reinterpret_cast<void(*)(void *ptr, size_t size)>(                    CalcPtr( _adr.DB_ReadXFile          ) );
-	    auto Load_ConstCharArray	= reinterpret_cast<void(*)(void* ptr, size_t size)>(					CalcPtr( _adr.Load_ConstCharArray   ) );
-	    auto Load_byteArray			= reinterpret_cast<void(*)(void* ptr, size_t size)>(					CalcPtr( _adr.Load_byteArray        ) );
-	    ScriptFile **varScriptFile	= reinterpret_cast<ScriptFile **>(                                      CalcPtr( _adr.varScriptFile         ) );
-	    char **varXString			= reinterpret_cast<char **>(                                            CalcPtr( _adr.varXString            ) );
-	    char **varConstChar			= reinterpret_cast<char **>(                                            CalcPtr( _adr.varConstChar          ) );
-	    char **varbyte				= reinterpret_cast<char **>(                                            CalcPtr( _adr.varbyte               ) );
-	    char** AllocLoad_ConstChar	= reinterpret_cast<char **>(										    CalcPtr( _adr.AllocLoad_ConstChar   ) );
-	    char** AllocLoad_byte		= reinterpret_cast<char **>(											CalcPtr( _adr.AllocLoad_byte        ) );
-        char** g_streamPosGlob_pos = reinterpret_cast<char**>(                                              CalcPtr( _adr.g_streamPosGlob_pos   ) );
-
-
-		char* backup;
-		ScriptFile* scriptfile;
-
-
-		DB_PatchMem_PushAsset(52, *varScriptFile);
-		Load_Stream(streamStart, *varScriptFile, sizeof(ScriptFile));
-		DB_PushStreamPos(5);
-
-		char* xStringBackup = *varXString;
-		*varXString = reinterpret_cast<char*>(*varScriptFile);
-		Load_XString(1);
-		*varXString = xStringBackup;
-		DB_PushStreamPos(6);
-
-
-		scriptfile = *varScriptFile;
-
-		backup = *varConstChar;
-
-		std::string filepath = _documentPath + "\\customassets\\gsc\\" + "script.gscbin";
-		std::string scriptname = "";
-		std::string fixpath = "";
-		std::string directory;
-		std::string filepathtmp = "";
-		bool scriptgscbin = false;
-		bool lastScript = false;
-
-
-		if (scriptfile)
-		{
-			scriptname = std::string(scriptfile->name);
-			//NotifyMsg("GSC '%s' -> ", scriptfile->name);
-
-			if (isSubStr(scriptfile->name, ".gsc"))
-			{
-				filepath = _documentPath + "\\customassets\\gsc\\" + scriptname + "bin";
-			}
-			else // numbered scriptfiles like "1892"
-			{
-				filepath = _documentPath + "\\customassets\\gsc\\" + scriptname + ".gscbin";
-			}
-
-			ReplaceAll(filepath, "/", "\\");
-
-			if (file_exists(filepath.c_str()))
-			{
-				//NotifyMsg("Custom GSC found!");
-				scriptgscbin = true;
-			}
-
-			//NotifyMsg("\n");
-
-			if (!strcmp(scriptfile->name, "scripts/mp/killstreaks/supply_sweep.gsc"))
-			{
-				lastScript = true;
-			}
-			if (!strcmp(scriptfile->name, "scripts/cp/maps/cp_pierro/cp_fake_stealth.gsc"))
-			{
-				lastScript = true;
-			}
-
-			//if (!strcmp(scriptfile->name, "scripts/mp/vehicles/vehicle_damage_mp.gsc") && (currentGame == GameTitle::MW2019_Donetsk))
-			//{
-			//    lastScript = true;
-			//}
-			//if (!strcmp(scriptfile->name, "scripts/mp/gametypes/war.gsc") && ( (currentGame == GameTitle::MW2019_138) || (currentGame == GameTitle::MW2019_144) ) )
-			//{
-			//    lastScript = true;
-			//}
-
-		}
-
-		if (scriptgscbin)
-		{
-			std::ifstream script;
-			script.open(filepath, std::ios::binary | std::ios::ate);
-			int size = (int)script.tellg();
-			script.seekg(0, std::ios::beg);
-
-			char* customScript = new char[size];
-			script.read(customScript, size);
-			script.seekg(0, std::ios::beg);
-
-			while (script.get() != '\0'); // read past the name
-			int vars[3] = { 0 };
-			script.read((char*)vars, sizeof(int) * 3); //read header info
-
-
-			if (scriptfile->buffer != NULL)
-			{
-				*varConstChar = *g_streamPosGlob_pos;
-				scriptfile->buffer = *varConstChar;
-
-				char* dummyMem = new char[scriptfile->compressedLen];
-				DB_ReadXFile(dummyMem, scriptfile->compressedLen);
-				delete[scriptfile->compressedLen] dummyMem;
-
-				memmove(*g_streamPosGlob_pos, customScript + (int)script.tellg(), vars[0]);
-
-				*g_streamPosGlob_pos = *g_streamPosGlob_pos + vars[0];
-				scriptfile->compressedLen = vars[0];
-			}
-			*varConstChar = backup;
-			scriptfile->len = vars[1];
-
-			DB_PopStreamPos();
-			DB_PushStreamPos(6);
-
-			scriptfile = *varScriptFile;
-			backup = *varbyte;
-
-			if (scriptfile->bytecode != NULL)
-			{
-				*varbyte = *g_streamPosGlob_pos;
-				scriptfile->bytecode = (unsigned char*)*varbyte;
-
-				char* dummyMem = new char[scriptfile->bytecodeLen];
-				DB_ReadXFile(dummyMem, scriptfile->bytecodeLen);
-				delete[scriptfile->bytecodeLen] dummyMem;
-
-				memmove(*g_streamPosGlob_pos, customScript + vars[0] + (int)script.tellg(), vars[2]);
-
-				*g_streamPosGlob_pos = *g_streamPosGlob_pos + vars[2];
-				scriptfile->bytecodeLen = vars[2];
-			}
-			*varbyte = backup;
-
-			delete[] customScript;
-			script.close();
-
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Load_ScriptFile> Custom GSC Injected!! : %s\n", filepath.c_str());
-		}
-		else
-		{
-			if (scriptfile->buffer != NULL)
-			{
-				*varConstChar = *g_streamPosGlob_pos;
-				scriptfile->buffer = *varConstChar;
-				Load_Stream(0, *varConstChar, scriptfile->compressedLen);
-			}
-			*varConstChar = backup;
-
-			DB_PopStreamPos();
-			DB_PushStreamPos(6);
-
-			scriptfile = *varScriptFile;
-			backup = *varbyte;
-			if (scriptfile->bytecode != NULL)
-			{
-				*varbyte = *g_streamPosGlob_pos;
-				scriptfile->bytecode = (unsigned char*)*varbyte;
-				Load_Stream(0, *varbyte, scriptfile->bytecodeLen);
-			}
-			*varbyte = backup;
-
-			if (_showDebugLogs)
-				NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
-		}
-
-		DB_PopStreamPos();
-		DB_PopStreamPos();
-		DB_PatchMem_PopAsset();
-
-
-		if (lastScript)
-		{
-			//NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <Load_ScriptFile> This is last script, function unhooked.\n");
-			//ClearMinHook("Load_ScriptFile_d", "Load_ScriptFile", CalcPtr(_adr.Load_ScriptFile));
-		    //_isHookLoadScriptFile = false;
-		    //CreateDumpText(gscPath, "gscinjected");
-		    //MW19_MP_Load_ScriptFile.clear();
-		    //DisableHookThread(nullptr, nullptr);
-		}
-
-	}
 }
 
 
