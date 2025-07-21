@@ -328,6 +328,7 @@ struct AdrOffsets
 	uintptr_t Dvar_GetBoolSafe;
 	uintptr_t g_partyData;
 	uintptr_t Lobby_GetLobbyData;
+	uintptr_t s_assetPools;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1231,6 +1232,22 @@ struct gentity_s
 struct LobbyData
 {
 	
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : Asset Pool Database
+// ja : アセットプールデータベース
+//++++++++++++++++++++++++++++++
+struct DB_AssetPool
+{
+	uintptr_t		m_entries;			// 8バイト void* 
+	uintptr_t		m_freeHead;			// 8バイト void*
+	unsigned int	m_poolSize;			// 4バイト
+	unsigned int	m_elementSize;		// 4バイト
+	//unsigned int	m_loadedPoolSize;	// 4バイト
+	// 28バイト
+	//char			__padding[150];		// 150  + 28 + 6 = 184バイト
 };
 
 
@@ -2573,6 +2590,8 @@ void GetAddressOffset(GameTitle title)
 
 
 			
+			_adr.s_assetPools									= _TEXT_SEC_LEN + 0x12523740;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
+			
 			// bot
 			_adr.g_partyData									= _TEXT_SEC_LEN + 0x1345E678;	// 0x7FF69697F678	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
 			_adr.Lobby_GetLobbyData								= _TEXT_SEC_LEN + 0x36C5390;	// 0x7FF686BE6390	SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
@@ -2830,6 +2849,184 @@ int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* ass
 	}
 	return res;
 }
+
+
+
+//++++++++++++++++++++++++++++++
+// en :Get the XAsset with the specified number from the asset pool
+// ja : アセットプールから指定した番号の該当のXAssetを取得する
+//++++++++++++++++++++++++++++++
+DB_AssetPool* GetAssetPool(int assetNum)
+{
+	DB_AssetPool* s_assetPools = reinterpret_cast<DB_AssetPool*>( CalcPtr(_adr.s_assetPools) + ( sizeof(DB_AssetPool) * assetNum ) );
+	return s_assetPools;
+}
+
+
+
+void AssetPoolInjection( )
+{
+	//	for (int i = 0; i < XAssetType::ASSET_TYPE_MAXCOUNT; i++)
+	//	{
+	//		DB_AssetPool* pooldbg = GetAssetPool(i);
+	//		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> Pool %d : %p , count: %u , len %u\n", i, (void*)pooldbg->m_entries, pooldbg->m_poolSize, pooldbg->m_elementSize);
+	//		if (i == XAssetType::ASSET_TYPE_SCRIPTFILE)
+	//			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> is this ASSET_TYPE_SCRIPTFILE??\n");
+	//	}
+	//	return;
+
+	auto pool = GetAssetPool(XAssetType::ASSET_TYPE_SCRIPTFILE);
+	unsigned int datasize = sizeof(ScriptFile);
+
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool num : %d\n"			, XAssetType::ASSET_TYPE_SCRIPTFILE);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool address : %p\n"		, (void*)pool->m_entries);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool count : %u\n"			, pool->m_poolSize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool length : %u\n"		, pool->m_elementSize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Struct length : %u\n"		, datasize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> --------------------------------------------------\n");
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
+
+	ScriptFile* gscAssets = (ScriptFile*)(pool->m_entries);
+
+	char buf[256];
+	std::string scriptName;
+	std::string scriptPath;
+	std::string directory;
+
+	for (int i = 0; i < pool->m_poolSize; i++)
+	{
+		ScriptFile* gscHeader = &gscAssets[i];
+
+		if (isSubStr(gscHeader->name, ".gsc"))
+			scriptName = std::string(gscHeader->name) + "bin";
+		else
+			scriptName = std::string(gscHeader->name) + ".gscbin";
+		scriptPath = _documentPath + "\\dumppool\\gsc\\" + scriptName;
+
+		ReplaceAll(scriptPath, "/", "\\");
+
+		if (!gscHeader->buffer)
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is empty buffer.\n", i, gscHeader->name);
+			continue;
+		}
+
+		if (gscHeader->len <= 0)
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is invalid size (%d).\n", i, gscHeader->name, gscHeader->len);
+			continue;
+		}
+
+		if (_enableGscDump)
+		{
+			// ========================================================================================== //
+			// for Dump
+			// ========================================================================================== //
+
+			size_t lastSlash = scriptPath.find_last_of("\\");
+			if (lastSlash != std::string::npos && isSubStr(scriptPath, "\\"))
+			{
+				directory = scriptPath.substr(0, lastSlash);
+				std::filesystem::create_directories(directory);
+			}
+
+			std::ofstream gscdumpfile(scriptPath, std::ios::out | std::ios::binary);
+			if (gscdumpfile.is_open())
+			{
+				dump_gsc_script(gscdumpfile, gscHeader);
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped success!\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
+				gscdumpfile.close();
+			}
+			else
+			{
+				NotifyMsg("[ \x1b[35m Failed \x1b[39m ]  GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped failed...\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
+			}
+		}
+		else
+		{
+			/*
+			// ========================================================================================== //
+			// for Inject
+			// ========================================================================================== //
+
+			NotepadLog("[%s] <Notice> ", titlename);
+
+
+			std::string filepath = "";
+			bool foundcustomgsc = false;
+
+			std::string scriptname = "";
+			std::string fixpath = "";
+			std::string directory;
+			std::string filepathtmp = "";
+
+
+			if (gscHeader)
+			{
+				sprintf_s(scriptid, "%llX", gscHeader->name);
+				NotepadLog("GSC [ %d - '%s' ] -> ", i, scriptid);
+
+				filepath = gscPath + scriptid + ".gscc";
+				ReplaceAll(filepath, "/", "\\");
+
+				if (file_exists(filepath.c_str()))
+					foundcustomgsc = true;
+			}
+
+			if (!foundcustomgsc)
+			{
+				NotepadLog("\n");
+				continue;
+			}
+			else
+			{
+				NotepadLog("Custom GSC found!\n");
+			}
+
+			filepathtmp = filepath + "_tmp";
+			ShiftFileBytes(filepath.c_str(), filepathtmp.c_str(), _sbyte);
+			std::filesystem::remove(filepath); // ファイルを削除
+			rename_file(filepathtmp.c_str(), filepath.c_str());
+
+			std::ifstream script(filepath, std::ios::binary | std::ios::ate);
+			if (!script.is_open())
+			{
+				NotepadLog("[%s] <Failed> Failed to open Custom GSC file : %s\n", titlename, filepath.c_str());
+				continue;
+			}
+
+			int size = (int)script.tellg();
+			script.seekg(0, std::ios::beg);
+
+			if (gscHeader->len < size)
+			{
+				script.close();
+				NotepadLog("[%s] <Warning> Custom GSC ( %d - '%llX.gsc ) is buffer too small ( %d < %d )\n", titlename, i, gscHeader->name, gscHeader->len, size);
+				continue;
+			}
+
+			std::unique_ptr<char[]> customScript(new char[size]);
+			script.read(customScript.get(), size);
+			script.close();
+
+
+			if (gscHeader->buffer)
+			{
+				memset((void*)gscHeader->buffer, 0, gscHeader->len);
+				memcpy((void*)gscHeader->buffer, customScript.get(), size);
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] Custom GSC ( %d - '%llX.gsc ) - Injected!! [ Size : %d bytes ]\n", titlename, i, gscHeader->name, size);
+			}
+			else
+			{
+				NotepadLog("[%s] <Failed> Custom GSC ( %d - '%llX.gsc ) - buffer is null.\n", titlename, i, gscHeader->name);
+			}
+			std::filesystem::remove(filepath); // ファイルを削除
+			*/
+		}
+	}
+}
+
 
 
 
@@ -3991,6 +4188,14 @@ void R_EndFrame_d()
 		std::filesystem::remove(_mathStr);
 		_enableGscDump = true;
 	}
+
+
+	//_mathStr = _documentPath + "\\rtm\\poolcheck";
+	//if (file_exists(_mathStr.c_str()))
+	//{
+	//	AssetPoolInjection();
+	//	std::filesystem::remove(_mathStr);
+	//}
 
 	R_EndFrame_h();
 }
