@@ -4172,7 +4172,6 @@ void R_EndFrame_d()
 			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> LUI_OpenMenu command sended!\n");
 		}
 		std::filesystem::remove(_mathStr);
-		_enableGscDump = true;
 	}
 
 
@@ -4186,7 +4185,6 @@ void R_EndFrame_d()
 			//NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Cbuf_AddText command sended!\n");
 		}
 		std::filesystem::remove(_mathStr);
-		_enableGscDump = true;
 	}
 
 
