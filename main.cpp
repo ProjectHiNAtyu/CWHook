@@ -4217,18 +4217,20 @@ void GameStart()
 
 	SetupMinHook("GameStart", "R_EndFrame"									, CalcPtr(_adr.R_EndFrame)									, &R_EndFrame_d									, &R_EndFrame_h);
 	
-	SetupMinHook("GameSetup", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
-	SetupMinHook("GameSetup", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
-	SetupMinHook("GameSetup", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
+	SetupMinHook("GameStart", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
+	SetupMinHook("GameStart", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
+	SetupMinHook("GameStart", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
 
-	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
-	SetupMinHook("GameSetup", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
-	SetupMinHook("GameSetup", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
+	SetupMinHook("GameStart", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
 
-	SetupMinHook("GameSetup", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
-	SetupMinHook("GameSetup", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
+	SetupMinHook("GameStart", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
+	SetupMinHook("GameStart", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
 	
-	SetupMinHook("GameSetup", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
+	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
+	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
+	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
 	
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
@@ -4257,8 +4259,6 @@ void GameSetup()
 {
 	//_dumpGSC = true;
 	SetupMinHook("GameSetup", "Dvar_RegisterBool"	, CalcPtr(_adr.Dvar_RegisterBool)	, &Dvar_RegisterBool_d		, &Dvar_RegisterBool_h);
-	SetupMinHook("GameSetup", "Load_ScriptFile"		, CalcPtr(_adr.Load_ScriptFile)		, &Load_ScriptFile_d		, &Load_ScriptFile_h);
-	SetupMinHook("GameSetup", "DB_LoadXFile"		, CalcPtr(_adr.DB_LoadXFile)		, &DB_LoadXFile_d			, &DB_LoadXFile_h);
 }
 
 
