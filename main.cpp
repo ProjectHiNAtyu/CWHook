@@ -4070,7 +4070,7 @@ void R_EndFrame_d()
 	{
 		switch (_elapsedFrameCount)
 		{
-			case 50:
+			case 80:
 				{
 					_xuid.RandomXUID();
 					_xuid.m_id = 123456789;
