@@ -2839,6 +2839,186 @@ void GetAddressOffset(GameTitle title)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// Dvar
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Register a Boolean Dvar (for detour)
+// ja : Bool型Dvarを登録する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flags, const char* description)
+{
+	static std::map<std::pair<std::string, std::string>, bool> dvars_to_patch =
+	{
+		//{ { "force_offline_menus", "LSTQOKLTRN" }, true },
+		//{ { "force_offline_enabled", "MPSSOTQQPM" }, true },
+		//{ { "fastfileAltLaunch", "MPNRKLKOKR" }, true }, // When enabled, we load the 'alt' set of fastfiles. Intended for the launch chunks
+		//{ { "lui_enable_stats_reset", "MPTMQQNLNT" }, true }, // Enables stats reset on bad file version
+
+		//{ { "onlinegame", "LTSNLQNRKO" }, true },
+		//{ { "cg_drawBuildName", "LSSSQMQPNL" }, true },
+		//{ { "cg_drawFastfileDebugInfo", "MOSSSSTTNL" }, true },
+		//{ { "cg_drawFPS", "OLNTNRTPPL" }, true },
+		//{ { "cg_drawFrontendSceneDebugInfo", "OMPMKKTORN" }, true },
+		//{ { "cg_viewedSplashScreen", "MLNMPQOON" }, true },
+		//{ { "cl_waterMarkEnabled", "LRKNROSQPM" }, true },
+		//{ { "con_bindableGrave", "OKLQKPPKPQ" }, false },
+		//{ { "con_minicon", "LMSLLSMONN" }, true },
+		//{ { "frontEndScene_force_disable_blackout"						, "frontEndScene_force_disable_blackout"	}, true },
+
+		//{ { "lui_enable_magma_blade_layout", "LRKPTLNQTT" }, false },
+		//{ { "lui_force_online_menus", "LMMRONPQMO" }, false },
+		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
+		//{ { "ui_onlineRequired", "MTSTMKPMRM" }, false }
+		//{ { "ShouldBlackOutFrontEndScene"								, "MTOPOKPPLN"								}, false },
+		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"								}, true },
+		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
+		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
+		{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"								}, true },
+		//	{ { "xp_dec_dc"													, "NTTRLOPQKS"								}, false }, // This causes clients to disconnect themselves from servers if their xp decreases.
+		//	{ { "xblive_privatematch"										, "LSTLQTSSRM"								}, true },
+		//	{ { "systemlink"												, "LPSPMQSNPQ"								}, true },
+		//	{ { "systemlink_host"											, "LLPNKKORPT"								}, true }, // Local client is hosting system link game
+		//	{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
+		//	{ { "onlinegame"												, "LTSNLQNRKO"	}, true },
+		//	{ { "online_lan_cross_play"										, "LTOQRQMMLQ"	}, true },
+		//	{ { "com_force_premium"											, "MROLPRPTPO"	}, true },
+		//	{ { "con_minicon"												, "LMSLLSMONN"	}, true },
+		//	{ { "lui_enable_stats_reset"									, "MPTMQQNLNT"	}, true }, // Enables stats reset on bad file version
+		//	{ { "cg_drawBuildName"											, "LSSSQMQPNL"	}, true },
+		//	{ { "cg_drawFastfileDebugInfo"									, "MOSSSSTTNL"	}, true },
+		//	{ { "cg_drawFPS"												, "OLNTNRTPPL"	}, true },
+		//	{ { "cg_drawFrontendSceneDebugInfo"								, "OMPMKKTORN"	}, true },
+		//	{ { "cl_waterMarkEnabled"										, "LRKNROSQPM"	}, true },
+		//	{ { "lui_wz_tutorial_optional"									, "LSPSKLPNQT"	}, true },
+		//	{ { "com_checkIfGameModeInstalled"								, "RLSPOOTTT"	}, false },
+		//	{ { "online_challenge_fence_enabled"							, "LKQRNQSSQS"	}, false }, // Enable challenge fence
+		//	{ { "online_anticheat_should_com_error_if_mp_or_cp_banned"		, "OLMKQPQOM"	}, false }, // Control if the frame should run that checks MP or CP feature bans.
+		//	{ { "online_anticheat_should_main_menu_fence_fail_if_mp_banned"	, "LNSPMQMSS"	}, false }, // Local client is hosting system link game
+		//	{ { "fastfileAltLaunch"											, "MPNRKLKOKR"	}, false }, // When enabled, we load the 'alt' set of fastfiles. Intended for the launch chunks
+		//	{ { "ui_onlineRequired"											, "MTSTMKPMRM"	}, false },
+		//	{ { "lui_force_online_menus"									, "LMMRONPQMO"	}, false },
+		//	{ { "lui_cod_points_enabled"									, "LNTOKPTKS"	}, false },
+	};
+
+
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
+
+	bool value_patched = value;
+	std::uint32_t flags_patched = flags;
+	for (const auto& [names, val] : dvars_to_patch)
+	{
+		if (names.second == dvar_name)
+		{
+			const char* disclaimer = "";
+			if (value_patched == val)
+			{
+				disclaimer = " - unnecessary";
+			}
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched '%s' -> %s %s\n", names.first.c_str(), val ? "true" : "false", disclaimer);
+			value_patched = val;
+		}
+	}
+
+	if (strcmp(dvar_name, "LPSPMQSNPQ") == 0)
+	{
+		//NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched 'systemlink'\n");
+		//value_patched = true;
+		//flags_patched = 0x80;
+	}
+
+	return Dvar_RegisterBool_h(dvar_name, value_patched, flags_patched, description);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get the name of a string type Dvar from the Dvar name
+// ja : Dvar名からstring型Dvarの名称を取得する
+//++++++++++++++++++++++++++++++
+const char* Dvar_GetStringSafe_f(const char* dvar)
+{
+	auto func = reinterpret_cast<const char* (*)(const char*)>(CalcPtr(_adr.Dvar_GetStringSafe));
+	return func(dvar);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get the state of a boolean Dvar from its name
+// ja : Dvar名からbool型Dvarの状態を取得する
+//++++++++++++++++++++++++++++++
+bool Dvar_GetBoolSafe_f(const char* dvar)
+{
+	auto func = reinterpret_cast<bool(*)(const char*)>(CalcPtr(_adr.Dvar_GetBoolSafe));
+	return func(dvar);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get Dvar struct information from Dvar name
+// ja : Dvar名からDvar構造体情報を取得する
+//++++++++++++++++++++++++++++++
+dvar_t* Dvar_FindVarByName_f(const char* dvarName)
+{
+	//[48 83 EC 48 49 8B C8 E8 ?? ?? ?? ?? + 0x7] resolve call.
+	return reinterpret_cast<dvar_t * (__fastcall*)(const char* dvarName)>(CalcPtr(_adr.Dvar_FindVarByName))(dvarName);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Sets the Boolean Dvar to the specified state internally.
+// ja : Bool型Dvarを指定の状態に内部的に設定する
+//++++++++++++++++++++++++++++++
+bool Dvar_SetBool_Internal_f(dvar_t** dvar, bool setFlag, int setValue, const char* fmt)
+{
+	if (!dvar || !*dvar)
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid dev data '%s' pointer\n", fmt);
+		return false;
+	}
+
+	uintptr_t Adr_Dvar_SetBool_Internal = CalcPtr(_adr.Dvar_SetBool_Internal);
+
+	auto Dvar_SetBool_Internal = reinterpret_cast<void(*)(dvar_t * dvar, bool value, int setSource)>(Adr_Dvar_SetBool_Internal);
+
+	if (!Dvar_SetBool_Internal)
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid 'write dev data' function pointer\n");
+		return false;
+	}
+
+	try
+	{
+		Dvar_SetBool_Internal(*dvar, setFlag, setValue);
+		if (setFlag)
+		{
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to true\n", fmt);
+		}
+		else
+		{
+			NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to false\n", fmt);
+		}
+	}
+	catch (...)
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Exception occurred while setting dev data '%s'\n", fmt);
+		return false;
+	}
+
+	return true;
+}
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // Command
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -3782,186 +3962,6 @@ XUID* XUID::RandomXUID()
 	this->m_id = I_irand(1, 0x7FFFFFFF);
 	*RandSeed = BackupRandSeed;
 	return this;
-}
-
-
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// Dvar
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Register a Boolean Dvar (for detour)
-// ja : Bool型Dvarを登録する ( ディトール用 )
-//++++++++++++++++++++++++++++++
-dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flags, const char* description)
-{
-	static std::map<std::pair<std::string, std::string>, bool> dvars_to_patch =
-	{
-		//{ { "force_offline_menus", "LSTQOKLTRN" }, true },
-		//{ { "force_offline_enabled", "MPSSOTQQPM" }, true },
-		//{ { "fastfileAltLaunch", "MPNRKLKOKR" }, true }, // When enabled, we load the 'alt' set of fastfiles. Intended for the launch chunks
-		//{ { "lui_enable_stats_reset", "MPTMQQNLNT" }, true }, // Enables stats reset on bad file version
-
-		//{ { "onlinegame", "LTSNLQNRKO" }, true },
-		//{ { "cg_drawBuildName", "LSSSQMQPNL" }, true },
-		//{ { "cg_drawFastfileDebugInfo", "MOSSSSTTNL" }, true },
-		//{ { "cg_drawFPS", "OLNTNRTPPL" }, true },
-		//{ { "cg_drawFrontendSceneDebugInfo", "OMPMKKTORN" }, true },
-		//{ { "cg_viewedSplashScreen", "MLNMPQOON" }, true },
-		//{ { "cl_waterMarkEnabled", "LRKNROSQPM" }, true },
-		//{ { "con_bindableGrave", "OKLQKPPKPQ" }, false },
-		//{ { "con_minicon", "LMSLLSMONN" }, true },
-		//{ { "frontEndScene_force_disable_blackout"						, "frontEndScene_force_disable_blackout"	}, true },
-
-		//{ { "lui_enable_magma_blade_layout", "LRKPTLNQTT" }, false },
-		//{ { "lui_force_online_menus", "LMMRONPQMO" }, false },
-		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
-		//{ { "ui_onlineRequired", "MTSTMKPMRM" }, false }
-		//{ { "ShouldBlackOutFrontEndScene"								, "MTOPOKPPLN"								}, false },
-		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"								}, true },
-		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
-		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
-		{ { "com_lan_lobby_enabled"										, "LPNMMPKRL"								}, true },
-		//	{ { "xp_dec_dc"													, "NTTRLOPQKS"								}, false }, // This causes clients to disconnect themselves from servers if their xp decreases.
-		//	{ { "xblive_privatematch"										, "LSTLQTSSRM"								}, true },
-		//	{ { "systemlink"												, "LPSPMQSNPQ"								}, true },
-		//	{ { "systemlink_host"											, "LLPNKKORPT"								}, true }, // Local client is hosting system link game
-		//	{ { "xblive_loggedin"											, "LLOKQOSPPP"	}, true },
-		//	{ { "onlinegame"												, "LTSNLQNRKO"	}, true },
-		//	{ { "online_lan_cross_play"										, "LTOQRQMMLQ"	}, true },
-		//	{ { "com_force_premium"											, "MROLPRPTPO"	}, true },
-		//	{ { "con_minicon"												, "LMSLLSMONN"	}, true },
-		//	{ { "lui_enable_stats_reset"									, "MPTMQQNLNT"	}, true }, // Enables stats reset on bad file version
-		//	{ { "cg_drawBuildName"											, "LSSSQMQPNL"	}, true },
-		//	{ { "cg_drawFastfileDebugInfo"									, "MOSSSSTTNL"	}, true },
-		//	{ { "cg_drawFPS"												, "OLNTNRTPPL"	}, true },
-		//	{ { "cg_drawFrontendSceneDebugInfo"								, "OMPMKKTORN"	}, true },
-		//	{ { "cl_waterMarkEnabled"										, "LRKNROSQPM"	}, true },
-		//	{ { "lui_wz_tutorial_optional"									, "LSPSKLPNQT"	}, true },
-		//	{ { "com_checkIfGameModeInstalled"								, "RLSPOOTTT"	}, false },
-		//	{ { "online_challenge_fence_enabled"							, "LKQRNQSSQS"	}, false }, // Enable challenge fence
-		//	{ { "online_anticheat_should_com_error_if_mp_or_cp_banned"		, "OLMKQPQOM"	}, false }, // Control if the frame should run that checks MP or CP feature bans.
-		//	{ { "online_anticheat_should_main_menu_fence_fail_if_mp_banned"	, "LNSPMQMSS"	}, false }, // Local client is hosting system link game
-		//	{ { "fastfileAltLaunch"											, "MPNRKLKOKR"	}, false }, // When enabled, we load the 'alt' set of fastfiles. Intended for the launch chunks
-		//	{ { "ui_onlineRequired"											, "MTSTMKPMRM"	}, false },
-		//	{ { "lui_force_online_menus"									, "LMMRONPQMO"	}, false },
-		//	{ { "lui_cod_points_enabled"									, "LNTOKPTKS"	}, false },
-	};
-
-
-	//if (_showDebugLogs)
-	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
-
-	bool value_patched = value;
-	std::uint32_t flags_patched = flags;
-	for (const auto& [names, val] : dvars_to_patch)
-	{
-		if (names.second == dvar_name)
-		{
-			const char* disclaimer = "";
-			if (value_patched == val)
-			{
-				disclaimer = " - unnecessary";
-			}
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched '%s' -> %s %s\n", names.first.c_str(), val ? "true" : "false", disclaimer);
-			value_patched = val;
-		}
-	}
-
-	if (strcmp(dvar_name, "LPSPMQSNPQ") == 0)
-	{
-		//NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched 'systemlink'\n");
-		//value_patched = true;
-		//flags_patched = 0x80;
-	}
-
-	return Dvar_RegisterBool_h(dvar_name, value_patched, flags_patched, description);
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Get the name of a string type Dvar from the Dvar name
-// ja : Dvar名からstring型Dvarの名称を取得する
-//++++++++++++++++++++++++++++++
-const char* Dvar_GetStringSafe_f(const char* dvar)
-{
-	auto func = reinterpret_cast<const char* (*)(const char*)>(CalcPtr(_adr.Dvar_GetStringSafe));
-	return func(dvar);
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Get the state of a boolean Dvar from its name
-// ja : Dvar名からbool型Dvarの状態を取得する
-//++++++++++++++++++++++++++++++
-bool Dvar_GetBoolSafe_f(const char* dvar)
-{
-	auto func = reinterpret_cast<bool(*)(const char*)>(CalcPtr(_adr.Dvar_GetBoolSafe));
-	return func(dvar);
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Get Dvar struct information from Dvar name
-// ja : Dvar名からDvar構造体情報を取得する
-//++++++++++++++++++++++++++++++
-dvar_t* Dvar_FindVarByName_f(const char* dvarName)
-{
-	//[48 83 EC 48 49 8B C8 E8 ?? ?? ?? ?? + 0x7] resolve call.
-	return reinterpret_cast<dvar_t * (__fastcall*)(const char* dvarName)>(CalcPtr(_adr.Dvar_FindVarByName))(dvarName);
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Sets the Boolean Dvar to the specified state internally.
-// ja : Bool型Dvarを指定の状態に内部的に設定する
-//++++++++++++++++++++++++++++++
-bool Dvar_SetBool_Internal_f(dvar_t** dvar, bool setFlag, int setValue, const char* fmt)
-{
-	if (!dvar || !*dvar)
-	{
-		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid dev data '%s' pointer\n", fmt);
-		return false;
-	}
-
-	uintptr_t Adr_Dvar_SetBool_Internal = CalcPtr(_adr.Dvar_SetBool_Internal);
-
-	auto Dvar_SetBool_Internal = reinterpret_cast<void(*)(dvar_t * dvar, bool value, int setSource)>(Adr_Dvar_SetBool_Internal);
-
-	if (!Dvar_SetBool_Internal)
-	{
-		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid 'write dev data' function pointer\n");
-		return false;
-	}
-
-	try
-	{
-		Dvar_SetBool_Internal(*dvar, setFlag, setValue);
-		if (setFlag)
-		{
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to true\n", fmt);
-		}
-		else
-		{
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to false\n", fmt);
-		}
-	}
-	catch (...)
-	{
-		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Exception occurred while setting dev data '%s'\n", fmt);
-		return false;
-	}
-
-	return true;
 }
 
 
