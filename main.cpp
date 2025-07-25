@@ -329,6 +329,10 @@ struct AdrOffsets
 	uintptr_t g_partyData;
 	uintptr_t Lobby_GetLobbyData;
 	uintptr_t s_assetPools;
+	uintptr_t DB_CheckFastfileHeaderVersionAndMagic;
+	uintptr_t DB_CheckXFileVersion;
+	uintptr_t DB_PollFastfileState;
+	uintptr_t Dvar_GetStringSafe;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1251,6 +1255,69 @@ struct DB_AssetPool
 };
 
 
+//++++++++++++++++++++++++++++++
+// en : Encryption Header
+// ja : 暗号化ヘッダー
+//++++++++++++++++++++++++++++++
+struct EncryptionHeader
+{
+	unsigned int isEncrypted;
+	char IV[16];
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : X file
+// ja : Xファイル
+//++++++++++++++++++++++++++++++
+struct __declspec(align(8)) XFile
+{
+	unsigned __int64 size;
+	unsigned __int64 preloadWalkSize;
+	unsigned __int64 blockSize[11];
+	EncryptionHeader encryption;
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : FastFile Header Database
+// ja : ファストファイルヘッダーデータベース
+//++++++++++++++++++++++++++++++
+struct DB_FFHeader
+{
+	char magic[8];              // 0
+	unsigned int headerVersion; // 8
+	unsigned int xfileVersion;  // 12
+	bool dashCompressBuild;     // 16
+	bool dashEncryptBuild;
+	BYTE transientFileType[1];
+	unsigned int residentPartSize;
+	unsigned int residentHash;
+	unsigned int alwaysLoadedPartSize;
+	XFile xfileHeader;
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : Database File
+// ja : データベースファイル
+//++++++++++++++++++++++++++++++
+struct DBFile
+{
+
+};
+
+
+//++++++++++++++++++++++++++++++
+// en : Database File Handle
+// ja : データベースファイルハンドル
+//++++++++++++++++++++++++++++++
+struct DBFileHandle
+{
+
+};
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1563,6 +1630,25 @@ Live_IsUserSignedInToDemonware_t Live_IsUserSignedInToDemonware_h;
 // ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef LobbyData*(__fastcall* Lobby_GetLobbyData_t)();
 Lobby_GetLobbyData_t Lobby_GetLobbyData_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef char(__fastcall* DB_CheckFastfileHeaderVersionAndMagic_t)(const DB_FFHeader* header, DBFile* outFile);
+DB_CheckFastfileHeaderVersionAndMagic_t DB_CheckFastfileHeaderVersionAndMagic_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+//char __fastcall DB_CheckXFileVersion( const DB_FFHeader* header, const DBFileHandle* handle, const char* path, const char* baseFileForPatch)
+typedef char(__fastcall* DB_CheckXFileVersion_t)(const DB_FFHeader* header, const DBFileHandle* handle, uintptr_t a3);
+DB_CheckXFileVersion_t DB_CheckXFileVersion_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef int(__fastcall* DB_PollFastfileState_t)(const char* zoneName);
+DB_PollFastfileState_t DB_PollFastfileState_h;
 
 
 
@@ -2590,8 +2676,6 @@ void GetAddressOffset(GameTitle title)
 
 
 			
-			_adr.s_assetPools									= _TEXT_SEC_LEN + 0x12523740;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
-			
 			// bot
 			_adr.g_partyData									= _TEXT_SEC_LEN + 0x1345E678;	// 0x7FF69697F678	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
 			_adr.Lobby_GetLobbyData								= _TEXT_SEC_LEN + 0x36C5390;	// 0x7FF686BE6390	SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
@@ -2604,10 +2688,15 @@ void GetAddressOffset(GameTitle title)
 			_adr.Dvar_SetBool_Internal							= _TEXT_SEC_LEN + 0x3F503E0;	// 0x7FF6874713E0	LUA_MENU/PATCH_UPDATE_SUCCESS
 			_adr.Dvar_FindVarByName								= _TEXT_SEC_LEN + 0x3F48210;	// 0x7FF687469210	E8 ? ? ? ? 48 8B CB 48 63 50
 			_adr.Dvar_GetBoolSafe								= _TEXT_SEC_LEN + 0x3F48430;	// 0x7FF687469430	MLOLTLLNRT
+			_adr.Dvar_GetStringSafe								= _TEXT_SEC_LEN + 0x3F4BF30;	// 0x7FF68746CF30	48 83 EC ? E8 ? ? ? ? 8B C8 E8 ? ? ? ? 48 85 C0 75 ? 48 8D 05 ? ? ? ? 48 83 C4 ? C3 80 78
+			
 			
 			// XAsset
 			_adr.DB_LoadXFile									= _TEXT_SEC_LEN + 0x3754060;	// 0x7FF686C75060	E8 ?? ?? ?? ?? 8B F8 33 ED 40 38 B3
 			_adr.DB_FindXAssetHeader							= _TEXT_SEC_LEN + 0x3757070;	// 0x7FF686C78070	E8 ?? ?? ?? ?? 44 8B C5 8D 4D
+			_adr.DB_CheckFastfileHeaderVersionAndMagic			= _TEXT_SEC_LEN + 0x3753E50;	// 0x7FF686C74E50	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
+			_adr.DB_CheckXFileVersion							= _TEXT_SEC_LEN + 0x3753F20;	// 0x7FF686C74F20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
+			_adr.DB_PollFastfileState							= _TEXT_SEC_LEN + 0x3759E20;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
 			
 			// LUA util optional
 			_adr.lua_tolstring									= _TEXT_SEC_LEN + 0x72799C0;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
@@ -2620,6 +2709,7 @@ void GetAddressOffset(GameTitle title)
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
+			_adr.s_assetPools									= _TEXT_SEC_LEN + 0x12523740;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
 			
 			// GSC
 			_adr.Load_ScriptFile								= _TEXT_SEC_LEN + 0x2E735B0;	// 
@@ -3322,6 +3412,59 @@ void AssetPoolInjection( )
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Check fast file header version and magic ( for detour )
+// ja : ファストファイルのヘッダーバージョンとマジックをチェックする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+char DB_CheckFastfileHeaderVersionAndMagic_d(const DB_FFHeader* header, DBFile* outFile)
+{
+	char result = DB_CheckFastfileHeaderVersionAndMagic_h(header, outFile);
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_CheckFastfileHeaderVersionAndMagic> result = %d , force return 1.\n", result);
+	result = 1;
+	return result;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Check the version of X-Files ( for detour )
+// ja : Xファイルのバージョンをチェックする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+char DB_CheckXFileVersion_d(const DB_FFHeader* header, const DBFileHandle* handle, uintptr_t a3)
+{
+	char result = DB_CheckXFileVersion_h(header, handle, a3);
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_CheckXFileVersion> result = %d , force return 1.\n", result);
+	result = 1;
+	return result;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Pooling fast file states ( for detour )
+// ja : ファストファイル状態をプールする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+int DB_PollFastfileState_d(const char* zoneName)
+{
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_PollFastfileState> zoneName = %s\n", zoneName);
+
+	if (strcmp(zoneName, "mp_donetsk_cg_ls_tr") == 0)
+	{
+		return 2;
+	}
+
+	if (strcmp(zoneName, "mp_wz_island_cg_ls_tr") == 0)
+	{
+		return 2;
+	}
+
+	return DB_PollFastfileState_h(zoneName);
+}
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -3711,8 +3854,8 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	};
 
 
-	if (_showDebugLogs)
-		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
 
 	bool value_patched = value;
 	std::uint32_t flags_patched = flags;
@@ -3738,6 +3881,18 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	}
 
 	return Dvar_RegisterBool_h(dvar_name, value_patched, flags_patched, description);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get the name of a string type Dvar from the Dvar name
+// ja : Dvar名からstring型Dvarの名称を取得する
+//++++++++++++++++++++++++++++++
+const char* Dvar_GetStringSafe_f(const char* dvar)
+{
+	auto func = reinterpret_cast<const char* (*)(const char*)>(CalcPtr(_adr.Dvar_GetStringSafe));
+	return func(dvar);
 }
 
 
@@ -4236,8 +4391,12 @@ void GameStart()
 	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
 	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
+	SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
+	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
 	
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
+
 
 }
 
