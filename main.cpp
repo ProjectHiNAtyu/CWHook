@@ -3642,30 +3642,6 @@ char DB_CheckXFileVersion_d(const DB_FFHeader* header, const DBFileHandle* handl
 
 
 //++++++++++++++++++++++++++++++
-// en : Pooling fast file states ( for detour )
-// ja : ファストファイル状態をプールする ( ディトール用 )
-//++++++++++++++++++++++++++++++
-int DB_PollFastfileState_d(const char* zoneName)
-{
-	//if (_showDebugLogs)
-	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_PollFastfileState> zoneName = %s\n", zoneName);
-
-	if (strcmp(zoneName, "mp_donetsk_cg_ls_tr") == 0)
-	{
-		return 2;
-	}
-
-	if (strcmp(zoneName, "mp_wz_island_cg_ls_tr") == 0)
-	{
-		return 2;
-	}
-
-	return DB_PollFastfileState_h(zoneName);
-}
-
-
-
-//++++++++++++++++++++++++++++++
 // en : Setting collision transient mode for multiplayer (for jump hooks)
 // ja : マルチプレイヤー用コリジョンのトランジェントモードを設定する ( ジャンプフック用 )
 //++++++++++++++++++++++++++++++
@@ -5683,6 +5659,30 @@ XAssetHeader DB_FindXAssetHeader_d(XAssetType type, const char* given_name, int 
 	}
 
 	return res;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Pooling fast file states ( for detour )
+// ja : ファストファイル状態をプールする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+int DB_PollFastfileState_d(const char* zoneName)
+{
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_PollFastfileState> zoneName = %s\n", zoneName);
+
+	if (strcmp(zoneName, "mp_donetsk_cg_ls_tr") == 0)
+	{
+		return 2;
+	}
+
+	if (strcmp(zoneName, "mp_wz_island_cg_ls_tr") == 0)
+	{
+		return 2;
+	}
+
+	return DB_PollFastfileState_h(zoneName);
 }
 
 
