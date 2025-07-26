@@ -333,6 +333,8 @@ struct AdrOffsets
 	uintptr_t DB_CheckXFileVersion;
 	uintptr_t DB_PollFastfileState;
 	uintptr_t Dvar_GetStringSafe;
+	uintptr_t CL_TransientsCollisionMP_SetTransientMode;
+	uintptr_t CL_TransientsCollisionMP_SetTransientMode_var;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1418,6 +1420,21 @@ XUID _xuid;
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
 bool _showDebugLogs = true;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showLuaLoadDebugLogs = false;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showGSCLoadDebugLogs = false;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showLuaPrintDebugLogs = false;
 
 
 // en : Whether to dump LUA (with RTM Tool)
@@ -2697,6 +2714,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.DB_CheckFastfileHeaderVersionAndMagic			= _TEXT_SEC_LEN + 0x3753E50;	// 0x7FF686C74E50	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
 			_adr.DB_CheckXFileVersion							= _TEXT_SEC_LEN + 0x3753F20;	// 0x7FF686C74F20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
 			_adr.DB_PollFastfileState							= _TEXT_SEC_LEN + 0x3759E20;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
+			_adr.CL_TransientsCollisionMP_SetTransientMode		= _TEXT_SEC_LEN + 0x2D197E0;	// 0x7FF68623A7E0	%s_cg_ls_tr ref up 1 func call arg ref 1 line
+			_adr.CL_TransientsCollisionMP_SetTransientMode_var	= _TEXT_SEC_LEN + 0xBC004E4;	// 0x7FF68F1214E4	CL_TransientsCollisionMP_SetTransientMode call variable
 			
 			// LUA util optional
 			_adr.lua_tolstring									= _TEXT_SEC_LEN + 0x72799C0;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
@@ -3036,8 +3055,8 @@ bool Cbuf_AddText(const char* fmt, ...)
 	uintptr_t CbufOffset = 0;
 	uintptr_t baseAddr = 0;
 
-	char cmd[512]{};
-	char post[512]{};
+	char cmd[1024]{};
+	char post[1024]{};
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -3052,11 +3071,11 @@ bool Cbuf_AddText(const char* fmt, ...)
 	try
 	{
 		//NotifyMsg("Exec buf manipulation -> ");
-		memcpy(post, (BYTE*)(xpartydisband), 512);
+		memcpy(post, (BYTE*)(xpartydisband), 1024);
 		strcpy((char*)(xpartydisband), cmd);
 		//NotifyMsg("Call endlobby func -> ");
 		reinterpret_cast<void(*)(void*)>(endlobby)(nullptr);
-		memcpy((BYTE*)(xpartydisband), post, 512);
+		memcpy((BYTE*)(xpartydisband), post, 1024);
 	}
 	catch (...)
 	{
@@ -3348,7 +3367,7 @@ void Load_ScriptFile_d(DBStreamStart streamStart)
 			}
 			*varbyte = backup;
 
-			if (_showDebugLogs)
+			if (_showGSCLoadDebugLogs)
 				NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Load_ScriptFile> Official GSC Loaded : %s\n", scriptfile->name);
 		}
 
@@ -3628,8 +3647,8 @@ char DB_CheckXFileVersion_d(const DB_FFHeader* header, const DBFileHandle* handl
 //++++++++++++++++++++++++++++++
 int DB_PollFastfileState_d(const char* zoneName)
 {
-	if (_showDebugLogs)
-		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_PollFastfileState> zoneName = %s\n", zoneName);
+	//if (_showDebugLogs)
+	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_PollFastfileState> zoneName = %s\n", zoneName);
 
 	if (strcmp(zoneName, "mp_donetsk_cg_ls_tr") == 0)
 	{
@@ -3642,6 +3661,32 @@ int DB_PollFastfileState_d(const char* zoneName)
 	}
 
 	return DB_PollFastfileState_h(zoneName);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Setting collision transient mode for multiplayer (for jump hooks)
+// ja : マルチプレイヤー用コリジョンのトランジェントモードを設定する ( ジャンプフック用 )
+//++++++++++++++++++++++++++++++
+void CL_TransientsCollisionMP_SetTransientMode_d(int mode)
+{
+	const char* mapName = Dvar_GetStringSafe_f("NSQLTTMRMP");
+	
+	if ( (strcmp(mapName, "mp_wz_island") == 0) || (strcmp(mapName, "mp_escape4") == 0) || (strcmp(mapName, "mp_sm_island_1") == 0))
+	{
+		if (_showDebugLogs)
+			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <CL_TransientsCollisionMP_SetTransientMode> mapName = %s , def value = %d , patched to 1\n", mapName , mode);
+		
+		*reinterpret_cast<int*>(CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode_var)) = 1;
+	}
+	else
+	{
+		if (_showDebugLogs)
+			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <CL_TransientsCollisionMP_SetTransientMode> mapName = %s , def value = %d , no patched\n", mapName, mode);
+
+		*reinterpret_cast<int*>(CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode_var)) = mode;
+	}
 }
 
 
@@ -3701,7 +3746,7 @@ int LUI_LuaCall_LUIGlobalPackage_DebugPrint_d(lua_State* lua_vm)
 		//RtmSetMemory<unsigned int>(CalcPtr(_adr.s_currentMatchId), 0);
 	}
 
-	if (_showDebugLogs)
+	if (_showLuaPrintDebugLogs)
 		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <LUI_LuaCall_LUIGlobalPackage_DebugPrint> %s\n", strResult.c_str());
 	return LUI_LuaCall_LUIGlobalPackage_DebugPrint_h(lua_vm);
 }
@@ -3876,7 +3921,7 @@ void LoadCustomLua(lua_State* s, const char* file)
 	}
 	else
 	{
-		if (_showDebugLogs)
+		if (_showLuaLoadDebugLogs)
 			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <luaL_loadfile> Loaded official Lua script : %s\n", file);
 	}
 
@@ -4395,6 +4440,8 @@ void GameStart()
 	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
 	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
 	
+	JumpHookTo(	"GameStart"	, "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, CL_TransientsCollisionMP_SetTransientMode_d);
+
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
 
