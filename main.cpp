@@ -1419,22 +1419,27 @@ XUID _xuid;
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showDebugLogs = true;
+bool _showDebugLogs = false;
 
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showLuaLoadDebugLogs = false;
+bool _showLuaLoadDebugLogs = true;
 
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showGSCLoadDebugLogs = false;
+bool _showGSCLoadDebugLogs = true;
 
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showLuaPrintDebugLogs = false;
+bool _showLuaPrintDebugLogs = true;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showRegisterBoolDebugLogs = false;
 
 
 // en : Whether to dump LUA (with RTM Tool)
@@ -1494,6 +1499,7 @@ luaL_loadbuffer_t luaL_loadbuffer_h;
 // ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef int(__fastcall* luaL_loadfile_t)(lua_State* s, const char* file_name);
 luaL_loadfile_t luaL_loadfile_h;
+
 
 typedef void(__fastcall* luaL_openlib_t)(lua_State* s, const char* lib_name, const luaL_Reg* l, unsigned int n_up);
 luaL_openlib_t luaL_openlib_h;
@@ -2753,6 +2759,10 @@ void GetAddressOffset(GameTitle title)
 
 
 
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
 			
 			// unused
 			_adr.GetUsername									= _TEXT_SEC_LEN + 0x3F8C6C0;	// 0x7FF6874AD6C0	UnnamedPlayer or LUI_LuaCall_Social_GetPlayerCrossplayGamertag
@@ -2776,6 +2786,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_COD_LuaCall_IsPremiumPlayerReady			= _TEXT_SEC_LEN + 0x69A6E70;	// 0x7FF689EC7E70
 
 
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
 			
 
 			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
@@ -2827,6 +2839,65 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_CoD_LuaCall_StatsResetGetState				= 0x7FF6B38A6260;	// LUI_CoD_LuaCall_StatsResetGetState
 			_adr.j_LUI_CoD_LuaCall_ShouldBeInOnlineArea			= 0x7FF6B3736780;	// LUI_CoD_LuaCall_ShouldBeInOnlineArea
 
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
+
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+	
+	/*
+	
+	/*
+	
+	/*
 			
 
 			_adr.DDL_Lookup_MoveToNameHash						= 0x7FF6B3F8A8F0;	// 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 30 45 8B D1 49 8B F0 48 8B DA 4C 8B D9 48 85 C9 0F 84
@@ -2924,8 +2995,8 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	};
 
 
-	//if (_showDebugLogs)
-	//	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
+	if (_showRegisterBoolDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <Dvar_RegisterBool> Registering Dvar '%s' | value = %s | flag = %u\n", dvar_name , (value ? "true" : "false"), flags);
 
 	bool value_patched = value;
 	std::uint32_t flags_patched = flags;
@@ -4241,6 +4312,28 @@ void SkuStylePatch(XUID xuid)
 
 
 
+bool OnfRtmFlag(std::string path , bool flag, bool onf, const char* msg)
+{
+	_mathStr = _documentPath + path;
+	if (file_exists(_mathStr.c_str()))
+	{
+		std::filesystem::remove(_mathStr);
+		if (onf && !flag)
+		{
+			NotifyMsg(msg);
+			return true;
+		}
+		else if(!onf && flag)
+		{
+			NotifyMsg(msg);
+			return false;
+		}
+	}
+	return flag;
+}
+
+
+
 //++++++++++++++++++++++++++++++
 // en : Every frame execution function (for executing actions)
 // ja : 毎フレーム実行関数（アクション実行用）
@@ -4251,7 +4344,7 @@ void R_EndFrame_d()
 	{
 		switch (_elapsedFrameCount)
 		{
-			case 80:
+			case 100:
 				{
 					_xuid.RandomXUID();
 					_xuid.m_id = 123456789;
@@ -4342,6 +4435,8 @@ void R_EndFrame_d()
 		std::filesystem::remove(_mathStr);
 	}
 
+
+	*/
 
 	_mathStr = _documentPath + "\\rtm\\luacmd";
 	if (file_exists(_mathStr.c_str()))
