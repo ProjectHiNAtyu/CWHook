@@ -1701,6 +1701,9 @@ size_t CalcAdr(const size_t val)
 //++++++++++++++++++++++++++++++
 size_t CalcPtr(const size_t val)
 {
+	if (_gameTitle == GameTitle::IW8_157)
+		return CalcAdr(val);
+
 	return _ImageBase + val;
 }
 
@@ -2504,6 +2507,111 @@ void GetAddressOffset(GameTitle title)
 
 		case GameTitle::IW8_157:
 		{
+			_adr.DumpBase										= 0x7FF6AD390000;				// 0x7FF683521000
+
+			//	XUID
+			_adr.Sys_Microseconds								= 0x7FF6B0E953D0;	// 0x7FF6875BC9D0	E8 ?? ?? ?? ?? 48 2B C3 48 8B C8
+			_adr.I_irand										= 0x7FF6B0D4DF30;	// 0x7FF68745C0E0	69 05 ?? ?? ?? ?? ?? ?? ?? ?? 2B D1 48 63 D2
+			_adr.GetRandSeed									= 0x7FF6B0D4DCB0;	// 0x7FF68745BE60	holdrand
+			
+			//	LUA	util
+			_adr.lua_pushboolean								= 0x7FF6B3FBF980;	// 0x7FF68A799EF0	LUI_CoD_LuaCall_IsUserSignedInToLive
+			
+			//	First hooks / set
+			_adr.Content_DoWeHaveContentPack					= 0x7FF6B0D54FC0;	// 0x7FF6874632B0	LUI_CoD_LuaCall_IsMapPackOwned
+			_adr.LUI_COD_LuaCall_IsPremiumPlayer				= 0x7FF6B36E8C60;	// 0x7FF689EC7C80	LUI_COD_LuaCall_IsPremiumPlayer
+			_adr.LUI_CoD_LuaCall_OfflineDataFetched				= 0x7FF6B38A6150;	// 0x7FF68A0733C0	LUI_CoD_LuaCall_OfflineDataFetched
+			_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed				= 0x7FF6B36F2880;	// 0x7FF689EB7A30	LUI_CoD_LuaCall_IsLocalPlayAllowed
+			_adr.Dvar_RegisterBool								= 0x7FF6B0D603C0;	// 0x7FF68746EF40	E8 ?? ?? ?? ?? 48 8B F0 F6 46
+			_adr.R_EndFrame										= 0x7FF6B34B5DC0;	// 0x7FF689C6D330	48 83 EC ?? E8 ?? ?? ?? ?? 48 8B 15 ?? ?? ?? ?? 45 33 D2
+			_adr.Live_IsInSystemlinkLobby						= 0x7FF6B1107130;	// 0x7FF68783BF70	LUI_CoD_LuaCall_InLobby
+			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+
+			//	Sku style Patch
+			_adr.unk_PlatformPatch_flag1						= 0x7FF6CB13CB30;	// 0x7FF69922A290	%08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
+			_adr.unk_XUIDCheck1									= 0x7FF6CEDD0DE8;	// 0x7FF69CEDA8E0	48 8D 1D ? ? ? ? 40 88 35
+			_adr.accountLoggedIn								= 0x7FF6CB13C382;	// 0x7FF699229AE2	CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
+			_adr.CurrentRegion_IssueFix2_flag					= _adr.accountLoggedIn;			// 0x7FF699229AE2	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
+			_adr.s_isContentEnumerationFinished					= 0x7FF6CA997400;	// 0x7FF698A3A580	80 3D ? ? ? ? ? 74 ? 48 89 7C 24
+			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= 0x7FF6CC5AE808;	// 0x7FF69A6B0808	OMROPMNPTT
+			_adr.xenonUserData_m_guardedUserData_signinState	= 0x7FF6CB13C860;	// 0x7FF699229FC0	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
+			_adr.dvar_xblive_loggedin							= 0x7FF6CAD32458;	// dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
+
+			//	ProfilePatches_Arg
+			_adr.Live_GetUserData								= 0x7FF6AFED05C0;	// 0x7FF6865A3740	LUI_CoD_LuaCall_IsUserAGuest -> Live_UserIsGuest -> Live_GetUserData_p
+			_adr.GamerProfile_LogInProfile						= 0x7FF6B16546C0;	// 0x7FF687E036A0	gamer_profile_input_type_updated
+			_adr.LoadSavedAchievements							= 0x7FF6AF4948A0;	// 0x7FF685B65DE0	achievements.%X.chv & achievements_1.chv
+			
+			//	h00dair mix style Patch
+			_adr.Live_IsSignedIn								= 0x7FF6B1A166D0;	// 0x7FF6881D61F0	XBOXLIVE/MPNOTALLOWED or LUI_CoD_LuaCall_IsConnectedToFirstParty
+			_adr.LiveStorage_DoWeHaveStatsForSource				= 0x7FF6B0720BF0;	// 0x7FF686E24450	LUI_CoD_LuaCall_DoWeHaveOnlineStats
+			_adr.controllerStatData								= 0x7FF6C903DC64;	// 0x7FF696CC2F64	LUI_CoD_LuaCall_StatsResetGetState -> LiveStorage_GetStatsResetState -> controllerResetStatData -> under arg controllerStatData
+			_adr.LiveStorage_StatsInit							= 0x7FF6B0723620;	// 0x7FF686E26EB0	ddl/mp/playerdata.ddl
+			_adr.LiveStorage_ReadStats							= 0x7FF6B0721150;	// 0x7FF686E249B0	playerdata_available
+
+
+
+			
+			// bot
+			_adr.g_partyData									= 0x7FF6C8D06E38;	// 0x7FF69697F678	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
+			_adr.Lobby_GetLobbyData								= 0x7FF6B04EC6C0;	// 0x7FF686BE6390	GScr_CanSpawnBotOrTestClient -> SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
+			
+			// Cbuf
+			_adr.xpartydisband									= 0x7FF6B4367288;	// 0x7FF68AB4C528	xpartydisbandafterround\n
+			_adr.GScr_EndLobby									= 0x7FF6B0662370;	// 0x7FF686D5E920	xpartydisband ref func
+
+			// Dvar
+			_adr.Dvar_SetBool_Internal							= 0x7FF6B0D626E0;	// 0x7FF6874713E0	LUA_MENU/PATCH_UPDATE_SUCCESS
+			_adr.Dvar_FindVarByName								= 0x7FF6B0D5A9E0;	// 0x7FF687469210	E8 ? ? ? ? 48 8B CB 48 63 50
+			_adr.Dvar_GetBoolSafe								= 0x7FF6B0D5AC00;	// 0x7FF687469430	MLOLTLLNRT
+			_adr.Dvar_GetStringSafe								= 0x7FF6B0D5E4A0;	// 0x7FF68746CF30	48 83 EC ? E8 ? ? ? ? 8B C8 E8 ? ? ? ? 48 85 C0 75 ? 48 8D 05 ? ? ? ? 48 83 C4 ? C3 80 78
+			
+			
+			// XAsset
+			_adr.DB_LoadXFile									= 0x7FF6B05788B0;	// 0x7FF686C75060	E8 ?? ?? ?? ?? 8B F8 33 ED 40 38 B3
+			_adr.DB_FindXAssetHeader							= 0x7FF6B057B8C0;	// 0x7FF686C78070	E8 ?? ?? ?? ?? 44 8B C5 8D 4D
+			_adr.DB_CheckFastfileHeaderVersionAndMagic			= 0x7FF6B05786A0;	// 0x7FF686C74E50	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
+			_adr.DB_CheckXFileVersion							= 0x7FF6B0578770;	// 0x7FF686C74F20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
+			_adr.DB_PollFastfileState							= 0;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
+			_adr.CL_TransientsCollisionMP_SetTransientMode		= 0x7FF6AFB6FF00;	// 0x7FF68623A7E0	%s_cg_ls_tr ref up 1 func call arg ref 1 line
+			_adr.CL_TransientsCollisionMP_SetTransientMode_var	= 0x7FF6B88B6364;	// 0x7FF68F1214E4	CL_TransientsCollisionMP_SetTransientMode call variable
+			
+			// LUA util optional
+			_adr.lua_tolstring									= 0x7FF6B3FC0450;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
+			
+			// LUA customize
+			_adr.luaL_loadbuffer								= 0x7FF6B3FC5890;	// 0x7FF68A79FE00	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
+			_adr.luaL_loadfile									= 0x7FF6B3FC5A20;	// 0x7FF68A79FF90	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
+			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 0x7FF68A2DE160	48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+
+			// Debug
+			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x7FF6B363D8E0;	// 0x7FF689E13380	DebugPrint LUIElement under func
+			_adr.LUI_ReportError								= 0x7FF6B3640DF0;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
+			_adr.s_assetPools									= 0;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
+			
+			// GSC
+			_adr.Load_ScriptFile								= 0x7FF6AFCC80B0;	// 
+			_adr.DB_PatchMem_PushAsset							= 0x7FF6AFC467D0;	// 
+			_adr.Load_Stream									= 0x7FF6B0584200;	// 
+			_adr.DB_PushStreamPos								= 0x7FF6B0583DF0;	// 
+			_adr.Load_XString									= 0x7FF6AFC997C0;	// 
+			_adr.DB_PopStreamPos								= 0x7FF6B0583D40;	// 
+			_adr.DB_PatchMem_PopAsset							= 0x7FF6AFC465A0;	// 
+			_adr.DB_ReadXFile									= 0x7FF6B05796F0;	// 
+			_adr.Load_ConstCharArray							= 0;	// 
+			_adr.Load_byteArray									= 0;	// 
+			_adr.varScriptFile									= 0x7FF6B8997A40;	// 
+			_adr.varXString										= 0x7FF6B8996240;	// 
+			_adr.varConstChar									= 0x7FF6B8996230;	// 
+			_adr.varbyte										= 0x7FF6B8996060;	// 
+			_adr.AllocLoad_ConstChar							= 0;	// 
+			_adr.AllocLoad_byte									= 0;	// 
+			_adr.g_streamPosGlob_pos							= 0x7FF6C8EA1F20;	// 
+
+
+			/*
+
+
 			_adr.DumpBase										= 0x7FF6AD390000;
 
 			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
@@ -2550,8 +2658,7 @@ void GetAddressOffset(GameTitle title)
 			_adr.platformConnectionState						= 0x7FF6CB13CC80;	// Platform_BeginAuth -> Platform_BeginAuth_exec ->
 			_adr.platformId										= 0x7FF6CB13C920;	// Platform_BeginAuth -> under 1 func -> ref arg -> -8byte
 			_adr.accountLoggedIn								= 0x7FF6CB13C382;	// CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
-			_adr.dvar_xblive_loggedin							= 0x7FF6CAD32458;	// dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
-
+			
 			_adr.unk_PlatformPatch_flag1						= 0x7FF6CB13CB30;	// %08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= 0x7FF6CC5AE808;	// OMROPMNPTT
 			_adr.CurrentRegion_IssueFix1						= 0x7FF6B1A13ADE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+9
@@ -2650,6 +2757,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.AllocLoad_ConstChar							= 0x7FF6AFC956E0;
 			_adr.AllocLoad_byte									= 0x7FF6AFC959E0;
 			_adr.g_streamPosGlob_pos							= 0x7FF6C8EA1F20;
+			*/
+
 		}
 		break;
 
@@ -2759,10 +2868,6 @@ void GetAddressOffset(GameTitle title)
 
 
 
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
 			
 			// unused
 			_adr.GetUsername									= _TEXT_SEC_LEN + 0x3F8C6C0;	// 0x7FF6874AD6C0	UnnamedPlayer or LUI_LuaCall_Social_GetPlayerCrossplayGamertag
@@ -2786,8 +2891,6 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_COD_LuaCall_IsPremiumPlayerReady			= _TEXT_SEC_LEN + 0x69A6E70;	// 0x7FF689EC7E70
 
 
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
 			
 
 			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
@@ -2839,65 +2942,6 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_CoD_LuaCall_StatsResetGetState				= 0x7FF6B38A6260;	// LUI_CoD_LuaCall_StatsResetGetState
 			_adr.j_LUI_CoD_LuaCall_ShouldBeInOnlineArea			= 0x7FF6B3736780;	// LUI_CoD_LuaCall_ShouldBeInOnlineArea
 
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
-	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
-	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
-	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
-	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
-	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-	
-	/*
-	
-	/*
-	
-	/*
 			
 
 			_adr.DDL_Lookup_MoveToNameHash						= 0x7FF6B3F8A8F0;	// 48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 30 45 8B D1 49 8B F0 48 8B DA 4C 8B D9 48 85 C9 0F 84
@@ -4366,7 +4410,26 @@ void R_EndFrame_d()
 		_elapsedFrameCount += 1;
 	}
 
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
+	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
+	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogoff"	, _showLuaLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogon"		, _showGSCLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show GSC load debug logs.\n");
+	_showGSCLoadDebugLogs		= OnfRtmFlag("\\rtm\\gscloaddebuglogoff"	, _showGSCLoadDebugLogs			, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide GSC load debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogon"	, _showLuaPrintDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua print debug logs.\n");
+	_showLuaPrintDebugLogs		= OnfRtmFlag("\\rtm\\luaprintdebuglogoff"	, _showLuaPrintDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide Lua print debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogon"		, _showRegisterBoolDebugLogs	, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show register bool debug logs.\n");
+	_showRegisterBoolDebugLogs	= OnfRtmFlag("\\rtm\\regbooldebuglogoff"	, _showRegisterBoolDebugLogs	, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogon"	, _fastSaveLog					, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enable debug logs fast save.\n");
+	_fastSaveLog				= OnfRtmFlag("\\rtm\\fastsavedebuglogoff"	, _fastSaveLog					, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide register bool debug logs.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpon"				, _enableLuaDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
+	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
+	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
 
+	
+	/*
+	
 	_mathStr = _documentPath + "\\rtm\\debuglogon";
 	if (file_exists(_mathStr.c_str()))
 	{
@@ -4663,8 +4726,8 @@ void HookExeModuleFunctions()
 void Initialization()
 {
 	//_gameTitle = GameTitle::IW8_138;
-	//_gameTitle = GameTitle::IW8_157;
-	_gameTitle = GameTitle::IW8_167;
+	_gameTitle = GameTitle::IW8_157;
+	//_gameTitle = GameTitle::IW8_167;
 	GetAddressOffset(_gameTitle);
 
 	HookExeModuleFunctions();

@@ -506,17 +506,17 @@ void DisableTlsCallbacks()
 	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xA89F90); 
 	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x2E660A0);
 	
-	//	// IW8 1.57
-	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); 
-	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); 
-	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); 
-	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); 
+	// IW8 1.57
+	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); 
+	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); 
+	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); 
+	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); 
 	
-	// IW8 1.67
-	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB20A80);	//	0x7FF684041A80
-	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB56410);	//	0x7FF684077410
-	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0x19A5930);	//	0x7FF684EC6930
-	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB1EF00);	//	0x7FF68403FF00
+	//	// IW8 1.67
+	//	char* tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB20A80);	//	0x7FF684041A80
+	//	char* tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB56410);	//	0x7FF684077410
+	//	char* tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0x19A5930);	//	0x7FF684EC6930
+	//	char* tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB1EF00);	//	0x7FF68403FF00
 
 	NotifyMsg("[Arxan Info] MW19 TLS Callbacks:\n");
 
