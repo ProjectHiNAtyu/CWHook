@@ -99,6 +99,7 @@ const WCHAR* BadWindowClassList[] =
 
 FILE* logFile = nullptr;
 bool suspendNewThreads = false;
+bool _fastSaveLog;
 
 void FilterHwndList(HWND* phwndFirst, PULONG pcHwndNeeded)
 {
@@ -627,6 +628,12 @@ void NotifyMsg(const char* format, ...)
 	static int _fflushCount = 100;
 	static int callCount = 0;
 	static std::string buffer;
+	int fflushCnt = _fflushCount;
+
+	if (_fastSaveLog)
+	{
+		fflushCnt = 0;
+	}
 
 	// ANSIエスケープシーケンスを有効化（初回のみ）
 	static bool consoleInitialized = false;
@@ -657,7 +664,7 @@ void NotifyMsg(const char* format, ...)
 	va_end(args);
 
 	callCount++;
-	if (callCount >= _fflushCount)
+	if (callCount >= fflushCnt)
 	{
 		// ログファイルパス生成
 		char dllPath[MAX_PATH];
