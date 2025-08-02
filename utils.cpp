@@ -1,4 +1,4 @@
-#define PHNT_VERSION PHNT_WIN10_22H2
+ï»¿#define PHNT_VERSION PHNT_WIN10_22H2
 #include <phnt_windows.h>
 #include <phnt.h>
 #include <ntexapi.h>
@@ -622,7 +622,7 @@ std::string RemoveAnsiSequences(const std::string& input)
 
 
 
-// NotifyMsg: printf‚Æ“¯—l‚ÌƒtƒH[ƒ}ƒbƒg‚ÅƒRƒ“ƒ\[ƒ‹o—Í‚Æƒtƒ@ƒCƒ‹ƒƒO‚ğ‹L˜^
+// NotifyMsg: printfã¨åŒæ§˜ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã§ã‚³ãƒ³ã‚½ãƒ¼ãƒ«å‡ºåŠ›ã¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ã‚°ã‚’è¨˜éŒ²
 void NotifyMsg(const char* format, ...)
 {
 	static int _fflushCount = 100;
@@ -635,11 +635,11 @@ void NotifyMsg(const char* format, ...)
 		fflushCnt = 0;
 	}
 
-	// ANSIƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚ğ—LŒø‰»i‰‰ñ‚Ì‚İj
+	// ANSIã‚¨ã‚¹ã‚±ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã‚’æœ‰åŠ¹åŒ–ï¼ˆåˆå›ã®ã¿ï¼‰
 	static bool consoleInitialized = false;
 	if (!consoleInitialized)
 	{
-		// ƒRƒ“ƒ\[ƒ‹‚ÌANSIƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚ğ—LŒø‰»
+		// ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã®ANSIã‚¨ã‚¹ã‚±ãƒ¼ãƒ—ã‚·ãƒ¼ã‚±ãƒ³ã‚¹ã‚’æœ‰åŠ¹åŒ–
 		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 		DWORD dwMode = 0;
 		GetConsoleMode(hOut, &dwMode);
@@ -648,15 +648,15 @@ void NotifyMsg(const char* format, ...)
 		consoleInitialized = true;
 	}
 
-	// ‰Â•Ïˆø”ƒŠƒXƒg‚Ìˆ—
+	// å¯å¤‰å¼•æ•°ãƒªã‚¹ãƒˆã®å‡¦ç†
 	va_list args;
 	va_start(args, format);
 
-	// –ˆ‰ñƒRƒ“ƒ\[ƒ‹‚Éo—Í
+	// æ¯å›ã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã«å‡ºåŠ›
 	vprintf(format, args);
 	fflush(stdout);
 
-	// ƒoƒbƒtƒ@‚É’Ç‹L
+	// ãƒãƒƒãƒ•ã‚¡ã«è¿½è¨˜
 	char temp[2048];
 	vsnprintf(temp, sizeof(temp), format, args);
 	buffer += temp;
@@ -666,14 +666,14 @@ void NotifyMsg(const char* format, ...)
 	callCount++;
 	if (callCount >= fflushCnt)
 	{
-		// ƒƒOƒtƒ@ƒCƒ‹ƒpƒX¶¬
+		// ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ç”Ÿæˆ
 		char dllPath[MAX_PATH];
 		GetModuleFileNameA(NULL, dllPath, MAX_PATH);
-		// ƒfƒBƒŒƒNƒgƒŠ•”•ª‚ğ’Šo
+		// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªéƒ¨åˆ†ã‚’æŠ½å‡º
 		std::string path(dllPath);
 		std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\!debuglog.txt";
 
-		// ƒtƒ@ƒCƒ‹‚É‚Ü‚Æ‚ß‚Ä‘‚«‚İ
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¾ã¨ã‚ã¦æ›¸ãè¾¼ã¿
 		FILE* fp = fopen(logFilePath.c_str(), "a");
 		if (fp)
 		{

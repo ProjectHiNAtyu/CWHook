@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #define PHNT_VERSION PHNT_WIN10_22H2
 #include <phnt_windows.h>
 #include <phnt.h>
@@ -20,7 +20,7 @@
 
 //++++++++++++++++++++++++++++++
 // en : Game title
-// ja : ƒQ[ƒ€ƒ^ƒCƒgƒ‹
+// ja : ã‚²ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«
 //++++++++++++++++++++++++++++++
 enum GameTitle
 {
@@ -34,7 +34,7 @@ enum GameTitle
 
 
 // en : Current Game title
-// ja : Œ»İ‚ÌƒQ[ƒ€ƒ^ƒCƒgƒ‹
+// ja : ç¾åœ¨ã®ã‚²ãƒ¼ãƒ ã‚¿ã‚¤ãƒˆãƒ«
 static GameTitle _gameTitle = GameTitle::UNKNOWN;
 
 
