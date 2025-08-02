@@ -14,6 +14,30 @@
 
 #include "systemhooks.h"
 
+
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Game title
+// ja : ゲームタイトル
+//++++++++++++++++++++++++++++++
+enum GameTitle
+{
+	UNKNOWN = 0,
+
+	IW8_167,
+	IW8_159,
+	IW8_157,
+	IW8_138,
+};
+
+
+// en : Current Game title
+// ja : 現在のゲームタイトル
+static GameTitle _gameTitle = GameTitle::UNKNOWN;
+
+
 const extern WCHAR* BadProcessnameList[];
 const extern WCHAR* BadWindowTextList[];
 const extern WCHAR* BadWindowClassList[];
@@ -23,15 +47,19 @@ const extern WCHAR* BadWindowClassList[];
 //	const uint64_t StartOfTextSection	= 0x7FF654E31000;
 //	const uint64_t StartOfBinary		= 0x7FF654E30000;
 
-// IW8 1.57
-const uint64_t EndOfTextSection		= 0x6F8E000;
-const uint64_t StartOfTextSection	= 0x7FF6AD391000;
-const uint64_t StartOfBinary		= 0x7FF6AD390000;
+//	// IW8 1.57
+//	const uint64_t EndOfTextSection		= 0x6F8E000;
+//	const uint64_t StartOfTextSection	= 0x7FF6AD391000;
+//	const uint64_t StartOfBinary		= 0x7FF6AD390000;
 
 //	// IW8 1.67
 //	const uint64_t EndOfTextSection			= 0x75D9000;
 //	const uint64_t StartOfTextSection		= 0x7FF683521000;
 //	const uint64_t StartOfBinary			= 0x7FF683520000;
+
+static uint64_t EndOfTextSection		= 0;
+static uint64_t StartOfTextSection		= 0;
+static uint64_t StartOfBinary			= 0;
 
 
 extern FILE* logFile;

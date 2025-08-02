@@ -213,20 +213,6 @@ typedef unsigned char byte;
 
 //++++++++++++++++++++++++++++++
 // en : Game title
-// ja : ゲームタイトル
-//++++++++++++++++++++++++++++++
-enum GameTitle
-{
-	UNKNOWN = 0,
-
-	IW8_167,
-	IW8_157,
-	IW8_138,
-};
-
-
-//++++++++++++++++++++++++++++++
-// en : Game title
 // ja : アドレスポインター
 //++++++++++++++++++++++++++++++
 struct AdrOffsets
@@ -1338,11 +1324,6 @@ const uintptr_t _TEXT_SEC_LEN = 0x1000;
 // en : Image Base Address Reference
 // ja : イメージベースアドレス参照
 const auto _ImageBase = (uintptr_t)GetModuleHandle(nullptr);
-
-
-// en : Current Game title
-// ja : 現在のゲームタイトル
-GameTitle _gameTitle = GameTitle::UNKNOWN;
 
 
 // en : Address Pointer
@@ -4725,9 +4706,6 @@ void HookExeModuleFunctions()
 //++++++++++++++++++++++++++++++
 void Initialization()
 {
-	//_gameTitle = GameTitle::IW8_138;
-	_gameTitle = GameTitle::IW8_157;
-	//_gameTitle = GameTitle::IW8_167;
 	GetAddressOffset(_gameTitle);
 
 	HookExeModuleFunctions();
@@ -4808,6 +4786,37 @@ void ShowIntroMessage()
 int main2()
 {
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+
+	
+	_gameTitle = GameTitle::IW8_167;
+
+	switch (_gameTitle)
+	{
+		case GameTitle::IW8_167:
+			EndOfTextSection	= 0x75D9000;
+			StartOfTextSection	= 0x7FF683521000;
+			StartOfBinary		= 0x7FF683520000;
+			break;
+
+		case GameTitle::IW8_159:
+			EndOfTextSection	= 0x768E000;
+			StartOfTextSection	= 0x7FF69CFE1000;
+			StartOfBinary		= 0x7FF69CFE0000;
+			break;
+
+		case GameTitle::IW8_157:
+			EndOfTextSection	= 0x6F8E000;
+			StartOfTextSection	= 0x7FF6AD391000;
+			StartOfBinary		= 0x7FF6AD390000;
+			break;
+
+		case GameTitle::IW8_138:
+			EndOfTextSection	= 0x5E6B000;
+			StartOfTextSection	= 0x7FF654E31000;
+			StartOfBinary		= 0x7FF654E30000;
+			break;
+	}
+
 
 	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
 		FILE_SHARE_READ, NULL, OPEN_EXISTING,
