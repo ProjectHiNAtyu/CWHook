@@ -212,6 +212,18 @@ typedef unsigned char byte;
 
 
 //++++++++++++++++++++++++++++++
+// en : A structure that stores stack trace information
+// ja : スタックトレース情報を格納する構造体
+//++++++++++++++++++++++++++++++
+struct StackTraceInfo
+{
+	std::vector<uintptr_t> addresses;
+	std::string crashLog;
+	EXCEPTION_POINTERS* exceptionPointers;
+};
+
+
+//++++++++++++++++++++++++++++++
 // en : Game title
 // ja : アドレスポインター
 //++++++++++++++++++++++++++++++
@@ -1399,6 +1411,21 @@ bool _frameCountEnd;
 bool _dumpGSC = false;
 
 
+// en : Crash log file path
+// ja : クラッシュログファイルパス
+static const char* CRASH_LOG_FILE = "!crashlog.txt";
+
+
+// en : Crash log file path
+// ja : クラッシュログファイルパス
+static const char* IMMEDIATE_CRASH_LOG = "!immediate_crash.txt";
+
+
+// en : Handlebars for VEH
+// ja : VEH用のハンドル
+static PVOID vehHandle = nullptr;
+
+
 // en : Exception Error Filter Settings function (to hold the IAT hook)
 // ja : 例外エラーフィルター設定関数（IATフックの保持用）
 std::optional<std::pair<void*, void*>> SetUnhandledExceptionFilter_h;
@@ -2447,6 +2474,362 @@ bool ClearMinHook(const char* callName, const char* funcName, size_t address)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// en : Custom Exception Handler
+// ja : カスタム例外ハンドラー
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Convert absolute addresses to relative address format
+// ja : 絶対アドレスを相対アドレス形式に変換
+//++++++++++++++++++++++++++++++
+std::string FormatRelativeAddress(uintptr_t address)
+{
+	static uintptr_t moduleBase = reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr));
+
+	if (address >= moduleBase)
+	{
+		uintptr_t offset = address - moduleBase;
+		char buffer[256];
+		sprintf_s(buffer, "modernwarfare.exe + 0x%llX", offset);
+		return std::string(buffer);
+	}
+
+	// モジュール外のアドレスの場合は絶対アドレスを表示
+	char buffer[256];
+	sprintf_s(buffer, "0x%llX", address);
+	return std::string(buffer);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Function to get stack trace
+// ja : スタックトレースを取得する関数
+//++++++++++++++++++++++++++++++
+std::vector<uintptr_t> CaptureStackTrace(CONTEXT* context)
+{
+	std::vector<uintptr_t> stackTrace;
+
+	// DbgHelpライブラリを初期化
+	HANDLE process = GetCurrentProcess();
+	if (!SymInitialize(process, NULL, TRUE))
+	{
+		return stackTrace;
+	}
+
+	// スタックフレーム情報を設定
+	STACKFRAME64 stackFrame = {};
+	DWORD machineType;
+
+#ifdef _M_X64
+	machineType = IMAGE_FILE_MACHINE_AMD64;
+	stackFrame.AddrPC.Offset = context->Rip;
+	stackFrame.AddrPC.Mode = AddrModeFlat;
+	stackFrame.AddrFrame.Offset = context->Rbp;
+	stackFrame.AddrFrame.Mode = AddrModeFlat;
+	stackFrame.AddrStack.Offset = context->Rsp;
+	stackFrame.AddrStack.Mode = AddrModeFlat;
+#else
+	machineType = IMAGE_FILE_MACHINE_I386;
+	stackFrame.AddrPC.Offset = context->Eip;
+	stackFrame.AddrPC.Mode = AddrModeFlat;
+	stackFrame.AddrFrame.Offset = context->Ebp;
+	stackFrame.AddrFrame.Mode = AddrModeFlat;
+	stackFrame.AddrStack.Offset = context->Esp;
+	stackFrame.AddrStack.Mode = AddrModeFlat;
+#endif
+
+	// スタックトレースを収集
+	for (int i = 0; i < 64; i++)
+	{
+		if (!StackWalk64(machineType, process, GetCurrentThread(), &stackFrame,
+			context, NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL))
+		{
+			break;
+		}
+
+		if (stackFrame.AddrPC.Offset == 0)
+		{
+			break;
+		}
+
+		stackTrace.push_back(static_cast<uintptr_t>(stackFrame.AddrPC.Offset));
+	}
+
+	SymCleanup(process);
+	return stackTrace;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Generates exception information in string format
+// ja : 例外情報を文字列形式で生成
+//++++++++++++++++++++++++++++++
+std::string FormatExceptionInfo(EXCEPTION_POINTERS* exceptionPointers)
+{
+	std::stringstream ss;
+
+	// 現在時刻を取得
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+
+	ss << "==========================================\n";
+	ss << "CWHook Crash Report\n";
+	ss << "==========================================\n";
+	ss << "Date: " << st.wYear << "/" << st.wMonth << "/" << st.wDay
+		<< " " << st.wHour << ":" << st.wMinute << ":" << st.wSecond << "\n\n";
+
+	// 例外コードと発生アドレス
+	EXCEPTION_RECORD* exceptionRecord = exceptionPointers->ExceptionRecord;
+	ss << "Exception Code: 0x" << std::hex << std::uppercase
+		<< exceptionRecord->ExceptionCode << "\n";
+
+	// 例外の説明
+	switch (exceptionRecord->ExceptionCode)
+	{
+		case EXCEPTION_ACCESS_VIOLATION:
+			ss << "Exception Type: Access Violation\n";
+			if (exceptionRecord->NumberParameters >= 2)
+			{
+				ss << "Access Type: " << (exceptionRecord->ExceptionInformation[0] ? "Write" : "Read") << "\n";
+				ss << "Address: " << FormatRelativeAddress(exceptionRecord->ExceptionInformation[1]) << "\n";
+			}
+			break;
+
+		case EXCEPTION_STACK_OVERFLOW:
+			ss << "Exception Type: Stack Overflow\n";
+			break;
+
+		case EXCEPTION_ILLEGAL_INSTRUCTION:
+			ss << "Exception Type: Illegal Instruction\n";
+			break;
+
+		case EXCEPTION_INT_DIVIDE_BY_ZERO:
+			ss << "Exception Type: Division by Zero\n";
+			break;
+
+		default:
+			ss << "Exception Type: Unknown (0x" << std::hex << exceptionRecord->ExceptionCode << ")\n";
+			break;
+	}
+
+	ss << "Exception Address: " << FormatRelativeAddress(reinterpret_cast<uintptr_t>(exceptionRecord->ExceptionAddress)) << "\n\n";
+
+	// レジスタ情報
+	CONTEXT* context = exceptionPointers->ContextRecord;
+	ss << "Registers:\n";
+	ss << "RAX: " << FormatRelativeAddress(context->Rax) << "\n";
+	ss << "RBX: " << FormatRelativeAddress(context->Rbx) << "\n";
+	ss << "RCX: " << FormatRelativeAddress(context->Rcx) << "\n";
+	ss << "RDX: " << FormatRelativeAddress(context->Rdx) << "\n";
+	ss << "RSI: " << FormatRelativeAddress(context->Rsi) << "\n";
+	ss << "RDI: " << FormatRelativeAddress(context->Rdi) << "\n";
+	ss << "RBP: " << FormatRelativeAddress(context->Rbp) << "\n";
+	ss << "RSP: " << FormatRelativeAddress(context->Rsp) << "\n";
+	ss << "RIP: " << FormatRelativeAddress(context->Rip) << "\n\n";
+
+	// スタックトレース
+	std::vector<uintptr_t> stackTrace = CaptureStackTrace(context);
+	ss << "Stack Trace:\n";
+	for (size_t i = 0; i < stackTrace.size(); i++)
+	{
+		ss << "[" << std::dec << i << "] " << FormatRelativeAddress(stackTrace[i]) << "\n";
+	}
+
+	ss << "\n==========================================\n\n";
+
+	return ss.str();
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Custom Exception Handler
+// ja : カスタム例外ハンドラー
+//++++++++++++++++++++++++++++++
+LONG WINAPI CustomExceptionHandler(EXCEPTION_POINTERS* exceptionPointers)
+{
+	try
+	{
+		// クラッシュログを生成
+		std::string crashLog = FormatExceptionInfo(exceptionPointers);
+
+		// ファイルに書き込み
+		std::ofstream logFile(CRASH_LOG_FILE, std::ios::app);
+		if (logFile.is_open())
+		{
+			logFile << crashLog;
+			logFile.close();
+		}
+
+		// メッセージボックスで表示
+		std::string message = "CWHook has crashed!\n\nCrash details have been saved to " + std::string(CRASH_LOG_FILE) + "\n\n";
+		message += "Brief crash info:\n";
+
+		// 簡略化された情報をメッセージボックス用に追加
+		EXCEPTION_RECORD* exceptionRecord = exceptionPointers->ExceptionRecord;
+		char briefInfo[512];
+		sprintf_s(briefInfo, "Exception: 0x%08X\nAddress: %s",
+			exceptionRecord->ExceptionCode,
+			FormatRelativeAddress(reinterpret_cast<uintptr_t>(exceptionRecord->ExceptionAddress)).c_str());
+
+		message += briefInfo;
+
+		MessageBoxA(NULL, message.c_str(), "CWHook Crash Handler", MB_OK | MB_ICONERROR);
+
+	}
+	catch (...)
+	{
+		// 例外ハンドラー自体で例外が発生した場合の安全策
+		MessageBoxA(NULL, "Critical error in crash handler!", "CWHook Fatal Error", MB_OK | MB_ICONERROR);
+	}
+
+	// デフォルトの例外処理に渡す
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Vectored Exception Handler
+// ja : より包括的な例外キャッチ
+//++++++++++++++++++++++++++++++
+LONG WINAPI VectoredExceptionHandler(EXCEPTION_POINTERS* exceptionPointers)
+{
+	try
+	{
+		EXCEPTION_RECORD* exceptionRecord = exceptionPointers->ExceptionRecord;
+
+		// 特定の例外コードのみログに記録（無限ループを避けるため）
+		if (exceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION ||
+			exceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW ||
+			exceptionRecord->ExceptionCode == EXCEPTION_ILLEGAL_INSTRUCTION ||
+			exceptionRecord->ExceptionCode == EXCEPTION_INT_DIVIDE_BY_ZERO ||
+			exceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT) {
+
+			// 即座にログファイルに書き込み（簡易版）
+			std::ofstream immediateLog(IMMEDIATE_CRASH_LOG, std::ios::app);
+			if (immediateLog.is_open())
+			{
+				SYSTEMTIME st;
+				GetLocalTime(&st);
+
+				immediateLog << "=== VEH Immediate Crash Detection ===\n";
+				immediateLog << "Time: " << st.wHour << ":" << st.wMinute << ":" << st.wSecond << "\n";
+				immediateLog << "Exception Code: 0x" << std::hex << exceptionRecord->ExceptionCode << "\n";
+				immediateLog << "Exception Address: " << FormatRelativeAddress(reinterpret_cast<uintptr_t>(exceptionRecord->ExceptionAddress)) << "\n";
+
+				// 簡易スタックトレース
+				CONTEXT* context = exceptionPointers->ContextRecord;
+				immediateLog << "RIP: " << FormatRelativeAddress(context->Rip) << "\n";
+				immediateLog << "RSP: " << FormatRelativeAddress(context->Rsp) << "\n";
+				immediateLog << "RBP: " << FormatRelativeAddress(context->Rbp) << "\n";
+				immediateLog << "======================================\n\n";
+				immediateLog.close();
+			}
+		}
+
+	}
+	catch (...)
+	{
+		// VEHで例外が発生した場合の安全策
+	}
+
+	// 他のハンドラーに処理を継続させる
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Minidump creation function
+// ja : ミニダンプ作成関数
+//++++++++++++++++++++++++++++++
+void CreateMiniDump(EXCEPTION_POINTERS* exceptionPointers, const char* dumpFileName)
+{
+	HANDLE hFile = CreateFileA(dumpFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		MINIDUMP_EXCEPTION_INFORMATION mdei;
+		mdei.ThreadId = GetCurrentThreadId();
+		mdei.ExceptionPointers = exceptionPointers;
+		mdei.ClientPointers = FALSE;
+
+		MINIDUMP_TYPE dumpType = static_cast<MINIDUMP_TYPE>(
+			MiniDumpNormal |
+			MiniDumpWithDataSegs |
+			MiniDumpWithHandleData |
+			MiniDumpWithThreadInfo
+			);
+
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, dumpType, &mdei, NULL, NULL);
+		CloseHandle(hFile);
+	}
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Improved Custom Exception Handler (with minidump functionality)
+// ja : 改良版カスタム例外ハンドラー（ミニダンプ機能付き）
+//++++++++++++++++++++++++++++++
+LONG WINAPI EnhancedExceptionHandler(EXCEPTION_POINTERS* exceptionPointers)
+{
+	try
+	{
+		// ミニダンプを作成
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		char dumpFileName[256];
+		sprintf_s(dumpFileName, "!crash_dump_%04d%02d%02d_%02d%02d%02d.dmp",
+			st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+
+		CreateMiniDump(exceptionPointers, dumpFileName);
+
+		// 詳細ログを作成
+		std::string crashLog = FormatExceptionInfo(exceptionPointers);
+
+		// ファイルに書き込み
+		std::ofstream logFile(CRASH_LOG_FILE, std::ios::app);
+		if (logFile.is_open())
+		{
+			logFile << crashLog;
+			logFile << "Mini dump created: " << dumpFileName << "\n\n";
+			logFile.close();
+		}
+
+		// メッセージボックスで表示
+		std::string message = "CWHook has crashed!\n\n";
+		message += "Crash details saved to: " + std::string(CRASH_LOG_FILE) + "\n";
+		message += "Mini dump created: " + std::string(dumpFileName) + "\n\n";
+
+		EXCEPTION_RECORD* exceptionRecord = exceptionPointers->ExceptionRecord;
+		char briefInfo[512];
+		sprintf_s(briefInfo, "Exception: 0x%08X\nAddress: %s",
+			exceptionRecord->ExceptionCode,
+			FormatRelativeAddress(reinterpret_cast<uintptr_t>(exceptionRecord->ExceptionAddress)).c_str());
+
+		message += briefInfo;
+
+		MessageBoxA(NULL, message.c_str(), "CWHook Enhanced Crash Handler", MB_OK | MB_ICONERROR);
+
+	}
+	catch (...)
+	{
+		MessageBoxA(NULL, "Critical error in enhanced crash handler!", "CWHook Fatal Error", MB_OK | MB_ICONERROR);
+	}
+
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // en : Address Construction
 // ja : アドレス構築
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -3015,6 +3398,18 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "online_lan_cross_play", "LTOQRQMMLQ" }, true },
 		//{ { "ui_onlineRequired", "MTSTMKPMRM" }, false }
 		//{ { "ShouldBlackOutFrontEndScene"								, "MTOPOKPPLN"								}, false },
+		//{ { "lui_showDebugLayer"										, "MSPSNLMPLP"								}, true },	// Toggle debug layer visibility
+		//{ { "server_bandwidth_profile_log_enabled"						, "NKMMPKRRSL"								}, true },	// Enable time series logging of server bandwidth data
+		//{ { "server_latency_profile_log_enabled"						, "MMSRQNMQM"								}, true },	// Enable time series logging of server latency data
+		//{ { "server_profile_log_enabled"								, "NTOSSLKMMP"								}, true },	// Enable time series logging of server performance data
+		//{ { "server_snap_details_log_enabled"							, "NQMNLRQQR"								}, true },	// Enable time series logging of server snapshot details
+		//{ { "snd_libad_logging_enable"									, "MPNPQSTOSN"								}, true },	// Print log output from libad
+		//{ { "live_displayLogOnErrorReason"								, "LRROQQPSMR"								}, true },	// if non-zero, display specific details of log on error.
+		//{ { "lui_root_dlog_enabled"										, "NQOKPOKKML"								}, true },	// Enables DLog event on LUI root creation error.
+		//{ { "netinfo_logging"											, "MPQLLMPSOK"								}, true },	// netinfo_logging enabler (default = off)
+		//{ { "pc_bypass_techset_fixup_enabled"							, "OQMKRQTKN"								}, true },	// When true the game is bypassing the techset fix up done during the load/unload of a map on PC unless My Changes is used
+		
+
 		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"								}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
 		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
@@ -4796,6 +5191,39 @@ int main2()
 	GetFileSizeEx(hFile, &size);
 	ntdllSize = 4096 * ceil(size.QuadPart / 4096.0f);
 
+
+	switch (_gameTitle)
+	{
+	case GameTitle::IW8_138:
+	case GameTitle::IW8_157:
+	case GameTitle::IW8_159:
+	case GameTitle::IW8_167:
+		// 既存のログファイルを削除
+		if (DeleteFileA(IMMEDIATE_CRASH_LOG))
+		{
+			NotifyMsg("[CWHook] Deleted existing immediate crash log\n");
+		}
+	
+		// Vectored Exception Handler を登録 (最高優先度)
+		vehHandle = AddVectoredExceptionHandler(1, VectoredExceptionHandler);
+		if (vehHandle)
+		{
+			NotifyMsg("[CWHook] Vectored Exception Handler registered successfully\n");
+		}
+		else
+		{
+			NotifyMsg("[CWHook] Failed to register Vectored Exception Handler\n");
+		}
+	
+		// 改良版例外ハンドラーを登録 (ミニダンプ機能付き)
+		SetUnhandledExceptionFilter(EnhancedExceptionHandler);
+	
+		// 初期化ログを出力
+		NotifyMsg("[CWHook] Enhanced Exception Handler registered successfully\n");
+		break;
+	}
+	
+
 	// 1.67 broken
 	// exceptionHandle = AddVectoredExceptionHandler(true, exceptionHandler);
 
@@ -4840,6 +5268,13 @@ int main2()
 	//NtdllAsmStub();
 
 	Initialization();
+
+	// VEHを削除
+	if (vehHandle)
+	{
+		RemoveVectoredExceptionHandler(vehHandle);
+		NotifyMsg("[CWHook] Vectored Exception Handler removed\n");
+	}
 
 	return 0;
 }
