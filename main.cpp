@@ -321,6 +321,7 @@ struct AdrOffsets
 	uintptr_t Dvar_GetStringSafe;
 	uintptr_t CL_TransientsCollisionMP_SetTransientMode;
 	uintptr_t CL_TransientsCollisionMP_SetTransientMode_var;
+	uintptr_t DLog_Record;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1306,6 +1307,22 @@ struct DBFileHandle
 };
 
 
+//++++++++++++++++++++++++++++++
+// en : DLog Serialization Format
+// ja : Dログシリアライズフォーマット
+//++++++++++++++++++++++++++++++
+enum DLogSerializationFormat
+{
+	DLOG_SERIALIZATION_FORMAT_UNKNOWN = 0x0, 
+	DLOG_SERIALIZATION_FORMAT_DDL4 = 0x1, 
+	DLOG_SERIALIZATION_FORMAT_PB2 = 0x2, 
+	DLOG_SERIALIZATION_FORMAT_JSON = 0x3, 
+	DLOG_SERIALIZATION_FORMAT_MSGPACK = 0x4, 
+	DLOG_SERIALIZATION_FORMAT_AVRO = 0x5, 
+	DLOG_SERIALIZATION_FORMAT_BINARY = 0x6,
+};
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1653,6 +1670,12 @@ DB_CheckXFileVersion_t DB_CheckXFileVersion_h;
 // ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef int(__fastcall* DB_PollFastfileState_t)(const char* zoneName);
 DB_PollFastfileState_t DB_PollFastfileState_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef char(__fastcall* DLog_Record_t)(unsigned __int64 userId, const char* eventName, char* bytes, int byteCount, DLogSerializationFormat serializationFormat, bool sampled);
+DLog_Record_t DLog_Record_h;
 
 
 
@@ -2569,6 +2592,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x7FF6B363D8E0;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= 0x7FF6B3640DF0;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			_adr.s_assetPools									= 0;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
+			_adr.DLog_Record									= 0x7FF6B3F7A200;	// 0x7FF6B3F7A200	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
+			
 			
 			// GSC
 			_adr.Load_ScriptFile								= 0x7FF6AFCC80B0;	// 
@@ -2825,7 +2850,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			_adr.s_assetPools									= _TEXT_SEC_LEN + 0x12523740;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
-			
+			_adr.DLog_Record									= _TEXT_SEC_LEN + 0x7233770;	// 0x7FF68A754770	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
+
 			// GSC
 			_adr.Load_ScriptFile								= _TEXT_SEC_LEN + 0x2E735B0;	// 
 			_adr.DB_PatchMem_PushAsset							= _TEXT_SEC_LEN + 0x2DF0930;	// 
@@ -3623,84 +3649,6 @@ void AssetPoolInjection( )
 		}
 		else
 		{
-			/*
-			// ========================================================================================== //
-			// for Inject
-			// ========================================================================================== //
-
-			NotepadLog("[%s] <Notice> ", titlename);
-
-
-			std::string filepath = "";
-			bool foundcustomgsc = false;
-
-			std::string scriptname = "";
-			std::string fixpath = "";
-			std::string directory;
-			std::string filepathtmp = "";
-
-
-			if (gscHeader)
-			{
-				sprintf_s(scriptid, "%llX", gscHeader->name);
-				NotepadLog("GSC [ %d - '%s' ] -> ", i, scriptid);
-
-				filepath = gscPath + scriptid + ".gscc";
-				ReplaceAll(filepath, "/", "\\");
-
-				if (file_exists(filepath.c_str()))
-					foundcustomgsc = true;
-			}
-
-			if (!foundcustomgsc)
-			{
-				NotepadLog("\n");
-				continue;
-			}
-			else
-			{
-				NotepadLog("Custom GSC found!\n");
-			}
-
-			filepathtmp = filepath + "_tmp";
-			ShiftFileBytes(filepath.c_str(), filepathtmp.c_str(), _sbyte);
-			std::filesystem::remove(filepath); // ファイルを削除
-			rename_file(filepathtmp.c_str(), filepath.c_str());
-
-			std::ifstream script(filepath, std::ios::binary | std::ios::ate);
-			if (!script.is_open())
-			{
-				NotepadLog("[%s] <Failed> Failed to open Custom GSC file : %s\n", titlename, filepath.c_str());
-				continue;
-			}
-
-			int size = (int)script.tellg();
-			script.seekg(0, std::ios::beg);
-
-			if (gscHeader->len < size)
-			{
-				script.close();
-				NotepadLog("[%s] <Warning> Custom GSC ( %d - '%llX.gsc ) is buffer too small ( %d < %d )\n", titlename, i, gscHeader->name, gscHeader->len, size);
-				continue;
-			}
-
-			std::unique_ptr<char[]> customScript(new char[size]);
-			script.read(customScript.get(), size);
-			script.close();
-
-
-			if (gscHeader->buffer)
-			{
-				memset((void*)gscHeader->buffer, 0, gscHeader->len);
-				memcpy((void*)gscHeader->buffer, customScript.get(), size);
-				NotifyMsg("[ \x1b[32m Success \x1b[39m ] Custom GSC ( %d - '%llX.gsc ) - Injected!! [ Size : %d bytes ]\n", titlename, i, gscHeader->name, size);
-			}
-			else
-			{
-				NotepadLog("[%s] <Failed> Custom GSC ( %d - '%llX.gsc ) - buffer is null.\n", titlename, i, gscHeader->name);
-			}
-			std::filesystem::remove(filepath); // ファイルを削除
-			*/
 		}
 	}
 }
@@ -4102,6 +4050,20 @@ LobbyData* Lobby_GetLobbyData_d()
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Checks if a statistics source exists for the specified controller index. (execute the function)
+// ja : 指定したコントローラーインデックスの統計ソースが存在するか確認する ( 関数を実行する )
+//++++++++++++++++++++++++++++++
+char DLog_Record_d(unsigned __int64 userId, const char* eventName, char* bytes, int byteCount, DLogSerializationFormat serializationFormat, bool sampled)
+{
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DLog_Record> userId = %llu , bytes = %p , byteCount = %d , format = %d , name = %s\n", userId, bytes, byteCount, serializationFormat, eventName);
+
+	return DLog_Record_h(userId, eventName, bytes, byteCount, serializationFormat, sampled);
+}
+
+
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // Authentication
@@ -4374,7 +4336,7 @@ void R_EndFrame_d()
 					_xuid.RandomXUID();
 					_xuid.m_id = 123456789;
 					//_xuid.RandomXUID();
-
+					
 					SetupMinHook("R_EndFrame", "Live_IsSignedIn"							, CalcPtr(_adr.Live_IsSignedIn)								, &Live_IsSignedIn_d							, &Live_IsSignedIn_h);
 					
 					SkuStylePatch(_xuid);
@@ -4553,6 +4515,7 @@ void GameStart()
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
 	SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
 	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	SetupMinHook("GameStart", "DLog_Record"									, CalcPtr(_adr.DLog_Record)									, &DLog_Record_d								, &DLog_Record_h);
 	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
 	
 	JumpHookTo(	"GameStart"	, "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, CL_TransientsCollisionMP_SetTransientMode_d);
@@ -4857,6 +4820,8 @@ int main2()
 
 	NotifyMsg("address %llx\n", baseAddr);
 
+
+
 	SetSyscallsFromNtdll();
 	RestoreNtdllDbgFunctions();
 	MH_Initialize();
@@ -4875,242 +4840,6 @@ int main2()
 	//NtdllAsmStub();
 
 	Initialization();
-
-	return 0;
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : main process
-// ja : メイン処理
-//++++++++++++++++++++++++++++++
-int main()
-{
-	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
-
-	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
-		FILE_SHARE_READ, NULL, OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL, NULL);
-	LARGE_INTEGER size;
-	GetFileSizeEx(hFile, &size);
-	ntdllSize = 4096 * ceil(size.QuadPart / 4096.0f);
-
-	exceptionHandle = AddVectoredExceptionHandler(true, exceptionHandler);
-
-	auto* const peb = reinterpret_cast<PPEB>(__readgsqword(0x60));
-	peb->BeingDebugged = false;
-	*reinterpret_cast<PDWORD>(LPSTR(peb) + 0xBC) &= ~0x70;
-
-	AllocConsole();
-	freopen("CONIN$", "r", stdin);
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
-
-	ShowIntroMessage();
-
-	NotifyMsg("[Arxan Info] address %llx\n", baseAddr);
-	//inputHandle = CreateThread(nullptr, 0, ConsoleInput, module, 0, &inputThreadId);
-	//printf("inputThreadId: %llx\n", inputThreadId);
-
-	SetSyscallsFromNtdll();
-	RestoreNtdllDbgFunctions();
-	MH_Initialize();
-	InitializeSystemHooks();
-
-	logFile = fopen("log.txt", "w+");
-
-	// disable audio being turned on
-	DWORD dwVolume;
-	if (waveOutGetVolume(NULL, &dwVolume) == MMSYSERR_NOERROR)
-		waveOutSetVolume(NULL, 0);
-
-	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
-
-
-	/*
-
-	const char* funcStr1 = "DbgBreakPoint";
-	const char* funcStr2 = "DbgUserBreakPoint";
-	const char* funcStr3 = "DbgUiConnectToDbg";
-	
-	void* funcAddr1 = GetProcAddress(moduleNtdll, funcStr1);
-	void* funcAddr2 = GetProcAddress(moduleNtdll, funcStr2);
-	void* funcAddr3 = GetProcAddress(moduleNtdll, funcStr3);
-	//void* funcAddr4 = GetProcAddress(moduleNtdll, "RtlRaiseException");
-
-	placeHardwareBP((char*)funcAddr1, 0, Condition::Execute);
-	placeHardwareBP((char*)funcAddr2, 1, Condition::Execute);
-	placeHardwareBP((char*)funcAddr3, 2, Condition::Execute);
-	//placeHardwareBP((char*)funcAddr4, 3, Condition::Execute);
-
-	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 0, funcStr1, funcAddr1, (unsigned int)((char*)funcAddr1 - (char*)moduleNtdll));
-	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 1, funcStr2, funcAddr2, (unsigned int)((char*)funcAddr2 - (char*)moduleNtdll));
-	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 2, funcStr3, funcAddr3, (unsigned int)((char*)funcAddr3 - (char*)moduleNtdll));
-	//printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 3, "RtlRaiseException"	, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
-
-
-	*/
-
-
-
-
-
-
-
-
-
-
-	/*
-	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
-	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
-
-	const char* funcStr4 = "DbgUiDebugActiveProcess";
-	const char* funcStr5 = "DbgUiGetThreadDebugObject";
-	const char* funcStr6 = "DbgUiIssueRemoteBreakin";
-	const char* funcStr7 = "DbgUiRemoteBreakin";
-
-	void* funcAddr4 = GetProcAddress(ntdllModule, funcStr4);
-	void* funcAddr5 = GetProcAddress(ntdllModule, funcStr5);
-	void* funcAddr6 = GetProcAddress(ntdllModule, funcStr6);
-	void* funcAddr7 = GetProcAddress(ntdllModule, funcStr7);
-
-
-	placeHardwareBP((char*)funcAddr4, 0, Condition::Execute);
-	placeHardwareBP((char*)funcAddr5, 1, Condition::Execute);
-	placeHardwareBP((char*)funcAddr6, 2, Condition::Execute);
-	placeHardwareBP((char*)funcAddr7, 3, Condition::Execute);
-
-	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 0, funcStr4, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
-	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 1, funcStr5, funcAddr5, (unsigned int)((char*)funcAddr5 - (char*)ntdllModule));
-	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 2, funcStr6, funcAddr6, (unsigned int)((char*)funcAddr6 - (char*)ntdllModule));
-	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 3, funcStr7, funcAddr7, (unsigned int)((char*)funcAddr7 - (char*)ntdllModule));
-	*/
-	/*
-	
-	*/
-
-
-	/*
-	void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
-	void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
-	void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
-	void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
-	void* ntClose = GetProcAddress(ntdllModule, "NtClose");
-	void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
-	void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
-
-
-	if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
-	if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
-	if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
-	if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
-	if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
-	if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
-	if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
-	*/
-
-
-	/*
-	printf("SetArxanCrashDetectionBreakpoints: Setting up crash detection HWBPs\n");
-
-	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
-	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
-
-	if (!ntdllModule || !kernel32Module) {
-		printf("ERROR: Failed to get module handles for crash detection\n");
-		//return;
-	}
-	else
-	{
-		// 終了系関数のアドレスを取得
-		void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
-		void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
-		void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
-		void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
-		void* ntClose = GetProcAddress(ntdllModule, "NtClose");
-		void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
-		void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
-
-		printf("MW19: Crash detection target functions:\n");
-		if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
-		if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
-		if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
-		if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
-		if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
-		if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
-		if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
-
-		// 現在のHWBP状態を確認
-		CONTEXT ctx = { 0 };
-		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
-		GetThreadContext(GetCurrentThread(), &ctx);
-
-		printf("Current HWBP state before crash detection setup:\n");
-		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
-		printf("  Dr7: 0x%llX\n", ctx.Dr7);
-
-		// クラッシュ検出用HWBP設置（優先順位順）
-		std::vector<std::pair<void*, const char*>> crashFunctions = {
-			{exitProcess, "ExitProcess"},
-			{terminateProcess, "TerminateProcess"},
-			{ntTerminateProcess, "NtTerminateProcess"},
-			{ntRaiseHardError, "NtRaiseHardError"}
-		};
-
-		// 利用可能なHWBPスロットを動的に検索
-		int availableSlots[4] = { -1, -1, -1, -1 };
-		int slotCount = 0;
-
-		if (ctx.Dr0 == 0) availableSlots[slotCount++] = 0;
-		if (ctx.Dr1 == 0) availableSlots[slotCount++] = 1;
-		if (ctx.Dr2 == 0) availableSlots[slotCount++] = 2;
-		//if (ctx.Dr3 == 0) availableSlots[slotCount++] = 3;
-
-		printf("Available HWBP slots: %d\n", slotCount);
-		for (int i = 0; i < slotCount; i++) {
-			printf("  Slot %d is available\n", availableSlots[i]);
-		}
-
-		int slotIndex = 0;
-		for (const auto& func : crashFunctions) {
-			if (func.first && slotIndex < slotCount) {
-				int slot = availableSlots[slotIndex];
-
-				// placeHardwareBP関数を使用してHWBPを設置
-				placeHardwareBP(func.first, slot, Condition::Execute);
-				printf("SetArxanCrashDetectionBreakpoints: HWBP %d set on %s at 0x%p\n",
-					slot, func.second, func.first);
-				slotIndex++;
-			}
-		}
-
-		// 設定後のHWBP状態を確認
-		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
-		GetThreadContext(GetCurrentThread(), &ctx);
-		printf("HWBP state after crash detection setup:\n");
-		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
-		printf("  Dr7: 0x%llX\n", ctx.Dr7);
-
-		printf("SetArxanCrashDetectionBreakpoints: Crash detection setup completed\n");
-	}
-	*/
-
-
-
-
-	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "NtAllocateVirtualMemory")+0x12, 3, Condition::Execute);
-
-	//HMODULE moduleNtdll = GetModuleHandle("user32.dll");
-	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "GetSystemMetrics")+0x12, 3, Condition::Execute);
-
-	// arxan applies checksum checks & healing to INT2D
-	NtdllAsmStub();
-
-	// crashes the game after a while, only good if you want to know what syscalls get called from win32u & friends
-	//initInstrumentation();
-
-	//Initialization();
 
 	return 0;
 }
@@ -5715,6 +5444,242 @@ utils::hook::jump(									CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayerReady)			
 
 
 
+
+
+
+//++++++++++++++++++++++++++++++
+// en : main process
+// ja : メイン処理
+//++++++++++++++++++++++++++++++
+int main()
+{
+	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
+
+	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
+		FILE_SHARE_READ, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
+	LARGE_INTEGER size;
+	GetFileSizeEx(hFile, &size);
+	ntdllSize = 4096 * ceil(size.QuadPart / 4096.0f);
+
+	exceptionHandle = AddVectoredExceptionHandler(true, exceptionHandler);
+
+	auto* const peb = reinterpret_cast<PPEB>(__readgsqword(0x60));
+	peb->BeingDebugged = false;
+	*reinterpret_cast<PDWORD>(LPSTR(peb) + 0xBC) &= ~0x70;
+
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+
+	ShowIntroMessage();
+
+	NotifyMsg("[Arxan Info] address %llx\n", baseAddr);
+	//inputHandle = CreateThread(nullptr, 0, ConsoleInput, module, 0, &inputThreadId);
+	//printf("inputThreadId: %llx\n", inputThreadId);
+
+	SetSyscallsFromNtdll();
+	RestoreNtdllDbgFunctions();
+	MH_Initialize();
+	InitializeSystemHooks();
+
+	logFile = fopen("log.txt", "w+");
+
+	// disable audio being turned on
+	DWORD dwVolume;
+	if (waveOutGetVolume(NULL, &dwVolume) == MMSYSERR_NOERROR)
+		waveOutSetVolume(NULL, 0);
+
+	HMODULE moduleNtdll = GetModuleHandle("ntdll.dll");
+
+
+	/*
+
+	const char* funcStr1 = "DbgBreakPoint";
+	const char* funcStr2 = "DbgUserBreakPoint";
+	const char* funcStr3 = "DbgUiConnectToDbg";
+	
+	void* funcAddr1 = GetProcAddress(moduleNtdll, funcStr1);
+	void* funcAddr2 = GetProcAddress(moduleNtdll, funcStr2);
+	void* funcAddr3 = GetProcAddress(moduleNtdll, funcStr3);
+	//void* funcAddr4 = GetProcAddress(moduleNtdll, "RtlRaiseException");
+
+	placeHardwareBP((char*)funcAddr1, 0, Condition::Execute);
+	placeHardwareBP((char*)funcAddr2, 1, Condition::Execute);
+	placeHardwareBP((char*)funcAddr3, 2, Condition::Execute);
+	//placeHardwareBP((char*)funcAddr4, 3, Condition::Execute);
+
+	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 0, funcStr1, funcAddr1, (unsigned int)((char*)funcAddr1 - (char*)moduleNtdll));
+	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 1, funcStr2, funcAddr2, (unsigned int)((char*)funcAddr2 - (char*)moduleNtdll));
+	printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 2, funcStr3, funcAddr3, (unsigned int)((char*)funcAddr3 - (char*)moduleNtdll));
+	//printf("SetNtdllDebugBreakpoints: Setting HWBP %d on %s at 0x%p (ntdll+0x%X)\n", 3, "RtlRaiseException"	, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
+
+
+	*/
+
+
+
+
+
+
+
+
+
+
+	/*
+	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
+	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
+
+	const char* funcStr4 = "DbgUiDebugActiveProcess";
+	const char* funcStr5 = "DbgUiGetThreadDebugObject";
+	const char* funcStr6 = "DbgUiIssueRemoteBreakin";
+	const char* funcStr7 = "DbgUiRemoteBreakin";
+
+	void* funcAddr4 = GetProcAddress(ntdllModule, funcStr4);
+	void* funcAddr5 = GetProcAddress(ntdllModule, funcStr5);
+	void* funcAddr6 = GetProcAddress(ntdllModule, funcStr6);
+	void* funcAddr7 = GetProcAddress(ntdllModule, funcStr7);
+
+
+	placeHardwareBP((char*)funcAddr4, 0, Condition::Execute);
+	placeHardwareBP((char*)funcAddr5, 1, Condition::Execute);
+	placeHardwareBP((char*)funcAddr6, 2, Condition::Execute);
+	placeHardwareBP((char*)funcAddr7, 3, Condition::Execute);
+
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 0, funcStr4, funcAddr4, (unsigned int)((char*)funcAddr4 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 1, funcStr5, funcAddr5, (unsigned int)((char*)funcAddr5 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 2, funcStr6, funcAddr6, (unsigned int)((char*)funcAddr6 - (char*)ntdllModule));
+	printf("SetArxanCrashDetectionBreakpoints: Setting HWBP %d on %s at 0x%p (dll+0x%X)\n"	, 3, funcStr7, funcAddr7, (unsigned int)((char*)funcAddr7 - (char*)ntdllModule));
+	*/
+	/*
+	
+	*/
+
+
+	/*
+	void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
+	void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
+	void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
+	void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
+	void* ntClose = GetProcAddress(ntdllModule, "NtClose");
+	void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
+	void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
+
+
+	if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
+	if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
+	if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
+	if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
+	if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
+	if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
+	if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
+	*/
+
+
+	/*
+	printf("SetArxanCrashDetectionBreakpoints: Setting up crash detection HWBPs\n");
+
+	HMODULE ntdllModule = GetModuleHandleA("ntdll.dll");
+	HMODULE kernel32Module = GetModuleHandleA("kernel32.dll");
+
+	if (!ntdllModule || !kernel32Module) {
+		printf("ERROR: Failed to get module handles for crash detection\n");
+		//return;
+	}
+	else
+	{
+		// 終了系関数のアドレスを取得
+		void* exitProcess = GetProcAddress(kernel32Module, "ExitProcess");
+		void* terminateProcess = GetProcAddress(kernel32Module, "TerminateProcess");
+		void* ntTerminateProcess = GetProcAddress(ntdllModule, "NtTerminateProcess");
+		void* ntRaiseHardError = GetProcAddress(ntdllModule, "NtRaiseHardError");
+		void* ntClose = GetProcAddress(ntdllModule, "NtClose");
+		void* ntSetInformationProcess = GetProcAddress(ntdllModule, "NtSetInformationProcess");
+		void* rtlReportException = GetProcAddress(ntdllModule, "RtlReportException");
+
+		printf("MW19: Crash detection target functions:\n");
+		if (exitProcess) printf("  ExitProcess: 0x%p (kernel32+0x%X)\n", exitProcess, (unsigned int)((char*)exitProcess - (char*)kernel32Module));
+		if (terminateProcess) printf("  TerminateProcess: 0x%p (kernel32+0x%X)\n", terminateProcess, (unsigned int)((char*)terminateProcess - (char*)kernel32Module));
+		if (ntTerminateProcess) printf("  NtTerminateProcess: 0x%p (ntdll+0x%X)\n", ntTerminateProcess, (unsigned int)((char*)ntTerminateProcess - (char*)ntdllModule));
+		if (ntRaiseHardError) printf("  NtRaiseHardError: 0x%p (ntdll+0x%X)\n", ntRaiseHardError, (unsigned int)((char*)ntRaiseHardError - (char*)ntdllModule));
+		if (ntClose) printf("  NtClose: 0x%p (ntdll+0x%X)\n", ntClose, (unsigned int)((char*)ntClose - (char*)ntdllModule));
+		if (ntSetInformationProcess) printf("  NtSetInformationProcess: 0x%p (ntdll+0x%X)\n", ntSetInformationProcess, (unsigned int)((char*)ntSetInformationProcess - (char*)ntdllModule));
+		if (rtlReportException) printf("  RtlReportException: 0x%p (ntdll+0x%X)\n", rtlReportException, (unsigned int)((char*)rtlReportException - (char*)ntdllModule));
+
+		// 現在のHWBP状態を確認
+		CONTEXT ctx = { 0 };
+		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+		GetThreadContext(GetCurrentThread(), &ctx);
+
+		printf("Current HWBP state before crash detection setup:\n");
+		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
+		printf("  Dr7: 0x%llX\n", ctx.Dr7);
+
+		// クラッシュ検出用HWBP設置（優先順位順）
+		std::vector<std::pair<void*, const char*>> crashFunctions = {
+			{exitProcess, "ExitProcess"},
+			{terminateProcess, "TerminateProcess"},
+			{ntTerminateProcess, "NtTerminateProcess"},
+			{ntRaiseHardError, "NtRaiseHardError"}
+		};
+
+		// 利用可能なHWBPスロットを動的に検索
+		int availableSlots[4] = { -1, -1, -1, -1 };
+		int slotCount = 0;
+
+		if (ctx.Dr0 == 0) availableSlots[slotCount++] = 0;
+		if (ctx.Dr1 == 0) availableSlots[slotCount++] = 1;
+		if (ctx.Dr2 == 0) availableSlots[slotCount++] = 2;
+		//if (ctx.Dr3 == 0) availableSlots[slotCount++] = 3;
+
+		printf("Available HWBP slots: %d\n", slotCount);
+		for (int i = 0; i < slotCount; i++) {
+			printf("  Slot %d is available\n", availableSlots[i]);
+		}
+
+		int slotIndex = 0;
+		for (const auto& func : crashFunctions) {
+			if (func.first && slotIndex < slotCount) {
+				int slot = availableSlots[slotIndex];
+
+				// placeHardwareBP関数を使用してHWBPを設置
+				placeHardwareBP(func.first, slot, Condition::Execute);
+				printf("SetArxanCrashDetectionBreakpoints: HWBP %d set on %s at 0x%p\n",
+					slot, func.second, func.first);
+				slotIndex++;
+			}
+		}
+
+		// 設定後のHWBP状態を確認
+		ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+		GetThreadContext(GetCurrentThread(), &ctx);
+		printf("HWBP state after crash detection setup:\n");
+		printf("  Dr0: 0x%llX, Dr1: 0x%llX, Dr2: 0x%llX, Dr3: 0x%llX\n", ctx.Dr0, ctx.Dr1, ctx.Dr2, ctx.Dr3);
+		printf("  Dr7: 0x%llX\n", ctx.Dr7);
+
+		printf("SetArxanCrashDetectionBreakpoints: Crash detection setup completed\n");
+	}
+	*/
+
+
+
+
+	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "NtAllocateVirtualMemory")+0x12, 3, Condition::Execute);
+
+	//HMODULE moduleNtdll = GetModuleHandle("user32.dll");
+	//placeHardwareBP((char*)GetProcAddress(moduleNtdll, "GetSystemMetrics")+0x12, 3, Condition::Execute);
+
+	// arxan applies checksum checks & healing to INT2D
+	NtdllAsmStub();
+
+	// crashes the game after a while, only good if you want to know what syscalls get called from win32u & friends
+	//initInstrumentation();
+
+	//Initialization();
+
+	return 0;
+}
 
 
 
