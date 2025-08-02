@@ -671,7 +671,7 @@ void NotifyMsg(const char* format, ...)
 		GetModuleFileNameA(NULL, dllPath, MAX_PATH);
 		// ディレクトリ部分を抽出
 		std::string path(dllPath);
-		std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\debuglog.txt";
+		std::string logFilePath = path.substr(0, path.find_last_of("\\/")) + "\\!debuglog.txt";
 
 		// ファイルにまとめて書き込み
 		FILE* fp = fopen(logFilePath.c_str(), "a");

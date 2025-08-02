@@ -4818,6 +4818,14 @@ int main2()
 	}
 
 
+	// 既存のログファイルを削除
+	if (DeleteFileA("!crashlog.txt")) {
+		NotifyMsg("[main2] Deleted existing !crashlog.txt\n");
+	}
+	if (DeleteFileA("!debuglog.txt")) {
+		NotifyMsg("[CWHook] Deleted existing !debuglog.txt\n");
+	}
+
 	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
 		FILE_SHARE_READ, NULL, OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL, NULL);
