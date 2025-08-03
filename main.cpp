@@ -1703,6 +1703,12 @@ Lobby_GetLobbyData_t Lobby_GetLobbyData_h;
 
 // en : Hook source function pointer for various MinHooks (for storage)
 // ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef void(__fastcall* CL_TransientsCollisionMP_SetTransientMode_t)(int mode);
+CL_TransientsCollisionMP_SetTransientMode_t CL_TransientsCollisionMP_SetTransientMode_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef char(__fastcall* DB_CheckFastfileHeaderVersionAndMagic_t)(const DB_FFHeader* header, DBFile* outFile);
 DB_CheckFastfileHeaderVersionAndMagic_t DB_CheckFastfileHeaderVersionAndMagic_h;
 
@@ -5071,7 +5077,7 @@ void GameStart()
 	SetupMinHook("GameStart", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
 	SetupMinHook("GameStart", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
 	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
-	
+
 	SetupMinHook("GameStart", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
 	SetupMinHook("GameStart", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
 	//SetupMinHook("GameStart", "Live_IsUserSignedInToBnet"					, CalcPtr(_adr.Live_IsUserSignedInToBnet)					, &Live_IsUserSignedInToBnet_d					, &Live_IsUserSignedInToBnet_h);
@@ -5080,23 +5086,29 @@ void GameStart()
 	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
 	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
-	//SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
-	//SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	SetupMinHook("GameStart", "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, &CL_TransientsCollisionMP_SetTransientMode_d	, &CL_TransientsCollisionMP_SetTransientMode_h);
+	
 	SetupMinHook("GameStart", "DLog_Record"									, CalcPtr(_adr.DLog_Record)									, &DLog_Record_d								, &DLog_Record_h);
 	SetupMinHook("GameStart", "DLog_RecordErrorEvent"						, CalcPtr(_adr.DLog_RecordErrorEvent)						, &DLog_RecordErrorEvent_d						, &DLog_RecordErrorEvent_h);
+	
+	
+	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
+
+	return;
+	//SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
+	//SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
 	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
 	//SetupMinHook("GameStart", "sub_7FF6B057D200"							, CalcPtr(0x7FF6B057D200)									, &sub_7FF6B057D200_d							, &sub_7FF6B057D200_h);
 	
+	
+	//JumpHookTo(	"GameStart"	, "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, &CL_TransientsCollisionMP_SetTransientMode_d);
 
 	
-	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAvailable"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAvailable)			, &LUI_CoD_LuaCall_IsGameModeAvailable_d		, &LUI_CoD_LuaCall_IsGameModeAvailable_h);
-	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAllowed)			, &LUI_CoD_LuaCall_IsGameModeAllowed_d			, &LUI_CoD_LuaCall_IsGameModeAllowed_h);
+	//SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAvailable"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAvailable)			, &LUI_CoD_LuaCall_IsGameModeAvailable_d		, &LUI_CoD_LuaCall_IsGameModeAvailable_h);
+	//SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAllowed)			, &LUI_CoD_LuaCall_IsGameModeAllowed_d			, &LUI_CoD_LuaCall_IsGameModeAllowed_h);
 	//SetupMinHook("GameStart", "LuaShared_LuaCall_IsSingleplayer"			, CalcPtr(_adr.LuaShared_LuaCall_IsSingleplayer)			, &LuaShared_LuaCall_IsSingleplayer_d			, &LuaShared_LuaCall_IsSingleplayer_h);
 
 	
-
-	JumpHookTo(	"GameStart"	, "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, CL_TransientsCollisionMP_SetTransientMode_d);
-
 
 
 
@@ -5112,8 +5124,6 @@ void GameStart()
 	//SetupMinHook("GameStart", "DB_AllocStreamPos"		, CalcPtr(_adr.DB_AllocStreamPos)		, &DB_AllocStreamPos_d			, &DB_AllocStreamPos_h);
 
 
-
-	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
 
 }
