@@ -3544,7 +3544,13 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "lui_root_dlog_enabled"										, "NQOKPOKKML"								}, true },	// Enables DLog event on LUI root creation error.
 		//{ { "netinfo_logging"											, "MPQLLMPSOK"								}, true },	// netinfo_logging enabler (default = off)
 		//{ { "pc_bypass_techset_fixup_enabled"							, "OQMKRQTKN"								}, true },	// When true the game is bypassing the techset fix up done during the load/unload of a map on PC unless My Changes is used
+		// { { "com_force_free_to_play"									, "NPSSNLOLPS"								}, true }, // Forces non-premium user status on Development builds.
 
+		//{ { "warzone_privatematch_enabled"								, "MLQNQTRRTK"								}, true },
+		//{ { "warzone_permissions"										, "LNLMORMPTS"								}, true },
+		//{ { "lui_magma_enabled"											, "NMNPSRKPPP"								}, true },
+		//{ { "ui_is_magma_gamemode"										, "QTQRQPLNK"								}, true },
+		//{ { "ui_wz_mode"												, "ui_wz_mode"								}, true },
 		
 		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"								}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
@@ -5357,7 +5363,6 @@ int main2()
 			EndOfTextSection	= 0x6F8E000;
 			StartOfTextSection	= 0x7FF6AD391000;
 			StartOfBinary		= 0x7FF6AD390000;
-			_onlyWarzoneBuild	= true;
 			break;
 
 		case GameTitle::IW8_138:
