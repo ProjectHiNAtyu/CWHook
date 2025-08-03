@@ -334,6 +334,7 @@ struct AdrOffsets
 	uintptr_t CL_TransientsCollisionMP_SetTransientMode;
 	uintptr_t CL_TransientsCollisionMP_SetTransientMode_var;
 	uintptr_t DLog_Record;
+	uintptr_t DLog_RecordErrorEvent;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1335,6 +1336,26 @@ enum DLogSerializationFormat
 };
 
 
+//++++++++++++++++++++++++++++++
+// en : DLog Error Code
+// ja : Dログエラーコード
+//++++++++++++++++++++++++++++++
+enum DLogErrorCode
+{
+	DLOG_ERROR_CODE_NONE = 0x0,
+	DLOG_ERROR_CODE_FATAL = 0x1,
+	DLOG_ERROR_CODE_DROP = 0x2,
+	DLOG_ERROR_CODE_SERVER_DISCONNECT = 0x3,
+	DLOG_ERROR_CODE_LOCALIZATION = 0x4,
+	DLOG_ERROR_CODE_DISCONNECT = 0x5,
+	DLOG_ERROR_CODE_SCRIPT = 0x6,
+	DLOG_ERROR_CODE_SCRIPT_DROP = 0x7,
+	DLOG_ERROR_CODE_DLOG = 0x8,
+	DLOG_ERROR_CODE_LUA = 0x9,
+	DLOG_ERROR_CODE_SYS_ERROR = 0xA,
+};
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1703,6 +1724,12 @@ DB_PollFastfileState_t DB_PollFastfileState_h;
 // ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef char(__fastcall* DLog_Record_t)(unsigned __int64 userId, const char* eventName, char* bytes, int byteCount, DLogSerializationFormat serializationFormat, bool sampled);
 DLog_Record_t DLog_Record_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef void(__fastcall* DLog_RecordErrorEvent_t)(DLogErrorCode code, const char* message, const char* stackTrace);
+DLog_RecordErrorEvent_t DLog_RecordErrorEvent_h;
 
 
 
@@ -2976,7 +3003,8 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_ReportError								= 0x7FF6B3640DF0;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			_adr.s_assetPools									= 0;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
 			_adr.DLog_Record									= 0x7FF6B3F7A200;	// 0x7FF6B3F7A200	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
-			
+			_adr.DLog_RecordErrorEvent							= 0x7FF6AFD196A0;	// 0x7FF6AFD196A0	PreCacheGlyph -> LUI_CoD_CreateClientRoots -> 
+
 			
 			// GSC
 			_adr.Load_ScriptFile								= 0x7FF6AFCC80B0;	// 
@@ -3342,6 +3370,7 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x68F5940;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			_adr.s_assetPools									= _TEXT_SEC_LEN + 0x12523740;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
 			_adr.DLog_Record									= _TEXT_SEC_LEN + 0x7233770;	// 0x7FF68A754770	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
+			_adr.DLog_RecordErrorEvent							= _TEXT_SEC_LEN + 0x2EC4BA0;	// 0x7FF6863E5BA0	PreCacheGlyph -> LUI_CoD_CreateClientRoots -> 
 
 			// GSC
 			_adr.Load_ScriptFile								= _TEXT_SEC_LEN + 0x2E735B0;	// 
@@ -3515,8 +3544,8 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 		//{ { "lui_root_dlog_enabled"										, "NQOKPOKKML"								}, true },	// Enables DLog event on LUI root creation error.
 		//{ { "netinfo_logging"											, "MPQLLMPSOK"								}, true },	// netinfo_logging enabler (default = off)
 		//{ { "pc_bypass_techset_fixup_enabled"							, "OQMKRQTKN"								}, true },	// When true the game is bypassing the techset fix up done during the load/unload of a map on PC unless My Changes is used
-		
 
+		
 		{ { "lui_dev_features_enabled"									, "LSSRRSMNMR"								}, true },
 		{ { "force_offline_menus"										, "LSTQOKLTRN"								}, true },
 		{ { "force_offline_enabled"										, "MPSSOTQQPM"								}, true },
@@ -3556,15 +3585,15 @@ dvar_t* Dvar_RegisterBool_d(const char* dvar_name, bool value, unsigned int flag
 	for (const auto& [names, val] : dvars_to_patch)
 	{
 		if (names.second == dvar_name)
-		{
-			const char* disclaimer = "";
-			if (value_patched == val)
 			{
-				disclaimer = " - unnecessary";
+				const char* disclaimer = "";
+				if (value_patched == val)
+				{
+					disclaimer = " - unnecessary";
+				}
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched '%s' -> %s %s\n", names.first.c_str(), val ? "true" : "false", disclaimer);
+				value_patched = val;
 			}
-			NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Dvar_RegisterBool> Patched '%s' -> %s %s\n", names.first.c_str(), val ? "true" : "false", disclaimer);
-			value_patched = val;
-		}
 	}
 
 	if (strcmp(dvar_name, "LPSPMQSNPQ") == 0)
@@ -4566,6 +4595,20 @@ char DLog_Record_d(unsigned __int64 userId, const char* eventName, char* bytes, 
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Checks if a statistics source exists for the specified controller index. (execute the function)
+// ja : 指定したコントローラーインデックスの統計ソースが存在するか確認する ( 関数を実行する )
+//++++++++++++++++++++++++++++++
+void DLog_RecordErrorEvent_d(DLogErrorCode code, const char* message, const char* stackTrace)
+{
+	if (_showDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DLog_RecordErrorEvent> code = %d , message = %s , stackTrace = %s\n", code, message, stackTrace);
+
+	DLog_RecordErrorEvent_h(code, message, stackTrace);
+}
+
+
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // Authentication
@@ -4615,7 +4658,7 @@ XenonUserData* Live_GetUserData(int controllerIndex)
 	switch (_gameTitle)
 	{
 		case GameTitle::IW8_138:
-		return (XenonUserData*)CalcPtr(_adr.Live_GetUserData);
+			return (XenonUserData*)CalcPtr(_adr.Live_GetUserData);
 
 		case GameTitle::IW8_157:
 		case GameTitle::IW8_159:
@@ -4751,9 +4794,11 @@ void h00dairMixStylePatch(XUID xuid)
 	}
 	
 	RtmSetMemory<char>(CalcPtr(_adr.controllerStatData) + ( controllerIndexSize * 0 ) + (statsSourceSize * StatsSource::STATS_ONLINE )	, 1 );	// controller 0 - online stats
-	
+
+	NotifyMsg("[ \x1b[33m Notice \x1b[39m ] Controller patched\n");
 	LiveStorage_StatsInit(0, 1, 0, StatsSource::STATS_ONLINE);
 
+	NotifyMsg("[ \x1b[33m Notice \x1b[39m ] Stats inited\n");
 	dvar_t** dvar_xblive_loggedin = reinterpret_cast<dvar_t**>(CalcPtr(_adr.dvar_xblive_loggedin));
 	Dvar_SetBool_Internal_f(dvar_xblive_loggedin, true, 0, "xblive_loggedin");
 	
@@ -5020,19 +5065,47 @@ void GameStart()
 	SetupMinHook("GameStart", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
 	SetupMinHook("GameStart", "LUI_COD_LuaCall_IsPremiumPlayer"				, CalcPtr(_adr.LUI_COD_LuaCall_IsPremiumPlayer)				, &LUI_COD_LuaCall_IsPremiumPlayer_d			, &LUI_COD_LuaCall_IsPremiumPlayer_h);
 	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsLocalPlayAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed)			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_d			, &LUI_CoD_LuaCall_IsLocalPlayAllowed_h);
-
+	
 	SetupMinHook("GameStart", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
 	SetupMinHook("GameStart", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
-	
+	//SetupMinHook("GameStart", "Live_IsUserSignedInToBnet"					, CalcPtr(_adr.Live_IsUserSignedInToBnet)					, &Live_IsUserSignedInToBnet_d					, &Live_IsUserSignedInToBnet_h);
+	//SetupMinHook("GameStart", "Live_IsUserSignedIn"							, CalcPtr(_adr.Live_IsUserSignedIn)							, &Live_IsUserSignedIn_d						, &Live_IsUserSignedIn_h);
+
 	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
 	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
-	SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
-	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	//SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
+	//SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
 	SetupMinHook("GameStart", "DLog_Record"									, CalcPtr(_adr.DLog_Record)									, &DLog_Record_d								, &DLog_Record_h);
+	SetupMinHook("GameStart", "DLog_RecordErrorEvent"						, CalcPtr(_adr.DLog_RecordErrorEvent)						, &DLog_RecordErrorEvent_d						, &DLog_RecordErrorEvent_h);
 	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
+	//SetupMinHook("GameStart", "sub_7FF6B057D200"							, CalcPtr(0x7FF6B057D200)									, &sub_7FF6B057D200_d							, &sub_7FF6B057D200_h);
 	
+
+	
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAvailable"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAvailable)			, &LUI_CoD_LuaCall_IsGameModeAvailable_d		, &LUI_CoD_LuaCall_IsGameModeAvailable_h);
+	SetupMinHook("GameStart", "LUI_CoD_LuaCall_IsGameModeAllowed"			, CalcPtr(_adr.LUI_CoD_LuaCall_IsGameModeAllowed)			, &LUI_CoD_LuaCall_IsGameModeAllowed_d			, &LUI_CoD_LuaCall_IsGameModeAllowed_h);
+	//SetupMinHook("GameStart", "LuaShared_LuaCall_IsSingleplayer"			, CalcPtr(_adr.LuaShared_LuaCall_IsSingleplayer)			, &LuaShared_LuaCall_IsSingleplayer_d			, &LuaShared_LuaCall_IsSingleplayer_h);
+
+	
+
 	JumpHookTo(	"GameStart"	, "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, CL_TransientsCollisionMP_SetTransientMode_d);
+
+
+
+
+	//	SetupMinHook("GameStart", "Load_Stream"				, CalcPtr(_adr.Load_Stream)					, &Load_Stream_d				, &Load_Stream_h);
+	//	SetupMinHook("GameStart", "DB_PushStreamPos"		, CalcPtr(_adr.DB_PushStreamPos)			, &DB_PushStreamPos_d			, &DB_PushStreamPos_h);
+	//	SetupMinHook("GameStart", "DB_PopStreamPos"			, CalcPtr(_adr.DB_PopStreamPos)				, &DB_PopStreamPos_d			, &DB_PopStreamPos_h);
+	//	SetupMinHook("GameStart", "DB_ConvertOffsetToAlias"	, CalcPtr(0x7FF68631EF30 - 0x7FF683520000)	, &DB_ConvertOffsetToAlias_d	, &DB_ConvertOffsetToAlias_h);
+	//	SetupMinHook("GameStart", "DB_InsertPointer"		, CalcPtr(0x7FF686C804F0 - 0x7FF683520000)	, &DB_InsertPointer_d			, &DB_InsertPointer_h);
+	//	SetupMinHook("GameStart", "DB_AllocStreamPos"		, CalcPtr(0x7FF68631EF10 - 0x7FF683520000)	, &DB_AllocStreamPos_d			, &DB_AllocStreamPos_h);
+	
+	//SetupMinHook("GameStart", "DB_ConvertOffsetToAlias"	, CalcPtr(_adr.DB_ConvertOffsetToAlias)	, &DB_ConvertOffsetToAlias_d	, &DB_ConvertOffsetToAlias_h);
+	//SetupMinHook("GameStart", "DB_InsertPointer"		, CalcPtr(_adr.DB_InsertPointer)		, &DB_InsertPointer_d			, &DB_InsertPointer_h);
+	//SetupMinHook("GameStart", "DB_AllocStreamPos"		, CalcPtr(_adr.DB_AllocStreamPos)		, &DB_AllocStreamPos_d			, &DB_AllocStreamPos_h);
+
+
 
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
@@ -5143,6 +5216,39 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 //++++++++++++++++++++++++++++++
 void HookExeModuleFunctions()
 {
+
+	// ja : CreateFileAフックの設定（2分クラッシュ回避）
+	HMODULE kernel32 = GetModuleHandleA("kernel32.dll");
+	if (kernel32)
+	{
+		CreateFileA_target = (void*)GetProcAddress(kernel32, "CreateFileA");
+		if (CreateFileA_target)
+		{
+			if (MH_CreateHook(CreateFileA_target, &CreateFileA_hook, reinterpret_cast<LPVOID*>(&CreateFileA_original)) == MH_OK)
+			{
+				if (MH_EnableHook(CreateFileA_target) == MH_OK)
+				{
+					NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Initialization> CreateFileA hooked successfully! (2-minute crash workaround)\n");
+				}
+				else
+				{
+					NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to enable hook for CreateFileA...\n");
+				}
+			}
+			else
+			{
+				NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to create hook for CreateFileA...\n");
+			}
+		}
+		else
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to get address of CreateFileA...\n");
+		}
+	}
+	else
+	{
+		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to get handle to kernel32.dll...\n");
+	}
 
 	HMODULE user32 = GetModuleHandleA("user32.dll");
 	if (!user32)
@@ -5279,12 +5385,14 @@ int main2()
 			EndOfTextSection	= 0x768E000;
 			StartOfTextSection	= 0x7FF69CFE1000;
 			StartOfBinary		= 0x7FF69CFE0000;
+			_onlyWarzoneBuild	= true;
 			break;
 
 		case GameTitle::IW8_157:
 			EndOfTextSection	= 0x6F8E000;
 			StartOfTextSection	= 0x7FF6AD391000;
 			StartOfBinary		= 0x7FF6AD390000;
+			_onlyWarzoneBuild	= true;
 			break;
 
 		case GameTitle::IW8_138:
@@ -6542,27 +6650,10 @@ int LUI_CoD_LuaCall_IsBattleNetAuthReady_d(lua_State* luaVM) { lua_pushboolean(l
 
 
 //++++++++++++++++++++++++++++++
-// en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAllowed to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsGameModeAllowed のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
-//++++++++++++++++++++++++++++++
-int LUI_CoD_LuaCall_IsGameModeAllowed_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
-
-
-
-//++++++++++++++++++++++++++++++
 // en : Forces the LUA state of LUI_COD_LuaCall_IsPremiumPlayerReady to send bool true information (for detour)
 // ja : LUI_COD_LuaCall_IsPremiumPlayerReady のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
 //++++++++++++++++++++++++++++++
 int LUI_COD_LuaCall_IsPremiumPlayerReady_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
-
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAvailable to send bool true information (for detour)
-// ja : LUI_CoD_LuaCall_IsGameModeAvailable のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
-//++++++++++++++++++++++++++++++
-int LUI_CoD_LuaCall_IsGameModeAvailable_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
 
 
 
@@ -6677,26 +6768,10 @@ char dwLogOnHSM_base_HSM_IsInState_d(uintptr_t component, dwLogOnHSM_base_eHSMSt
 
 
 //++++++++++++++++++++++++++++++
-// en : Get whether the user is signed in to the BattleNet (for detour)
-// ja : ユーザーがバトルネットにサインインしているかどうかを取得する ( ディトール用 )
-//++++++++++++++++++++++++++++++
-bool Live_IsUserSignedInToBnet_d(int controllerIndex, int* onlinePlayFailReason) { *onlinePlayFailReason = 0; return true; }
-
-
-
-//++++++++++++++++++++++++++++++
 // en : Gets whether the game profile is logged in (for detour)
 // ja : ゲームプロフィールがログイン済みかどうかを取得する ( ディトール用 )
 //++++++++++++++++++++++++++++++
 bool GamerProfile_IsProfileLoggedIn_d(int controllerIndex) { return true; }
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Check if user is signed in (for detour)
-// ja : ユーザーがサインインしているかどうかをチェックする（ディトール用）
-//++++++++++++++++++++++++++++++
-bool Live_IsUserSignedIn_d() { return true; }
 
 
 
