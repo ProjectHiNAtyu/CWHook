@@ -5216,40 +5216,6 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 //++++++++++++++++++++++++++++++
 void HookExeModuleFunctions()
 {
-
-	// ja : CreateFileAフックの設定（2分クラッシュ回避）
-	HMODULE kernel32 = GetModuleHandleA("kernel32.dll");
-	if (kernel32)
-	{
-		CreateFileA_target = (void*)GetProcAddress(kernel32, "CreateFileA");
-		if (CreateFileA_target)
-		{
-			if (MH_CreateHook(CreateFileA_target, &CreateFileA_hook, reinterpret_cast<LPVOID*>(&CreateFileA_original)) == MH_OK)
-			{
-				if (MH_EnableHook(CreateFileA_target) == MH_OK)
-				{
-					NotifyMsg("[ \x1b[32m Success \x1b[39m ] <Initialization> CreateFileA hooked successfully! (2-minute crash workaround)\n");
-				}
-				else
-				{
-					NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to enable hook for CreateFileA...\n");
-				}
-			}
-			else
-			{
-				NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to create hook for CreateFileA...\n");
-			}
-		}
-		else
-		{
-			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to get address of CreateFileA...\n");
-		}
-	}
-	else
-	{
-		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <Initialization> Failed to get handle to kernel32.dll...\n");
-	}
-
 	HMODULE user32 = GetModuleHandleA("user32.dll");
 	if (!user32)
 	{
@@ -5385,7 +5351,6 @@ int main2()
 			EndOfTextSection	= 0x768E000;
 			StartOfTextSection	= 0x7FF69CFE1000;
 			StartOfBinary		= 0x7FF69CFE0000;
-			_onlyWarzoneBuild	= true;
 			break;
 
 		case GameTitle::IW8_157:
