@@ -224,7 +224,7 @@ struct StackTraceInfo
 
 
 //++++++++++++++++++++++++++++++
-// en : Game title
+// en : Addresses & Pointers
 // ja : アドレスポインター
 //++++++++++++++++++++++++++++++
 struct AdrOffsets
@@ -335,6 +335,7 @@ struct AdrOffsets
 	uintptr_t CL_TransientsCollisionMP_SetTransientMode_var;
 	uintptr_t DLog_Record;
 	uintptr_t DLog_RecordErrorEvent;
+	uintptr_t DB_Zones_GetZoneNameFromIndex;
 
 	uintptr_t Live_UserSignIn;
 	uintptr_t dvar_xblive_loggedin;
@@ -1356,6 +1357,24 @@ enum DLogErrorCode
 };
 
 
+//++++++++++++++++++++++++++++++
+// en : Zone Database
+// ja : ゾーンデータベース
+//++++++++++++++++++++++++++++++
+struct DB_Zone
+{
+	char name[64];
+	XAssetList assetList;
+	XZoneMemory mem;
+	unsigned int flags;
+	unsigned __int16 worldTransientIndex;
+	unsigned __int16 nextHashEntry;
+	volatile bool loadComplete;
+	bool addedXPaks;
+	bool frontendUIPreloadZone;
+};
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -1465,7 +1484,7 @@ XUID _xuid;
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showDebugLogs = false;
+bool _showDebugLogs = true;
 
 
 // en : Whether to display debug logs (with RTM Tool)
@@ -1486,6 +1505,16 @@ bool _showLuaPrintDebugLogs = true;
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
 bool _showRegisterBoolDebugLogs = false;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showDLogErrorDebugLogs = false;
+
+
+// en : Whether to display debug logs (with RTM Tool)
+// ja : デバッグログを表示するかどうか（RTM Tool併用）
+bool _showGetZoneNameDebugLogs = false;
 
 
 // en : Whether to dump LUA (with RTM Tool)
@@ -1736,6 +1765,12 @@ DLog_Record_t DLog_Record_h;
 // ja : 各種MinHook用フック元関数ポインター（保持用）
 typedef void(__fastcall* DLog_RecordErrorEvent_t)(DLogErrorCode code, const char* message, const char* stackTrace);
 DLog_RecordErrorEvent_t DLog_RecordErrorEvent_h;
+
+
+// en : Hook source function pointer for various MinHooks (for storage)
+// ja : 各種MinHook用フック元関数ポインター（保持用）
+typedef DB_Zone* (__fastcall* DB_Zones_GetZoneNameFromIndex_t)(int zoneIndex);
+DB_Zones_GetZoneNameFromIndex_t DB_Zones_GetZoneNameFromIndex_h;
 
 
 
@@ -2992,9 +3027,9 @@ void GetAddressOffset(GameTitle title)
 			_adr.DB_FindXAssetHeader							= 0x7FF6B057B8C0;	// 0x7FF686C78070	E8 ?? ?? ?? ?? 44 8B C5 8D 4D
 			_adr.DB_CheckFastfileHeaderVersionAndMagic			= 0x7FF6B05786A0;	// 0x7FF686C74E50	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
 			_adr.DB_CheckXFileVersion							= 0x7FF6B0578770;	// 0x7FF686C74F20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
-			_adr.DB_PollFastfileState							= 0;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
 			_adr.CL_TransientsCollisionMP_SetTransientMode		= 0x7FF6AFB6FF00;	// 0x7FF68623A7E0	%s_cg_ls_tr ref up 1 func call arg ref 1 line
 			_adr.CL_TransientsCollisionMP_SetTransientMode_var	= 0x7FF6B88B6364;	// 0x7FF68F1214E4	CL_TransientsCollisionMP_SetTransientMode call variable
+			_adr.DB_Zones_GetZoneNameFromIndex					= 0x7FF6AFF6A0D0;	// 0x7FF6AFF6A0D0	<default>
 			
 			// LUA util optional
 			_adr.lua_tolstring									= 0x7FF6B3FC0450;	// 0x7FF68A79A9C0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
@@ -3007,7 +3042,6 @@ void GetAddressOffset(GameTitle title)
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x7FF6B363D8E0;	// 0x7FF689E13380	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= 0x7FF6B3640DF0;	// 0x7FF689E16940	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
-			_adr.s_assetPools									= 0;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
 			_adr.DLog_Record									= 0x7FF6B3F7A200;	// 0x7FF6B3F7A200	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
 			_adr.DLog_RecordErrorEvent							= 0x7FF6AFD196A0;	// 0x7FF6AFD196A0	PreCacheGlyph -> LUI_CoD_CreateClientRoots -> 
 
@@ -3032,8 +3066,15 @@ void GetAddressOffset(GameTitle title)
 			_adr.g_streamPosGlob_pos							= 0x7FF6C8EA1F20;	// 
 
 
-			/*
+			// Warzone patch
+			_adr.LUI_CoD_LuaCall_IsGameModeAllowed				= 0x7FF6B36E0720;	// 
+			_adr.LUI_CoD_LuaCall_IsGameModeAvailable			= 0x7FF6B36E0820;	// 
+			//_adr.LuaShared_LuaCall_IsSingleplayer				= 0x7FF6B3627590;	// 
 
+			/*
+			_adr.s_assetPools									= 0;	// 0x7FF695A44740	assetpool_arg_under_arg G -8 from 48 63 C1 4C 8D 05 ?? ?? ?? ?? 48 8D 0C 40 49 8B 04 C8 48 89 02 49 89 14 C8 C3
+
+			_adr.DB_PollFastfileState							= 0;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
 
 			_adr.DumpBase										= 0x7FF6AD390000;
 
@@ -3047,8 +3088,6 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
 			
 			_adr.LUI_CoD_LuaCall_IsConnectedToGameServer		= 0x7FF6B36DF870;	// 
-			_adr.LUI_CoD_LuaCall_IsGameModeAllowed				= 0x7FF6B36E0720;	// 
-			_adr.LUI_CoD_LuaCall_IsGameModeAvailable			= 0x7FF6B36E0820;	// 
 			_adr.LUI_COD_LuaCall_IsPremiumPlayerReady			= 0x7FF6B36E8E80;	// 
 			_adr.LuaShared_LuaCall_IsDemoBuild					= 0x7FF6B36276B0;	// 
 			_adr.xpartydisband									= 0x7FF6B4367288;	// 
@@ -3360,6 +3399,9 @@ void GetAddressOffset(GameTitle title)
 			_adr.DB_CheckFastfileHeaderVersionAndMagic			= _TEXT_SEC_LEN + 0x3753E50;	// 0x7FF686C74E50	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
 			_adr.DB_CheckXFileVersion							= _TEXT_SEC_LEN + 0x3753F20;	// 0x7FF686C74F20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
 			_adr.DB_PollFastfileState							= _TEXT_SEC_LEN + 0x3759E20;	// 0x7FF686C7AE20	common_core_alt_mp ref+38 under 1 func
+			_adr.DB_Zones_GetZoneNameFromIndex					= _TEXT_SEC_LEN + 0x311E580;	// 0x7FF68663F580	<default>
+			
+			// Collision
 			_adr.CL_TransientsCollisionMP_SetTransientMode		= _TEXT_SEC_LEN + 0x2D197E0;	// 0x7FF68623A7E0	%s_cg_ls_tr ref up 1 func call arg ref 1 line
 			_adr.CL_TransientsCollisionMP_SetTransientMode_var	= _TEXT_SEC_LEN + 0xBC004E4;	// 0x7FF68F1214E4	CL_TransientsCollisionMP_SetTransientMode call variable
 			
@@ -4096,6 +4138,22 @@ int DB_LoadXFile_d(const char* zone_name, XZoneMemory* zone_mem, XAssetList* ass
 
 
 //++++++++++++++++++++++++++++++
+// en : Loading XAsset files from a database ( for detour )
+// ja : データベースからXAssetファイルをロードする ( ディトール用 )
+//++++++++++++++++++++++++++++++
+DB_Zone* DB_Zones_GetZoneNameFromIndex_d(int zoneIndex)
+{
+	DB_Zone* zone = DB_Zones_GetZoneNameFromIndex_h(zoneIndex);
+
+	if (_showGetZoneNameDebugLogs)
+		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_Zones_GetZoneNameFromIndex> index = %d , name = %s\n", zoneIndex, zone->name);
+
+	return zone;
+}
+
+
+
+//++++++++++++++++++++++++++++++
 // en : Get the XAsset with the specified number from the asset pool
 // ja : アセットプールから指定した番号の該当のXAssetを取得する
 //++++++++++++++++++++++++++++++
@@ -4337,6 +4395,30 @@ int LUI_COD_LuaCall_IsPremiumPlayer_d(lua_State* luaVM) { lua_pushboolean(luaVM,
 // ja : LUI_CoD_LuaCall_IsLocalPlayAllowed のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
 //++++++++++++++++++++++++++++++
 int LUI_CoD_LuaCall_IsLocalPlayAllowed_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAvailable to send bool true information (for detour)
+// ja : LUI_CoD_LuaCall_IsGameModeAvailable のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+int LUI_CoD_LuaCall_IsGameModeAvailable_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Forces the LUA state of LUI_CoD_LuaCall_IsGameModeAllowed to send bool true information (for detour)
+// ja : LUI_CoD_LuaCall_IsGameModeAllowed のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+int LUI_CoD_LuaCall_IsGameModeAllowed_d(lua_State* luaVM) { lua_pushboolean(luaVM, 1); return 1; }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Forces the LUA state of LuaShared_LuaCall_IsSingleplayer to send bool true information (for detour)
+// ja : LuaShared_LuaCall_IsSingleplayer のLUA状態に対して強制的に bool true 情報を送信する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+int LuaShared_LuaCall_IsSingleplayer_d(lua_State* luaVM) { lua_pushboolean(luaVM, 0); return 1; }
 
 
 
@@ -4613,7 +4695,7 @@ char DLog_Record_d(unsigned __int64 userId, const char* eventName, char* bytes, 
 //++++++++++++++++++++++++++++++
 void DLog_RecordErrorEvent_d(DLogErrorCode code, const char* message, const char* stackTrace)
 {
-	if (_showDebugLogs)
+	if (_showDLogErrorDebugLogs)
 		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DLog_RecordErrorEvent> code = %d , message = %s , stackTrace = %s\n", code, message, stackTrace);
 
 	DLog_RecordErrorEvent_h(code, message, stackTrace);
@@ -4717,6 +4799,22 @@ bool Live_IsUserSignedInToDemonware_d(int controllerIndex) { return true; }
 // ja : サインイン中かどうかを取得する ( ディトール用 )
 //++++++++++++++++++++++++++++++
 bool Live_IsSignedIn_d() { return true; }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Check if user is signed in (for detour)
+// ja : ユーザーがサインインしているかどうかをチェックする（ディトール用）
+//++++++++++++++++++++++++++++++
+bool Live_IsUserSignedIn_d() { return true; }
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get whether the user is signed in to the BattleNet (for detour)
+// ja : ユーザーがバトルネットにサインインしているかどうかを取得する ( ディトール用 )
+//++++++++++++++++++++++++++++++
+bool Live_IsUserSignedInToBnet_d(int controllerIndex, int* onlinePlayFailReason) { *onlinePlayFailReason = 0; return true; }
 
 
 
@@ -4893,37 +4991,12 @@ bool OnfRtmFlag(std::string path , bool flag, bool onf, const char* msg)
 
 
 //++++++++++++++++++++++++++++++
-// en : Every frame execution function (for executing actions)
-// ja : 毎フレーム実行関数（アクション実行用）
+// en : Debugging ToolsNotificationsFile Watches
+// ja : デバッグツール通知ファイル監視
 //++++++++++++++++++++++++++++++
-void R_EndFrame_d()
+void CheckRtmToolNotifyFiles()
 {
-	if (!_frameCountEnd)
-	{
-		switch (_elapsedFrameCount)
-		{
-			case 100:
-				{
-					_xuid.RandomXUID();
-					_xuid.m_id = 123456789;
-					//_xuid.RandomXUID();
-					
-					SetupMinHook("R_EndFrame", "Live_IsSignedIn"							, CalcPtr(_adr.Live_IsSignedIn)								, &Live_IsSignedIn_d							, &Live_IsSignedIn_h);
-					
-					SkuStylePatch(_xuid);
-					h00dairMixStylePatch(_xuid);
-					
-					NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Auth patched!\n");
-					NotifyMsg("\n");
-					_frameCountEnd = true;
-				}
-				break;
-
-			default:  break;
-		}
-		_elapsedFrameCount += 1;
-	}
-
+	
 	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogon"			, _showDebugLogs				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
 	_showDebugLogs				= OnfRtmFlag("\\rtm\\debuglogoff"			, _showDebugLogs				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
 	_showLuaLoadDebugLogs		= OnfRtmFlag("\\rtm\\lualoaddebuglogon"		, _showLuaLoadDebugLogs			, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show Lua load debug logs.\n");
@@ -4940,81 +5013,11 @@ void R_EndFrame_d()
 	_enableLuaDump				= OnfRtmFlag("\\rtm\\luadumpoff"			, _enableLuaDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
 	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpon"				, _enableGscDump				, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
 	_enableGscDump				= OnfRtmFlag("\\rtm\\gscdumpoff"			, _enableGscDump				, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-
+	_showDLogErrorDebugLogs		= OnfRtmFlag("\\rtm\\dlogerroron"			, _showDLogErrorDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show DLog error debug logs.\n");
+	_showDLogErrorDebugLogs		= OnfRtmFlag("\\rtm\\dlogerroroff"			, _showDLogErrorDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide DLog error debug logs.\n");
+	_showGetZoneNameDebugLogs	= OnfRtmFlag("\\rtm\\getzonenameon"			, _showGetZoneNameDebugLogs		, true	, "[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show zone name debug logs.\n");
+	_showGetZoneNameDebugLogs	= OnfRtmFlag("\\rtm\\getzonenameoff"		, _showGetZoneNameDebugLogs		, false	, "[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide zone name debug logs.\n");
 	
-	/*
-	
-	_mathStr = _documentPath + "\\rtm\\debuglogon";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (!_showDebugLogs)
-		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Show debug logs.\n");
-			_showDebugLogs = true;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-	_mathStr = _documentPath + "\\rtm\\debuglogoff";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (_showDebugLogs)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Hide debug logs.\n");
-			_showDebugLogs = false;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-
-	_mathStr = _documentPath + "\\rtm\\luadumpon";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (!_enableLuaDump)
-		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled LUA dump mode.\n");
-			_enableLuaDump = true;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-	_mathStr = _documentPath + "\\rtm\\luadumpoff";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (_enableLuaDump)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled LUA dump mode.\n");
-			_enableLuaDump = false;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-
-	_mathStr = _documentPath + "\\rtm\\gscdumpon";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (!_enableGscDump)
-		{
-			NotifyMsg("[ \x1b[32m Enabled \x1b[39m ] <R_EndFrame> Enabled GSC dump mode.\n");
-			_enableGscDump = true;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-	_mathStr = _documentPath + "\\rtm\\gscdumpoff";
-	if (file_exists(_mathStr.c_str()))
-	{
-		if (_enableGscDump)
-		{
-			NotifyMsg("[ \x1b[35m Disabled \x1b[39m ] <R_EndFrame> Disabled GSC dump mode.\n");
-			_enableGscDump = false;
-		}
-		std::filesystem::remove(_mathStr);
-	}
-
-
-	*/
-
 	_mathStr = _documentPath + "\\rtm\\luacmd";
 	if (file_exists(_mathStr.c_str()))
 	{
@@ -5039,14 +5042,43 @@ void R_EndFrame_d()
 		}
 		std::filesystem::remove(_mathStr);
 	}
+}
 
 
-	//_mathStr = _documentPath + "\\rtm\\poolcheck";
-	//if (file_exists(_mathStr.c_str()))
-	//{
-	//	AssetPoolInjection();
-	//	std::filesystem::remove(_mathStr);
-	//}
+
+//++++++++++++++++++++++++++++++
+// en : Every frame execution function (for executing actions)
+// ja : 毎フレーム実行関数（アクション実行用）
+//++++++++++++++++++++++++++++++
+void R_EndFrame_d()
+{
+	if (!_frameCountEnd)
+	{
+		switch (_elapsedFrameCount)
+		{
+			case 150:
+				{
+					_xuid.RandomXUID();
+					_xuid.m_id = 123456789;
+					//_xuid.RandomXUID();
+					
+					SetupMinHook("R_EndFrame", "Live_IsSignedIn"							, CalcPtr(_adr.Live_IsSignedIn)								, &Live_IsSignedIn_d							, &Live_IsSignedIn_h);
+					
+					SkuStylePatch(_xuid);
+					h00dairMixStylePatch(_xuid);
+					
+					NotifyMsg("[ \x1b[32m Success \x1b[39m ] <R_EndFrame> Auth patched!\n");
+					NotifyMsg("\n");
+					_frameCountEnd = true;
+				}
+				break;
+
+			default:  break;
+		}
+		_elapsedFrameCount += 1;
+	}
+
+	CheckRtmToolNotifyFiles();
 
 	R_EndFrame_h();
 }
@@ -5070,8 +5102,6 @@ void GameStart()
 
 	SetupMinHook("GameStart", "R_EndFrame"									, CalcPtr(_adr.R_EndFrame)									, &R_EndFrame_d									, &R_EndFrame_h);
 	
-	SetupMinHook("GameStart", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
-	SetupMinHook("GameStart", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
 	SetupMinHook("GameStart", "luaL_loadfile"								, CalcPtr(_adr.luaL_loadfile)								, &luaL_loadfile_d								, &luaL_loadfile_h);
 
 	SetupMinHook("GameStart", "LUI_CoD_LuaCall_OfflineDataFetched"			, CalcPtr(_adr.LUI_CoD_LuaCall_OfflineDataFetched)			, &LUI_CoD_LuaCall_OfflineDataFetched_d			, &LUI_CoD_LuaCall_OfflineDataFetched_h);
@@ -5080,14 +5110,17 @@ void GameStart()
 
 	SetupMinHook("GameStart", "Content_DoWeHaveContentPack"					, CalcPtr(_adr.Content_DoWeHaveContentPack)					, &Content_DoWeHaveContentPack_d				, &Content_DoWeHaveContentPack_h);
 	SetupMinHook("GameStart", "Live_IsUserSignedInToDemonware"				, CalcPtr(_adr.Live_IsUserSignedInToDemonware)				, &Live_IsUserSignedInToDemonware_d				, &Live_IsUserSignedInToDemonware_h);
-	//SetupMinHook("GameStart", "Live_IsUserSignedInToBnet"					, CalcPtr(_adr.Live_IsUserSignedInToBnet)					, &Live_IsUserSignedInToBnet_d					, &Live_IsUserSignedInToBnet_h);
-	//SetupMinHook("GameStart", "Live_IsUserSignedIn"							, CalcPtr(_adr.Live_IsUserSignedIn)							, &Live_IsUserSignedIn_d						, &Live_IsUserSignedIn_h);
-
+	
 	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
-	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
 	SetupMinHook("GameStart", "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, &CL_TransientsCollisionMP_SetTransientMode_d	, &CL_TransientsCollisionMP_SetTransientMode_h);
+	SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
+	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
 	
+	SetupMinHook("GameStart", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
+	SetupMinHook("GameStart", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
+	SetupMinHook("GameStart", "DB_LoadXFile"								, CalcPtr(_adr.DB_LoadXFile)								, &DB_LoadXFile_d								, &DB_LoadXFile_h);
+	SetupMinHook("GameStart", "DB_Zones_GetZoneNameFromIndex"				, CalcPtr(_adr.DB_Zones_GetZoneNameFromIndex)				, &DB_Zones_GetZoneNameFromIndex_d				, &DB_Zones_GetZoneNameFromIndex_h);
 	SetupMinHook("GameStart", "DLog_Record"									, CalcPtr(_adr.DLog_Record)									, &DLog_Record_d								, &DLog_Record_h);
 	SetupMinHook("GameStart", "DLog_RecordErrorEvent"						, CalcPtr(_adr.DLog_RecordErrorEvent)						, &DLog_RecordErrorEvent_d						, &DLog_RecordErrorEvent_h);
 	
@@ -5095,8 +5128,8 @@ void GameStart()
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
 	return;
-	//SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
-	//SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	//SetupMinHook("GameStart", "Live_IsUserSignedInToBnet"					, CalcPtr(_adr.Live_IsUserSignedInToBnet)					, &Live_IsUserSignedInToBnet_d					, &Live_IsUserSignedInToBnet_h);
+	//SetupMinHook("GameStart", "Live_IsUserSignedIn"							, CalcPtr(_adr.Live_IsUserSignedIn)							, &Live_IsUserSignedIn_d						, &Live_IsUserSignedIn_h);
 	//SetupMinHook("GameStart", "DB_PollFastfileState"						, CalcPtr(_adr.DB_PollFastfileState)						, &DB_PollFastfileState_d						, &DB_PollFastfileState_h);
 	//SetupMinHook("GameStart", "sub_7FF6B057D200"							, CalcPtr(0x7FF6B057D200)									, &sub_7FF6B057D200_d							, &sub_7FF6B057D200_h);
 	
@@ -5137,13 +5170,14 @@ void GameStart()
 void entry_point()
 {
 	GameStart();
+	CheckRtmToolNotifyFiles();
 
 	puts(__FUNCTION__ " done.");
 }
 
 
 
-//++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++ 0x3cedc00ac
 // en : Game setup (Hooking various functions at splash screen timing)
 // ja : ゲームセットアップ ( スプラッシュスクリーンタイミングで各種関数フック )
 //++++++++++++++++++++++++++++++
@@ -5216,6 +5250,7 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 
 		NotifyMsg("Splash screen image load detected!\n");
 		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] Base Address: 0x%p\n", _ImageBase);
+		CheckRtmToolNotifyFiles();
 		SetupProfile();
 		GameSetup();
 		_splashed = true;
@@ -5352,6 +5387,7 @@ int main2()
 {
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
 
+	CheckRtmToolNotifyFiles();
 	
 	_gameTitle = GameTitle::IW8_157;
 
@@ -5385,10 +5421,10 @@ int main2()
 
 	// 既存のログファイルを削除
 	if (DeleteFileA("!crashlog.txt")) {
-		NotifyMsg("[main2] Deleted existing !crashlog.txt\n");
+		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Deleted existing !crashlog.txt\n");
 	}
 	if (DeleteFileA("!debuglog.txt")) {
-		NotifyMsg("[CWHook] Deleted existing !debuglog.txt\n");
+		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Deleted existing !debuglog.txt\n");
 	}
 
 	HANDLE hFile = CreateFile("C://Windows//System32//ntdll.dll", GENERIC_READ,
@@ -5401,33 +5437,33 @@ int main2()
 
 	switch (_gameTitle)
 	{
-	case GameTitle::IW8_138:
-	case GameTitle::IW8_157:
-	case GameTitle::IW8_159:
-	case GameTitle::IW8_167:
-		// 既存のログファイルを削除
-		if (DeleteFileA(IMMEDIATE_CRASH_LOG))
-		{
-			NotifyMsg("[CWHook] Deleted existing immediate crash log\n");
-		}
+		case GameTitle::IW8_138:
+		case GameTitle::IW8_157:
+		case GameTitle::IW8_159:
+		case GameTitle::IW8_167:
+			// 既存のログファイルを削除
+			if (DeleteFileA(IMMEDIATE_CRASH_LOG))
+			{
+				NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Deleted existing immediate crash log\n");
+			}
 	
-		// Vectored Exception Handler を登録 (最高優先度)
-		vehHandle = AddVectoredExceptionHandler(1, VectoredExceptionHandler);
-		if (vehHandle)
-		{
-			NotifyMsg("[CWHook] Vectored Exception Handler registered successfully\n");
-		}
-		else
-		{
-			NotifyMsg("[CWHook] Failed to register Vectored Exception Handler\n");
-		}
+			// Vectored Exception Handler を登録 (最高優先度)
+			vehHandle = AddVectoredExceptionHandler(1, VectoredExceptionHandler);
+			if (vehHandle)
+			{
+				NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Vectored Exception Handler registered successfully\n");
+			}
+			else
+			{
+				NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Failed to register Vectored Exception Handler\n");
+			}
 	
-		// 改良版例外ハンドラーを登録 (ミニダンプ機能付き)
-		SetUnhandledExceptionFilter(EnhancedExceptionHandler);
+			// 改良版例外ハンドラーを登録 (ミニダンプ機能付き)
+			SetUnhandledExceptionFilter(EnhancedExceptionHandler);
 	
-		// 初期化ログを出力
-		NotifyMsg("[CWHook] Enhanced Exception Handler registered successfully\n");
-		break;
+			// 初期化ログを出力
+			NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Enhanced Exception Handler registered successfully\n");
+			break;
 	}
 	
 
@@ -5480,7 +5516,7 @@ int main2()
 	if (vehHandle)
 	{
 		RemoveVectoredExceptionHandler(vehHandle);
-		NotifyMsg("[CWHook] Vectored Exception Handler removed\n");
+		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> Vectored Exception Handler removed\n");
 	}
 
 	return 0;
