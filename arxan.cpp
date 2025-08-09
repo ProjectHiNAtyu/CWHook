@@ -65,7 +65,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)intactchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				//NotifyMsg("[Arxan Info] %llx %llx got changed\n", idaAddress, (uint64_t)intactchecksumHooks[i].functionAddress);
+				//NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] %llx %llx got changed\n", idaAddress, (uint64_t)intactchecksumHooks[i].functionAddress);
 				//fprintf(logFile, "%llx got changed\n", idaAddress);
 				//fflush(logFile);
 			}
@@ -84,7 +84,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)intactBigchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				//NotifyMsg("[Arxan Info] %llx %llx got changed\n", idaAddress, (uint64_t)intactBigchecksumHooks[i].functionAddress);
+				//NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] %llx %llx got changed\n", idaAddress, (uint64_t)intactBigchecksumHooks[i].functionAddress);
 				//fprintf(logFile, "%llx got changed\n", idaAddress);
 				//fflush(logFile);
 			}
@@ -103,7 +103,7 @@ int FixChecksum(uint64_t rbpOffset, uint64_t ptrOffset, uint64_t* ptrStack, uint
 			{
 				uint64_t idaAddress = (uint64_t)splitchecksumHooks[i].functionAddress - baseAddressStart + StartOfBinary;
 
-				//NotifyMsg("[Arxan Info] %llx %llx got changed\n", idaAddress, (uint64_t)splitchecksumHooks[i].functionAddress);
+				//NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] %llx %llx got changed\n", idaAddress, (uint64_t)splitchecksumHooks[i].functionAddress);
 				//fprintf(logFile, "%llx got changed\n", idaAddress);
 				//fflush(logFile);
 			}
@@ -299,7 +299,7 @@ NTSTATUS NTAPI ntdllSyscallNtClose(HANDLE Handle)
 	{
 		if (flags.ProtectFromClose)
 		{
-			NotifyMsg("[Arxan Info] not closable\n");
+			NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] not closable\n");
 			return STATUS_HANDLE_NOT_CLOSABLE;
 		}
 
@@ -307,7 +307,7 @@ NTSTATUS NTAPI ntdllSyscallNtClose(HANDLE Handle)
 		return 0x1337;
 	}
 
-	NotifyMsg("[Arxan Info] invalid handle: %llx\n", Handle);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] invalid handle: %llx\n", Handle);
 	return STATUS_INVALID_HANDLE;
 }
 
@@ -366,10 +366,10 @@ void ntdllQuerySystemInformation(SYSTEM_INFORMATION_CLASS SystemInformationClass
 			break;
 		case SystemHandleInformation:
 		case SystemExtendedHandleInformation:
-			NotifyMsg("[Arxan Info] \nchecked for handle information\n");
+			NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] \nchecked for handle information\n");
 			break;
 		case SystemObjectInformation:
-			NotifyMsg("[Arxan Info] checked for object information\n");
+			NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] checked for object information\n");
 			break;
 		default:
 			break;
@@ -381,13 +381,13 @@ void NtdllAsmStub()
 	hook::pattern syscallLocations = hook::module_pattern(GetModuleHandle("ntdll.dll"), "4C 8B D1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 0F 05");
 	size_t syscallCount = syscallLocations.size();
 
-	NotifyMsg("[Arxan Info] ntdll syscallCount %d\n", syscallCount);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] ntdll syscallCount %d\n", syscallCount);
 
 	// allocate asm stub rwx page
 	const size_t allocationSize = sizeof(uint8_t) * 128;
 	ntdllAsmStubLocation = allocate_somewhere_near(GetModuleHandle("ntdll.dll"), allocationSize);
 	memset(ntdllAsmStubLocation, 0x90, allocationSize);
-	NotifyMsg("[Arxan Info] ntdll stub location %llx\n", ntdllAsmStubLocation);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] ntdll stub location %llx\n", ntdllAsmStubLocation);
 
 	// assembly stub
 	static asmjit::JitRuntime runtime;
@@ -682,13 +682,13 @@ void NtdllAsmStub()
 		if (c != 0)
 			memcpy(functionAddress, jmpInstructionBuffer, callInstructionLength);
 		else
-			NotifyMsg("[Arxan Info] couldnt change page protection at %llx\n", functionAddress);
+			NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] couldnt change page protection at %llx\n", functionAddress);
 		
 		//int d = VirtualProtect(functionAddress, callInstructionLength, old_protect, &old_protect);
 		FlushInstructionCache(GetCurrentProcess(), functionAddress, callInstructionLength);
 	}
 
-	//NotifyMsg("[Arxan Info] done\n");
+	//NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] done\n");
 }
 
 void CreateInlineAsmStub()
@@ -954,10 +954,11 @@ void CreateInlineAsmStub()
 		previousStubOffset = currentStubOffset + sizeof(uint8_t) * code.codeSize() + 0x8;
 	}
 
-	NotifyMsg("[Arxan Info] p %d\n", intactCount);
-	NotifyMsg("[Arxan Info] p %d\n", intactBigCount);
-	NotifyMsg("[Arxan Info] p %d\n", splitCount);
+	printf("p (intactCount)     %llu\n", intactCount);
+	printf("p (intactBigCount)  %llu\n", intactBigCount);
+	printf("p (splitCount)      %llu\n", splitCount);
 }
+
 
 bool arxanHealingChecksum(uint64_t rbp)
 {
@@ -1137,7 +1138,7 @@ void CreateChecksumHealingStub()
 					a.ret();
 					break;
 				default:
-					NotifyMsg("[Arxan Info] Error: We shouldn't be here");
+					NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] Error: We shouldn't be here");
 					getchar();
 					abort();
 			}
@@ -1181,7 +1182,7 @@ void CreateChecksumHealingStub()
 			
 			// debugging printf
 			if (i == 0)
-				NotifyMsg("[Arxan Info] type: %d %llx\n", type, functionAddress);
+				NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] type: %d %llx\n", type, functionAddress);
 		}
 	}
 }
@@ -1262,7 +1263,7 @@ void ReplaceNtdllStackWithOurOwn(uint64_t addr, uint64_t locationCount)
 
 void RemoveNtdllChecksumChecks()
 {
-	NotifyMsg("[Arxan Info] RemoveNtdllChecksumChecks return\n");
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] RemoveNtdllChecksumChecks return\n");
 
 	return;
 	
@@ -1363,14 +1364,14 @@ void RemoveNtdllChecksumChecks()
 		previousStubOffset = currentStubOffset + sizeof(uint8_t) * code.codeSize() + 0x8;
 	}
 
-	NotifyMsg("[Arxan Info] done applying ntdll\n");
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] done applying ntdll\n");
 }
 
 
 
 void DbgRemove()
 {
-	NotifyMsg("[Arxan Info] DbgRemove return\n");
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] DbgRemove return\n");
 
 	return;
 	bool forceDebuggedNum = false;

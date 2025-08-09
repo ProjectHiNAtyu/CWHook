@@ -6153,7 +6153,7 @@ int main()
 
 	ShowIntroMessage();
 
-	NotifyMsg("[Arxan Info] address %llx\n", baseAddr);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] address %llx\n", baseAddr);
 	//inputHandle = CreateThread(nullptr, 0, ConsoleInput, module, 0, &inputThreadId);
 	//printf("inputThreadId: %llx\n", inputThreadId);
 
