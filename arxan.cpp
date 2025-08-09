@@ -712,16 +712,16 @@ void CreateInlineAsmStub()
 	}
 
 	// Log count information
-	NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (intactCount) : %llu\n", intactCount);
-	NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (intactBigCount) : %llu\n", intactBigCount);
-	NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (splitCount) : %llu\n", splitCount);
-	NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (total) : %llu\n", totalCount);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (intactCount) : %llu\n", intactCount);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (intactBigCount) : %llu\n", intactBigCount);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (splitCount) : %llu\n", splitCount);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (total) : %llu\n", totalCount);
 
 	for (int i = 0; i < intactCount; i++)
 	{
 		void* functionAddress = locationsIntact.get(i).get<void*>(0);
 		uint64_t offsetFromBase = (uint64_t)functionAddress - baseAddr;
-		NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (intactCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
+		NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (intactCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
 		
 		inlineStubs[stubCounter].functionAddress = functionAddress;
 		inlineStubs[stubCounter].type = intactSmall;
@@ -733,7 +733,7 @@ void CreateInlineAsmStub()
 	{
 		void* functionAddress = locationsIntactBig.get(i).get<void*>(0);
 		uint64_t offsetFromBase = (uint64_t)functionAddress - baseAddr;
-		NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (intactBigCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
+		NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (intactBigCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
 		
 		inlineStubs[stubCounter].functionAddress = functionAddress;
 		inlineStubs[stubCounter].type = intactBig;
@@ -745,7 +745,7 @@ void CreateInlineAsmStub()
 	{
 		void* functionAddress = locationsSplit.get(i).get<void*>(0);
 		uint64_t offsetFromBase = (uint64_t)functionAddress - baseAddr;
-		NotifyMsg("[ \\x1b[36m ArxanInfo \\x1b[39m ] <CreateInlineAsmStub> p (splitCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
+		NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> p (splitCount) [%d] = ModernWarfare.exe + 0x%llX\n", i, offsetFromBase);
 		
 		inlineStubs[stubCounter].functionAddress = functionAddress;
 		inlineStubs[stubCounter].type = split;

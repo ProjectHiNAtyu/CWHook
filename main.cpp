@@ -1489,17 +1489,17 @@ bool _showDebugLogs = true;
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showLuaLoadDebugLogs = true;
+bool _showLuaLoadDebugLogs = false;
 
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showGSCLoadDebugLogs = true;
+bool _showGSCLoadDebugLogs = false;
 
 
 // en : Whether to display debug logs (with RTM Tool)
 // ja : デバッグログを表示するかどうか（RTM Tool併用）
-bool _showLuaPrintDebugLogs = true;
+bool _showLuaPrintDebugLogs = false;
 
 
 // en : Whether to display debug logs (with RTM Tool)

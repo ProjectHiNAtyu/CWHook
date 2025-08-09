@@ -97,8 +97,10 @@ void directoryWatcher()
 	loadedPathString.append("/loaded");
 */
 
-	printf("init plugin path %s\n", pluginPathString.c_str());
-	printf("init loaded path %s\n", loadedPathString.c_str());
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <directoryWatcher> init plugin path %s\n", pluginPathString.c_str());
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <directoryWatcher> init loaded path %s\n", loadedPathString.c_str());
+	//printf("init plugin path %s\n", pluginPathString.c_str());
+	//printf("init loaded path %s\n", loadedPathString.c_str());
 
 	HANDLE file = CreateFile(pluginPathString.c_str(),
 		FILE_LIST_DIRECTORY,
@@ -262,7 +264,8 @@ void InitializePluginLoader()
 		std::filesystem::remove(filePath);
 	}
 
-	printf("cleaned up loaded plugins\n");
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <InitializePluginLoader> cleaned up loaded plugins\n");
+	//printf("cleaned up loaded plugins\n");
 
 	// copy plugin folder into the loaded plugins
 	for (const auto& entry : std::filesystem::directory_iterator(pluginPathString))

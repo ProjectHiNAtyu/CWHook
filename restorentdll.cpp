@@ -26,7 +26,6 @@ void util_copy(void* place, const void* data, const size_t length)
 
 void RestoreNtdllDbgFunctions()
 {
-	printf("RestoreNtdllDbgFunctions return\n");
 
 	return;
 	static const char* functions[] = {

@@ -158,6 +158,8 @@ int GetSystemMetricsFunc(int nIndex)
 			DisableKiUserApcDispatcherHook();
 			RestoreKernel32ThreadInitThunkFunction();
 			RemoveNtdllChecksumChecks();
+
+			NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <CreateInlineAsmStub> RestoreNtdllDbgFunctions return\n");
 			RestoreNtdllDbgFunctions();
 
 			InitializePluginLoader();
