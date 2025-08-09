@@ -5114,8 +5114,6 @@ void GameStart()
 	SetupMinHook("GameStart", "Load_ScriptFile"								, CalcPtr(_adr.Load_ScriptFile)								, &Load_ScriptFile_d							, &Load_ScriptFile_h);
 	SetupMinHook("GameStart", "Lobby_GetLobbyData"							, CalcPtr(_adr.Lobby_GetLobbyData)							, &Lobby_GetLobbyData_d							, &Lobby_GetLobbyData_h);
 	SetupMinHook("GameStart", "CL_TransientsCollisionMP_SetTransientMode"	, CalcPtr(_adr.CL_TransientsCollisionMP_SetTransientMode)	, &CL_TransientsCollisionMP_SetTransientMode_d	, &CL_TransientsCollisionMP_SetTransientMode_h);
-	SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"		, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
-	SetupMinHook("GameStart", "DB_CheckXFileVersion"						, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
 	
 	SetupMinHook("GameStart", "LUI_ReportError"								, CalcPtr(_adr.LUI_ReportError)								, &LUI_ReportError_d							, &LUI_ReportError_h);
 	SetupMinHook("GameStart", "LUI_LuaCall_LUIGlobalPackage_DebugPrint"		, CalcPtr(_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint)		, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_d	, &LUI_LuaCall_LUIGlobalPackage_DebugPrint_h);
@@ -5124,6 +5122,24 @@ void GameStart()
 	SetupMinHook("GameStart", "DLog_Record"									, CalcPtr(_adr.DLog_Record)									, &DLog_Record_d								, &DLog_Record_h);
 	SetupMinHook("GameStart", "DLog_RecordErrorEvent"						, CalcPtr(_adr.DLog_RecordErrorEvent)						, &DLog_RecordErrorEvent_d						, &DLog_RecordErrorEvent_h);
 	
+	
+	switch (_gameTitle)
+	{
+	case GameTitle::IW8_167:
+		SetupMinHook("GameStart", "DB_CheckFastfileHeaderVersionAndMagic"	, CalcPtr(_adr.DB_CheckFastfileHeaderVersionAndMagic)		, &DB_CheckFastfileHeaderVersionAndMagic_d		, &DB_CheckFastfileHeaderVersionAndMagic_h);
+		SetupMinHook("GameStart", "DB_CheckXFileVersion"					, CalcPtr(_adr.DB_CheckXFileVersion)						, &DB_CheckXFileVersion_d						, &DB_CheckXFileVersion_h);
+	
+		break;
+
+	case GameTitle::IW8_159:
+		break;
+
+	case GameTitle::IW8_157:
+		break;
+
+	case GameTitle::IW8_138:
+		break;
+	}
 	
 	memcpy(																	(void*)CalcPtr(_adr.Live_IsInSystemlinkLobby)				, "\xB0\x01"	, 2);
 
@@ -5248,7 +5264,7 @@ HCURSOR WINAPI LoadImageA_d(HINSTANCE hInst, LPCSTR lpName, UINT uType, int cx, 
 		NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 		NotifyMsg("\n");
 
-		NotifyMsg("Splash screen image load detected!\n");
+		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] Splash screen image load detected!\n");
 		NotifyMsg("[ \x1b[33m Notice \x1b[39m ] Base Address: 0x%p\n", _ImageBase);
 		CheckRtmToolNotifyFiles();
 		SetupProfile();

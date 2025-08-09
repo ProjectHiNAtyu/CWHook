@@ -497,42 +497,51 @@ void DisableTlsCallbacks()
 	// MW19 1.57 TLS Callback addresses (updated from BOCW)
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
 
-	char* tlscallback_1 = 0;
-	char* tlscallback_2 = 0;
-	char* tlscallback_3 = 0;
-	char* tlscallback_4 = 0;
+	
+	uint64_t tlscallbackoffset_1 = 0;
+	uint64_t tlscallbackoffset_2 = 0;
+	uint64_t tlscallbackoffset_3 = 0;
+	uint64_t tlscallbackoffset_4 = 0;
+
 	
 	switch (_gameTitle)
 	{
 		case GameTitle::IW8_167:
-			tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB20A80);	//	0x7FF684041A80
-			tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB56410);	//	0x7FF684077410
-			tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0x19A5930);	//	0x7FF684EC6930
-			tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x1000 + 0xB1EF00);	//	0x7FF68403FF00
+			tlscallbackoffset_1 = baseAddr + 0x1000 + 0xB20A80;	//	0x7FF684041A80//	0x7FF684041A80
+			tlscallbackoffset_2 = baseAddr + 0x1000 + 0xB56410;	//	0x7FF684077410//	0x7FF684077410
+			tlscallbackoffset_3 = baseAddr + 0x1000 + 0x19A593;	//	0x7FF684EC6930//	0x7FF684EC6930
+			tlscallbackoffset_4 = baseAddr + 0x1000 + 0xB1EF00;	//	0x7FF68403FF00//	0x7FF68403FF00
 			break;
 
 		case GameTitle::IW8_159:
-			tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xA915B0); // 0x7FF69DA715B0
-			tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xA9E2D0); // 0x7FF69DA7E2D0
-			tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAA2180); // 0x7FF69DA82180
-			tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xAA2E90); // 0x7FF69DA82E90
+			tlscallbackoffset_1 = baseAddr + 0xA915B0;	// 0x7FF69DA715B0
+			tlscallbackoffset_2 = baseAddr + 0xA9E2D0;	// 0x7FF69DA7E2D0
+			tlscallbackoffset_3 = baseAddr + 0xAA2180;	// 0x7FF69DA82180
+			tlscallbackoffset_4 = baseAddr + 0xAA2E90;	// 0x7FF69DA82E90
 			break;
 
 		case GameTitle::IW8_157:
-			tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xAB9080); 
-			tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xAC5990); 
-			tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xAC9480); 
-			tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0xACA0F0); 
+			tlscallbackoffset_1 = baseAddr + 0xAB9080;	
+			tlscallbackoffset_2 = baseAddr + 0xAC5990;	
+			tlscallbackoffset_3 = baseAddr + 0xAC9480;	
+			tlscallbackoffset_4 = baseAddr + 0xACA0F0;	
 			break;
 
 		case GameTitle::IW8_138:
-			tlscallback_1 = reinterpret_cast<char*>(baseAddr + 0xA5BA50); 
-			tlscallback_2 = reinterpret_cast<char*>(baseAddr + 0xA79500); 
-			tlscallback_3 = reinterpret_cast<char*>(baseAddr + 0xA89F90); 
-			tlscallback_4 = reinterpret_cast<char*>(baseAddr + 0x2E660A0);
+			tlscallbackoffset_1 = baseAddr + 0xA5BA50;
+			tlscallbackoffset_2 = baseAddr + 0xA79500;
+			tlscallbackoffset_3 = baseAddr + 0xA89F90;
+			tlscallbackoffset_4 = baseAddr + 0x2E660A0;
 			break;
 	}
 
+
+
+	char* tlscallback_1 =  reinterpret_cast<char*>(tlscallbackoffset_1);	//	0x7FF684041A80
+	char* tlscallback_2 =  reinterpret_cast<char*>(tlscallbackoffset_2);	//	0x7FF684077410
+	char* tlscallback_3 =  reinterpret_cast<char*>(tlscallbackoffset_3);	//	0x7FF684EC6930
+	char* tlscallback_4 =  reinterpret_cast<char*>(tlscallbackoffset_4);	//	0x7FF68403FF00
+	
 	// TlsCallback_0 1.57 - 0xAB9080 / 1.38 - 0xA5BA50
 	// TlsCallback_1 1.57 - 0xAC5990 / 1.38 - 0xA79500
 	// TlsCallback_2 1.57 - 0xAC9480 / 1.38 - 0xA89F90
