@@ -2950,10 +2950,10 @@ void GetAddressOffset(GameTitle title)
 			_adr.LiveStorage_StatsInit							= 0x7FF657845620;	// ddl/mp/playerdata.ddl
 			_adr.Content_DoWeHaveContentPack					= 0x7FF657B857D0;	// 8B D1 83 F9 02 ?? ?? B0 01 C3 44 8B 05 ?? ?? ?? ?? 33 C0 45 85 C0 ?? ?? 48 8D 0D ?? ?? ?? ?? 90
 			_adr.unk_PlatformPatch_flag1						= 0x7FF65D99F750;	// %08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
-			_adr.unk_XUIDCheck1									= 0x7FF66F801E78;	// 48 8D 15 ? ? ? ? 48 FF C6 81 FF
+			_adr.unk_XUIDCheck1									= 0x7FF66F801E78;	// 48 8D 15 ?? ?? ?? ?? 48 FF C6 81 FF
 			_adr.CurrentRegion_IssueFix2_flag					= 0x7FF66BCEA682;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
 			
-			_adr.s_isContentEnumerationFinished					= 0x7FF66B56F600;	// 80 3D ? ? ? ? ? 74 ? 48 89 7C 24
+			_adr.s_isContentEnumerationFinished					= 0x7FF66B56F600;	// 80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= 0x7FF66D0BE9C0;	// OMROPMNPTT
 			_adr.LiveStorage_ReadStats							= 0x7FF657842F60;	// playerdata_available
 			
@@ -2980,14 +2980,14 @@ void GetAddressOffset(GameTitle title)
 			_adr.Dvar_RegisterBool								= 0x7FF6B0D603C0;	// 0x7FF68746EF40	E8 ?? ?? ?? ?? 48 8B F0 F6 46
 			_adr.R_EndFrame										= 0x7FF6B34B5DC0;	// 0x7FF689C6D330	48 83 EC ?? E8 ?? ?? ?? ?? 48 8B 15 ?? ?? ?? ?? 45 33 D2
 			_adr.Live_IsInSystemlinkLobby						= 0x7FF6B1107130;	// 0x7FF68783BF70	LUI_CoD_LuaCall_InLobby
-			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ?? ?? ?? ?? 83 4F ?? ?? 48 8D 0D
 
 			//	Sku style Patch
 			_adr.unk_PlatformPatch_flag1						= 0x7FF6CB13CB30;	// 0x7FF69922A290	%08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
-			_adr.unk_XUIDCheck1									= 0x7FF6CEDD0DE8;	// 0x7FF69CEDA8E0	48 8D 1D ? ? ? ? 40 88 35
+			_adr.unk_XUIDCheck1									= 0x7FF6CEDD0DE8;	// 0x7FF69CEDA8E0	48 8D 1D ?? ?? ?? ?? 40 88 35
 			_adr.accountLoggedIn								= 0x7FF6CB13C382;	// 0x7FF699229AE2	CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
 			_adr.CurrentRegion_IssueFix2_flag					= _adr.accountLoggedIn;			// 0x7FF699229AE2	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
-			_adr.s_isContentEnumerationFinished					= 0x7FF6CA997400;	// 0x7FF698A3A580	80 3D ? ? ? ? ? 74 ? 48 89 7C 24
+			_adr.s_isContentEnumerationFinished					= 0x7FF6CA997400;	// 0x7FF698A3A580	80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= 0x7FF6CC5AE808;	// 0x7FF69A6B0808	OMROPMNPTT
 			_adr.xenonUserData_m_guardedUserData_signinState	= 0x7FF6CB13C860;	// 0x7FF699229FC0	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
 			_adr.dvar_xblive_loggedin							= 0x7FF6CAD32458;	// dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
@@ -3017,9 +3017,9 @@ void GetAddressOffset(GameTitle title)
 
 			// Dvar
 			_adr.Dvar_SetBool_Internal							= 0x7FF6B0D626E0;	// 0x7FF6874713E0	LUA_MENU/PATCH_UPDATE_SUCCESS
-			_adr.Dvar_FindVarByName								= 0x7FF6B0D5A9E0;	// 0x7FF687469210	E8 ? ? ? ? 48 8B CB 48 63 50
+			_adr.Dvar_FindVarByName								= 0x7FF6B0D5A9E0;	// 0x7FF687469210	E8 ?? ?? ?? ?? 48 8B CB 48 63 50
 			_adr.Dvar_GetBoolSafe								= 0x7FF6B0D5AC00;	// 0x7FF687469430	MLOLTLLNRT
-			_adr.Dvar_GetStringSafe								= 0x7FF6B0D5E4A0;	// 0x7FF68746CF30	48 83 EC ? E8 ? ? ? ? 8B C8 E8 ? ? ? ? 48 85 C0 75 ? 48 8D 05 ? ? ? ? 48 83 C4 ? C3 80 78
+			_adr.Dvar_GetStringSafe								= 0x7FF6B0D5E4A0;	// 0x7FF68746CF30	48 83 EC ?? E8 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 48 85 C0 75 ?? 48 8D 05 ?? ?? ?? ?? 48 83 C4 ?? C3 80 78
 			
 			
 			// XAsset
@@ -3037,7 +3037,7 @@ void GetAddressOffset(GameTitle title)
 			// LUA customize
 			_adr.luaL_loadbuffer								= 0x7FF6B3FC5890;	// 0x7FF68A79FE00	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
 			_adr.luaL_loadfile									= 0x7FF6B3FC5A20;	// 0x7FF68A79FF90	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
-			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 0x7FF68A2DE160	48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 0x7FF68A2DE160	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
 
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x7FF6B363D8E0;	// 0x7FF689E13380	DebugPrint LUIElement under func
@@ -3078,14 +3078,14 @@ void GetAddressOffset(GameTitle title)
 
 			_adr.DumpBase										= 0x7FF6AD390000;
 
-			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
-			_adr.unk_SignInState								= 0x7FF6C7B29570;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
+			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ?? ?? ?? ?? 85 C0 7F ?? 8B CB
+			_adr.unk_SignInState								= 0x7FF6C7B29570;	// E8 ?? ?? ?? ?? 85 C0 7F ?? 8B CB
 			_adr.Dvar_RegisterBool_call_1						= 0x7FF6B079828F;	// MPSSOTQQPM
 			_adr.Dvar_RegisterBool_call_2						= 0x7FF6B07982AA;	// LSTQOKLTRN
-			_adr.GamerProfile_SetDataByName						= 0x7FF6B16681A0;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B F1 0F 29 74 24
+			_adr.GamerProfile_SetDataByName						= 0x7FF6B16681A0;	// 48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 8B F1 0F 29 74 24
 			_adr.holdrand										= 0x7FF6B71641E8;	// I_irand
-			_adr.Dvar_FindVarByName								= 0x7FF6B0D5A9E0;	// E8 ? ? ? ? 48 8B CB 48 63 50
-			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+			_adr.Dvar_FindVarByName								= 0x7FF6B0D5A9E0;	// E8 ?? ?? ?? ?? 48 8B CB 48 63 50
+			_adr.LUI_OpenMenu									= 0x7FF6B3B04040;	// 48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
 			
 			_adr.LUI_CoD_LuaCall_IsConnectedToGameServer		= 0x7FF6B36DF870;	// 
 			_adr.LUI_COD_LuaCall_IsPremiumPlayerReady			= 0x7FF6B36E8E80;	// 
@@ -3126,18 +3126,18 @@ void GetAddressOffset(GameTitle title)
 			_adr.CurrentRegion_IssueFix1						= 0x7FF6B1A13ADE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+9
 			_adr.CurrentRegion_IssueFix2						= 0x7FF6B1A1355E;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
 			_adr.CurrentRegion_IssueFix2_flag					= 0x7FF6CB13C382;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
-			_adr.unk_BNetClass									= 0x7FF6CB13C860;	// 83 3D ? ? ? ? ? 74 ? B8 ? ? ? ? C3
-			_adr.s_isContentEnumerationFinished					= 0x7FF6CA997400;	// 80 3D ? ? ? ? ? 74 ? 48 89 7C 24
-			_adr.unk_XUIDCheck1									= 0x7FF6CEDD0DE8;	// 48 8D 1D ? ? ? ? 40 88 35
+			_adr.unk_BNetClass									= 0x7FF6CB13C860;	// 83 3D ?? ?? ?? ?? ?? 74 ?? B8 ?? ?? ?? ?? C3
+			_adr.s_isContentEnumerationFinished					= 0x7FF6CA997400;	// 80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
+			_adr.unk_XUIDCheck1									= 0x7FF6CEDD0DE8;	// 48 8D 1D ?? ?? ?? ?? 40 88 35
 			_adr.GamerProfile_IsProfileLoggedIn					= 0x7FF6B1654460;	// hit_marker_3d
 			_adr.Content_DoWeHaveContentPack					= 0x7FF6B0D54FC0;	// 8B D1 83 F9 02 ?? ?? B0 01 C3 44 8B 05 ?? ?? ?? ?? 33 C0 45 85 C0 ?? ?? 48 8D 0D ?? ?? ?? ?? 90
 			_adr.GetUsername									= 0x7FF6B0D9DB70;	// UnnamedPlayer
 			_adr.s_OnlineServicesFenceData_state				= 0x7FF6C87D3E18;	// LUI_CoD_LuaCall_OnlineServicesGetState -> Live_OnlineServicesFence_GetState
-			_adr.dwGetLogOnStatus								= 0x7FF6B3194330;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
-			_adr.dwLogOnHSM_base_HSM_IsInState					= 0x7FF6AFC4B3C0;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
+			_adr.dwGetLogOnStatus								= 0x7FF6B3194330;	// 40 53 48 83 EC ?? 48 63 C1 BA ?? ?? ?? ?? 48 69 D8 or login_event -> 
+			_adr.dwLogOnHSM_base_HSM_IsInState					= 0x7FF6AFC4B3C0;	// 40 53 48 83 EC ?? 48 63 C1 BA ?? ?? ?? ?? 48 69 D8 or login_event -> 
 			_adr.Live_IsSignedIn								= 0x7FF6B1A166D0;	// XBOXLIVE/MPNOTALLOWED
 			_adr.Live_IsUserSignedIn							= 0x7FF6B0D9E0C0;	// 48 83 EC 28 E8 ?? ?? ?? ?? 85 C0 0F 9F C0 48 83 C4 28 C3 = x2
-			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+			_adr.Live_IsUserSignedInToDemonware					= 0x7FF6B1107CA0;	// E8 ?? ?? ?? ?? 83 4F ?? ?? 48 8D 0D
 			_adr.Live_IsUserSignedInToBnet						= 0x7FF6B01A9E30;	// 48 89 5C 24 08 57 48 83 EC 20 48 63 F9 48 8B DA 8B CF E8 ?? ?? ?? ?? 84 C0
 			_adr.Live_IsUserSignedInToLive						= 0x7FF6B0D9E0E0;	// LUI_CoD_LuaCall_IsUserSignedInToDemonware
 			_adr.Live_OnlineServicesFence_GetState				= 0x7FF6B0077B30;	// LUI_CoD_LuaCall_OnlineServicesGetState
@@ -3244,14 +3244,14 @@ void GetAddressOffset(GameTitle title)
 			_adr.Dvar_RegisterBool								= 0x40DA7B0;	// 0x7FF6A10BA7B0	E8 ?? ?? ?? ?? 48 8B F0 F6 46
 			_adr.R_EndFrame										= 0x68139F0;	// 0x7FF6A37F39F0	48 83 EC ?? E8 ?? ?? ?? ?? 48 8B 15 ?? ?? ?? ?? 45 33 D2
 			_adr.Live_IsInSystemlinkLobby						= 0x4490FE0;	// 0x7FF6A1470FE0	LUI_CoD_LuaCall_InLobby
-			_adr.Live_IsUserSignedInToDemonware					= 0x4491C70;	// 0x7FF6A1471C70	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+			_adr.Live_IsUserSignedInToDemonware					= 0x4491C70;	// 0x7FF6A1471C70	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ?? ?? ?? ?? 83 4F ?? ?? 48 8D 0D
 
 			//	Sku style Patch
 			_adr.unk_PlatformPatch_flag1						= 0x1568B7B0;	// 0x7FF6B266B7B0	%08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
-			_adr.unk_XUIDCheck1									= 0x19326868;	// 0x7FF6B6306868	48 8D 1D ? ? ? ? 40 88 35
+			_adr.unk_XUIDCheck1									= 0x19326868;	// 0x7FF6B6306868	48 8D 1D ?? ?? ?? ?? 40 88 35
 			_adr.accountLoggedIn								= 0x1568B002;	// 0x7FF6B266B002	CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
 			_adr.CurrentRegion_IssueFix2_flag					= _adr.accountLoggedIn;			// 0x7FF699229AE2	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
-			_adr.s_isContentEnumerationFinished					= 0x14EAF080;	// 0x7FF6B1E8F080	80 3D ? ? ? ? ? 74 ? 48 89 7C 24
+			_adr.s_isContentEnumerationFinished					= 0x14EAF080;	// 0x7FF6B1E8F080	80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= 0x16B01808;	// 0x7FF6B3AE1808	OMROPMNPTT
 			_adr.xenonUserData_m_guardedUserData_signinState	= 0x1568B4E0;	// 0x7FF6B266B4E0	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
 			_adr.dvar_xblive_loggedin							= 0x1525ED28;	// 0x7FF6B223ED28	dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
@@ -3281,9 +3281,9 @@ void GetAddressOffset(GameTitle title)
 
 			// Dvar
 			_adr.Dvar_SetBool_Internal							= 0x40DCA20;	// 0x7FF6A10BCA20	LUA_MENU/PATCH_UPDATE_SUCCESS
-			_adr.Dvar_FindVarByName								= 0x40D4960;	// 0x7FF6A10B4960	E8 ? ? ? ? 48 8B CB 48 63 50
+			_adr.Dvar_FindVarByName								= 0x40D4960;	// 0x7FF6A10B4960	E8 ?? ?? ?? ?? 48 8B CB 48 63 50
 			_adr.Dvar_GetBoolSafe								= 0x40D4B80;	// 0x7FF6A10B4B80	MLOLTLLNRT
-			_adr.Dvar_GetStringSafe								= 0x40D8790;	// 0x7FF6A10B8790	48 83 EC ? E8 ? ? ? ? 8B C8 E8 ? ? ? ? 48 85 C0 75 ? 48 8D 05 ? ? ? ? 48 83 C4 ? C3 80 78
+			_adr.Dvar_GetStringSafe								= 0x40D8790;	// 0x7FF6A10B8790	48 83 EC ?? E8 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 48 85 C0 75 ?? 48 8D 05 ?? ?? ?? ?? 48 83 C4 ?? C3 80 78
 			
 			
 			// XAsset
@@ -3301,7 +3301,7 @@ void GetAddressOffset(GameTitle title)
 			// LUA customize
 			_adr.luaL_loadbuffer								= 0x7334B20;	// 0x7FF6A4314B20	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
 			_adr.luaL_loadfile									= 0x7334CB0;	// 0x7FF6A4314CB0	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
-			_adr.LUI_OpenMenu									= 0x6E732E0;	// 0x7FF6A3E532E0	48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+			_adr.LUI_OpenMenu									= 0x6E732E0;	// 0x7FF6A3E532E0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
 
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= 0x69BEC00;	// 0x7FF6A399EC00	DebugPrint LUIElement under func
@@ -3351,14 +3351,14 @@ void GetAddressOffset(GameTitle title)
 			_adr.Dvar_RegisterBool								= _TEXT_SEC_LEN + 0x3F4DF40;	// 0x7FF68746EF40	E8 ?? ?? ?? ?? 48 8B F0 F6 46
 			_adr.R_EndFrame										= _TEXT_SEC_LEN + 0x674C330;	// 0x7FF689C6D330	48 83 EC ?? E8 ?? ?? ?? ?? 48 8B 15 ?? ?? ?? ?? 45 33 D2
 			_adr.Live_IsInSystemlinkLobby						= _TEXT_SEC_LEN + 0x431AF70;	// 0x7FF68783BF70	LUI_CoD_LuaCall_InLobby
-			_adr.Live_IsUserSignedInToDemonware					= _TEXT_SEC_LEN + 0x431BB80;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ? ? ? ? 83 4F ? ? 48 8D 0D
+			_adr.Live_IsUserSignedInToDemonware					= _TEXT_SEC_LEN + 0x431BB80;	// 0x7FF68783CB80	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ?? ?? ?? ?? 83 4F ?? ?? 48 8D 0D
 
 			//	Sku style Patch
 			_adr.unk_PlatformPatch_flag1						= _TEXT_SEC_LEN + 0x15D09290;	// 0x7FF69922A290	%08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
-			_adr.unk_XUIDCheck1									= _TEXT_SEC_LEN + 0x199B98E0;	// 0x7FF69CEDA8E0	48 8D 1D ? ? ? ? 40 88 35
+			_adr.unk_XUIDCheck1									= _TEXT_SEC_LEN + 0x199B98E0;	// 0x7FF69CEDA8E0	48 8D 1D ?? ?? ?? ?? 40 88 35
 			_adr.accountLoggedIn								= _TEXT_SEC_LEN + 0x15D08AE2;	// 0x7FF699229AE2	CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
 			_adr.CurrentRegion_IssueFix2_flag					= _adr.accountLoggedIn;			// 0x7FF699229AE2	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
-			_adr.s_isContentEnumerationFinished					= _TEXT_SEC_LEN + 0x15519580;	// 0x7FF698A3A580	80 3D ? ? ? ? ? 74 ? 48 89 7C 24
+			_adr.s_isContentEnumerationFinished					= _TEXT_SEC_LEN + 0x15519580;	// 0x7FF698A3A580	80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= _TEXT_SEC_LEN + 0x1718F808;	// 0x7FF69A6B0808	OMROPMNPTT
 			_adr.xenonUserData_m_guardedUserData_signinState	= _TEXT_SEC_LEN + 0x15D08FC0;	// 0x7FF699229FC0	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
 			_adr.dvar_xblive_loggedin							= _TEXT_SEC_LEN + 0x158C85A8;	// 0x7FF698DE95A8	dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
@@ -3388,9 +3388,9 @@ void GetAddressOffset(GameTitle title)
 
 			// Dvar
 			_adr.Dvar_SetBool_Internal							= _TEXT_SEC_LEN + 0x3F503E0;	// 0x7FF6874713E0	LUA_MENU/PATCH_UPDATE_SUCCESS
-			_adr.Dvar_FindVarByName								= _TEXT_SEC_LEN + 0x3F48210;	// 0x7FF687469210	E8 ? ? ? ? 48 8B CB 48 63 50
+			_adr.Dvar_FindVarByName								= _TEXT_SEC_LEN + 0x3F48210;	// 0x7FF687469210	E8 ?? ?? ?? ?? 48 8B CB 48 63 50
 			_adr.Dvar_GetBoolSafe								= _TEXT_SEC_LEN + 0x3F48430;	// 0x7FF687469430	MLOLTLLNRT
-			_adr.Dvar_GetStringSafe								= _TEXT_SEC_LEN + 0x3F4BF30;	// 0x7FF68746CF30	48 83 EC ? E8 ? ? ? ? 8B C8 E8 ? ? ? ? 48 85 C0 75 ? 48 8D 05 ? ? ? ? 48 83 C4 ? C3 80 78
+			_adr.Dvar_GetStringSafe								= _TEXT_SEC_LEN + 0x3F4BF30;	// 0x7FF68746CF30	48 83 EC ?? E8 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 48 85 C0 75 ?? 48 8D 05 ?? ?? ?? ?? 48 83 C4 ?? C3 80 78
 			
 			
 			// XAsset
@@ -3411,7 +3411,7 @@ void GetAddressOffset(GameTitle title)
 			// LUA customize
 			_adr.luaL_loadbuffer								= _TEXT_SEC_LEN + 0x727EE00;	// 0x7FF68A79FE00	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
 			_adr.luaL_loadfile									= _TEXT_SEC_LEN + 0x727EF90;	// 0x7FF68A79FF90	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
-			_adr.LUI_OpenMenu									= _TEXT_SEC_LEN + 0x6DBD160;	// 0x7FF68A2DE160	48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B F1 41 8B D8
+			_adr.LUI_OpenMenu									= _TEXT_SEC_LEN + 0x6DBD160;	// 0x7FF68A2DE160	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
 
 			// Debug
 			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x68F2380;	// 0x7FF689E13380	DebugPrint LUIElement under func
@@ -3468,11 +3468,11 @@ void GetAddressOffset(GameTitle title)
 
 			
 
-			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
-			_adr.unk_SignInState								= 0x7FF6C7B29570;	// E8 ? ? ? ? 85 C0 7F ? 8B CB
+			_adr.CL_GetLocalClientSignInState					= 0x7FF6B10C5090;	// E8 ?? ?? ?? ?? 85 C0 7F ?? 8B CB
+			_adr.unk_SignInState								= 0x7FF6C7B29570;	// E8 ?? ?? ?? ?? 85 C0 7F ?? 8B CB
 			_adr.Dvar_RegisterBool_call_1						= 0x7FF6B079828F;	// MPSSOTQQPM
 			_adr.Dvar_RegisterBool_call_2						= 0x7FF6B07982AA;	// LSTQOKLTRN
-			_adr.GamerProfile_SetDataByName						= 0x7FF6B16681A0;	// 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B F1 0F 29 74 24
+			_adr.GamerProfile_SetDataByName						= 0x7FF6B16681A0;	// 48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 8B F1 0F 29 74 24
 			_adr.holdrand										= 0x7FF6B71641E8;	// I_irand
 			
 			_adr.LuaShared_LuaCall_IsDemoBuild					= 0x7FF6B36276B0;	// 
@@ -3505,10 +3505,10 @@ void GetAddressOffset(GameTitle title)
 			_adr.platformId										= _TEXT_SEC_LEN + 0x15D09080;	// 0x7FF69922A080	Platform_BeginAuth -> under 1 func -> ref arg -> -8byte
 			
 			_adr.CurrentRegion_IssueFix1						= 0x7FF6B1A13ADE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+9
-			_adr.unk_BNetClass									= 0x7FF6CB13C860;	// 83 3D ? ? ? ? ? 74 ? B8 ? ? ? ? C3
+			_adr.unk_BNetClass									= 0x7FF6CB13C860;	// 83 3D ?? ?? ?? ?? ?? 74 ?? B8 ?? ?? ?? ?? C3
 			_adr.s_OnlineServicesFenceData_state				= 0x7FF6C87D3E18;	// LUI_CoD_LuaCall_OnlineServicesGetState -> Live_OnlineServicesFence_GetState
-			_adr.dwGetLogOnStatus								= 0x7FF6B3194330;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
-			_adr.dwLogOnHSM_base_HSM_IsInState					= 0x7FF6AFC4B3C0;	// 40 53 48 83 EC ? 48 63 C1 BA ? ? ? ? 48 69 D8 or login_event -> 
+			_adr.dwGetLogOnStatus								= 0x7FF6B3194330;	// 40 53 48 83 EC ?? 48 63 C1 BA ?? ?? ?? ?? 48 69 D8 or login_event -> 
+			_adr.dwLogOnHSM_base_HSM_IsInState					= 0x7FF6AFC4B3C0;	// 40 53 48 83 EC ?? 48 63 C1 BA ?? ?? ?? ?? 48 69 D8 or login_event -> 
 			_adr.Live_OnlineServicesFence_GetState				= 0x7FF6B0077B30;	// LUI_CoD_LuaCall_OnlineServicesGetState
 			_adr.Live_SyncOnlineDataFence_GetState				= 0x7FF6B0078C40;	// LUI_CoD_LuaCall_ShouldBeInOnlineArea -> j_LUI_CoD_LuaCall_ShouldBeInOnlineArea
 			
