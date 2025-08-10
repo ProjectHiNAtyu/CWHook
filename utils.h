@@ -35,7 +35,7 @@ enum GameTitle
 
 // en : Current Game title
 // ja : 現在のゲームタイトル
-static GameTitle _gameTitle = GameTitle::UNKNOWN;
+extern GameTitle _gameTitle;
 
 
 const extern WCHAR* BadProcessnameList[];

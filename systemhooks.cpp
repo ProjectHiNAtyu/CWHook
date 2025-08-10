@@ -497,6 +497,7 @@ void DisableTlsCallbacks()
 	// MW19 1.57 TLS Callback addresses (updated from BOCW)
 	uint64_t baseAddr = reinterpret_cast<uint64_t>(GetModuleHandle(nullptr));
 
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] <DisableTlsCallbacks> baseAddr: 0x%llX\n", baseAddr);
 	
 	uint64_t tlscallbackoffset_1 = 0;
 	uint64_t tlscallbackoffset_2 = 0;
@@ -533,8 +534,10 @@ void DisableTlsCallbacks()
 			tlscallbackoffset_3 = baseAddr + 0xA89F90;
 			tlscallbackoffset_4 = baseAddr + 0x2E660A0;
 			break;
-	}
 
+		default:
+			break;
+	}
 
 
 	char* tlscallback_1 =  reinterpret_cast<char*>(tlscallbackoffset_1);	//	0x7FF684041A80
@@ -567,10 +570,10 @@ void DisableTlsCallbacks()
 
 	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] MW19 TLS Callbacks:\n");
 
-	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls1: %llx\n", tlscallback_1);
-	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls2: %llx\n", tlscallback_2);
-	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls3: %llx\n", tlscallback_3);
-	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls4: %llx\n", tlscallback_4);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls1: 0x%llX\n", tlscallbackoffset_1);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls2: 0x%llX\n", tlscallbackoffset_2);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls3: 0x%llX\n", tlscallbackoffset_3);
+	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] tls4: 0x%llX\n", tlscallbackoffset_4);
 
 	if (MH_CreateHook(tlscallback_1, &generalTlsCallbackFunction, NULL) != MH_OK) { NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] hook didn't work\n"); }
 	if (MH_EnableHook(tlscallback_1) != MH_OK) { NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] hook didn't work\n"); }

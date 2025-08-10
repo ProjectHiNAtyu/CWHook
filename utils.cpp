@@ -16,6 +16,9 @@
 #include "restorentdll.h"
 #include <regex>
 
+// Game title variable definition
+GameTitle _gameTitle = GameTitle::UNKNOWN;
+
 const WCHAR* BadProcessnameList[] =
 {
 	L"ollydbg.exe",

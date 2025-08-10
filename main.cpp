@@ -13,7 +13,7 @@
 // Basic system and documentation          : Project Donetsk   ( https://github.com/ProjectDonetsk/IW8-1.20 )
 // arxan Bypass base project               : mallgrab / CWHook ( https://github.com/mallgrab/CWHook )
 // arxan Integrity Checks Infos            : momo5502 blogs    ( https://momo5502.com/posts/2022-11-17-reverse-engineering-integrity-checks-in-black-ops-3/ )
-// Some debugging reference & good support : Lebta2 / iw8-mod  ( https://github.com/xifil/iw8-mod )
+// Some debugging reference & good support : Lebta2
 // 
 //=================================================================//
 
@@ -52,7 +52,7 @@
 // Game code          : IW8 / CoD16 / MW19 / MW2019 / CoD2019 / CoD:MW
 // Game released year : 2019
 // Platform           : PC ( BattleNet )
-// Build version      : 1.67
+// Build version      : 1.67 / 1.57
 // Game mode          : SP / CP / MP ( Singleplayer / Co-op / Multiplayer )
 // 
 //=================================================================//
@@ -4968,6 +4968,10 @@ void SkuStylePatch(XUID xuid)
 
 
 
+//++++++++++++++++++++++++++++++
+// en : Real-time modding flag check
+// ja : リアルタイムモッディング用フラグチェック
+//++++++++++++++++++++++++++++++
 bool OnfRtmFlag(std::string path , bool flag, bool onf, const char* msg)
 {
 	_mathStr = _documentPath + path;
