@@ -283,7 +283,7 @@ HWND CreateWindowExFunc(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName
 HWND NtUserFindWindowExFunc(HWND hwndParent, HWND hwndChildAfter, PUNICODE_STRING ucClassName, PUNICODE_STRING ucWindowName)
 {
 	NotifyMsg("[ \x1b[36m ArxanInfo \x1b[39m ] ntuserfindwindowexfunc got called\n");
-
+	//return NtUserFindWindowExOrig(hwndParent, hwndChildAfter, ucClassName, ucWindowName);
 	return 0;
 }
 
@@ -672,7 +672,7 @@ void InitializeSystemHooks()
 		{NtUserQueryWindowAddr, &NtUserQueryWindowFunc, (LPVOID*)(&NtUserQueryWindowOrig)},
 		{NtUserInternalGetWindowTextAddr, &GetMenuFunc, (LPVOID*)(&NtUserInternalGetWindowTextOrig)},
 		{NtUserGetClassNameAddr, &GetMenuFunc, (LPVOID*)(&NtUserGetClassNameOrig)},
-		{NtUserFindWindowExAddr, &NtUserFindWindowExFunc, (LPVOID*)(&NtUserFindWindowExOrig)},
+		//{NtUserFindWindowExAddr, &NtUserFindWindowExFunc, (LPVOID*)(&NtUserFindWindowExOrig)},
 		{NtUserWindowFromPointAddr, &NtUserWindowFromPointFunc, (LPVOID*)(&NtUserWindowFromPointOrig)},
 		{CreateWindowExAddr, &CreateWindowExFunc, (LPVOID*)(&CreateWindowExOrig)},
 		{GetWindowTextAddr, &GetWindowTextFunc, (LPVOID*)(&GetWindowTextOrig)},
