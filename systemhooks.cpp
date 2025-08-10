@@ -535,6 +535,13 @@ void DisableTlsCallbacks()
 			tlscallbackoffset_4 = baseAddr + 0x2E660A0;
 			break;
 
+		case GameTitle::IW9:
+			tlscallbackoffset_1 = baseAddr + 0xA50;
+			tlscallbackoffset_2 = baseAddr + 0xA00;
+			tlscallbackoffset_3 = baseAddr + 0xA90;
+			tlscallbackoffset_4 = baseAddr + 0x20A0;
+			break;
+			
 		default:
 			break;
 	}

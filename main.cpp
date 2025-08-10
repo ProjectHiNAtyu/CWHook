@@ -4154,109 +4154,6 @@ DB_Zone* DB_Zones_GetZoneNameFromIndex_d(int zoneIndex)
 
 
 //++++++++++++++++++++++++++++++
-// en : Get the XAsset with the specified number from the asset pool
-// ja : アセットプールから指定した番号の該当のXAssetを取得する
-//++++++++++++++++++++++++++++++
-DB_AssetPool* GetAssetPool(int assetNum)
-{
-	DB_AssetPool* s_assetPools = reinterpret_cast<DB_AssetPool*>( CalcPtr(_adr.s_assetPools) + ( sizeof(DB_AssetPool) * assetNum ) );
-	return s_assetPools;
-}
-
-
-
-//++++++++++++++++++++++++++++++
-// en : Inject the XAsset with the specified number from the asset pool (dump only for debugging purposes)
-// ja : アセットプールから指定した番号の該当のXAssetをInjectする（デバッグ用途の為ダンプのみ）
-//++++++++++++++++++++++++++++++
-void AssetPoolInjection( )
-{
-	//	for (int i = 0; i < XAssetType::ASSET_TYPE_MAXCOUNT; i++)
-	//	{
-	//		DB_AssetPool* pooldbg = GetAssetPool(i);
-	//		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> Pool %d : %p , count: %u , len %u\n", i, (void*)pooldbg->m_entries, pooldbg->m_poolSize, pooldbg->m_elementSize);
-	//		if (i == XAssetType::ASSET_TYPE_SCRIPTFILE)
-	//			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> is this ASSET_TYPE_SCRIPTFILE??\n");
-	//	}
-	//	return;
-
-	auto pool = GetAssetPool(XAssetType::ASSET_TYPE_SCRIPTFILE);
-	unsigned int datasize = sizeof(ScriptFile);
-
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool num : %d\n"			, XAssetType::ASSET_TYPE_SCRIPTFILE);
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool address : %p\n"		, (void*)pool->m_entries);
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool count : %u\n"			, pool->m_poolSize);
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool length : %u\n"		, pool->m_elementSize);
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Struct length : %u\n"		, datasize);
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> --------------------------------------------------\n");
-	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
-
-	ScriptFile* gscAssets = (ScriptFile*)(pool->m_entries);
-
-	char buf[256];
-	std::string scriptName;
-	std::string scriptPath;
-	std::string directory;
-
-	for (int i = 0; i < pool->m_poolSize; i++)
-	{
-		ScriptFile* gscHeader = &gscAssets[i];
-
-		if (isSubStr(gscHeader->name, ".gsc"))
-			scriptName = std::string(gscHeader->name) + "bin";
-		else
-			scriptName = std::string(gscHeader->name) + ".gscbin";
-		scriptPath = _documentPath + "\\dumppool\\gsc\\" + scriptName;
-
-		ReplaceAll(scriptPath, "/", "\\");
-
-		if (!gscHeader->buffer)
-		{
-			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is empty buffer.\n", i, gscHeader->name);
-			continue;
-		}
-
-		if (gscHeader->len <= 0)
-		{
-			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is invalid size (%d).\n", i, gscHeader->name, gscHeader->len);
-			continue;
-		}
-
-		if (_enableGscDump)
-		{
-			// ========================================================================================== //
-			// for Dump
-			// ========================================================================================== //
-
-			size_t lastSlash = scriptPath.find_last_of("\\");
-			if (lastSlash != std::string::npos && isSubStr(scriptPath, "\\"))
-			{
-				directory = scriptPath.substr(0, lastSlash);
-				std::filesystem::create_directories(directory);
-			}
-
-			std::ofstream gscdumpfile(scriptPath, std::ios::out | std::ios::binary);
-			if (gscdumpfile.is_open())
-			{
-				dump_gsc_script(gscdumpfile, gscHeader);
-				NotifyMsg("[ \x1b[32m Success \x1b[39m ] GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped success!\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
-				gscdumpfile.close();
-			}
-			else
-			{
-				NotifyMsg("[ \x1b[35m Failed \x1b[39m ]  GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped failed...\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
-			}
-		}
-		else
-		{
-		}
-	}
-}
-
-
-
-//++++++++++++++++++++++++++++++
 // en : Check fast file header version and magic ( for detour )
 // ja : ファストファイルのヘッダーバージョンとマジックをチェックする ( ディトール用 )
 //++++++++++++++++++++++++++++++
@@ -5436,6 +5333,12 @@ int main2()
 			StartOfTextSection	= 0x7FF654E31000;
 			StartOfBinary		= 0x7FF654E30000;
 			break;
+
+		case GameTitle::IW9:
+			EndOfTextSection	= 0x50;
+			StartOfTextSection	= 0x7E31000;
+			StartOfBinary		= 0x7E30000;
+			break;
 	}
 
 
@@ -6521,6 +6424,109 @@ int DB_PollFastfileState_d(const char* zoneName)
 	}
 
 	return DB_PollFastfileState_h(zoneName);
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Get the XAsset with the specified number from the asset pool
+// ja : アセットプールから指定した番号の該当のXAssetを取得する
+//++++++++++++++++++++++++++++++
+DB_AssetPool* GetAssetPool(int assetNum)
+{
+	DB_AssetPool* s_assetPools = reinterpret_cast<DB_AssetPool*>( CalcPtr(_adr.s_assetPools) + ( sizeof(DB_AssetPool) * assetNum ) );
+	return s_assetPools;
+}
+
+
+
+//++++++++++++++++++++++++++++++
+// en : Inject the XAsset with the specified number from the asset pool (dump only for debugging purposes)
+// ja : アセットプールから指定した番号の該当のXAssetをInjectする（デバッグ用途の為ダンプのみ）
+//++++++++++++++++++++++++++++++
+void AssetPoolInjection( )
+{
+	//	for (int i = 0; i < XAssetType::ASSET_TYPE_MAXCOUNT; i++)
+	//	{
+	//		DB_AssetPool* pooldbg = GetAssetPool(i);
+	//		NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> Pool %d : %p , count: %u , len %u\n", i, (void*)pooldbg->m_entries, pooldbg->m_poolSize, pooldbg->m_elementSize);
+	//		if (i == XAssetType::ASSET_TYPE_SCRIPTFILE)
+	//			NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> is this ASSET_TYPE_SCRIPTFILE??\n");
+	//	}
+	//	return;
+
+	auto pool = GetAssetPool(XAssetType::ASSET_TYPE_SCRIPTFILE);
+	unsigned int datasize = sizeof(ScriptFile);
+
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool num : %d\n"			, XAssetType::ASSET_TYPE_SCRIPTFILE);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool address : %p\n"		, (void*)pool->m_entries);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool count : %u\n"			, pool->m_poolSize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Pool length : %u\n"		, pool->m_elementSize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> <Info> Struct length : %u\n"		, datasize);
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> --------------------------------------------------\n");
+	NotifyMsg("[ \x1b[34m Debug \x1b[39m ] <DB_AssetPool> \n");
+
+	ScriptFile* gscAssets = (ScriptFile*)(pool->m_entries);
+
+	char buf[256];
+	std::string scriptName;
+	std::string scriptPath;
+	std::string directory;
+
+	for (int i = 0; i < pool->m_poolSize; i++)
+	{
+		ScriptFile* gscHeader = &gscAssets[i];
+
+		if (isSubStr(gscHeader->name, ".gsc"))
+			scriptName = std::string(gscHeader->name) + "bin";
+		else
+			scriptName = std::string(gscHeader->name) + ".gscbin";
+		scriptPath = _documentPath + "\\dumppool\\gsc\\" + scriptName;
+
+		ReplaceAll(scriptPath, "/", "\\");
+
+		if (!gscHeader->buffer)
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is empty buffer.\n", i, gscHeader->name);
+			continue;
+		}
+
+		if (gscHeader->len <= 0)
+		{
+			NotifyMsg("[ \x1b[35m Failed \x1b[39m ] <DB_AssetPool> GSCAsset %d = %s is invalid size (%d).\n", i, gscHeader->name, gscHeader->len);
+			continue;
+		}
+
+		if (_enableGscDump)
+		{
+			// ========================================================================================== //
+			// for Dump
+			// ========================================================================================== //
+
+			size_t lastSlash = scriptPath.find_last_of("\\");
+			if (lastSlash != std::string::npos && isSubStr(scriptPath, "\\"))
+			{
+				directory = scriptPath.substr(0, lastSlash);
+				std::filesystem::create_directories(directory);
+			}
+
+			std::ofstream gscdumpfile(scriptPath, std::ios::out | std::ios::binary);
+			if (gscdumpfile.is_open())
+			{
+				dump_gsc_script(gscdumpfile, gscHeader);
+				NotifyMsg("[ \x1b[32m Success \x1b[39m ] GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped success!\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
+				gscdumpfile.close();
+			}
+			else
+			{
+				NotifyMsg("[ \x1b[35m Failed \x1b[39m ]  GSC [ %d - '%s' | len %d ] -> Path '%s' -> Dumped failed...\n", i, gscHeader->name, gscHeader->len, scriptPath.c_str());
+			}
+		}
+		else
+		{
+		}
+	}
 }
 
 
