@@ -5509,7 +5509,7 @@ int main2()
 	NotifyMsg("----- ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 	NotifyMsg("\n");
 
-	NotifyMsg("address %llx\n", baseAddr);
+	NotifyMsg("[ \x1b[33m Notice \x1b[39m ] <main2> address %llx\n", baseAddr);
 
 
 
