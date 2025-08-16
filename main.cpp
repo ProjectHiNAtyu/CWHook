@@ -2944,7 +2944,7 @@ void GetAddressOffset(GameTitle title)
 			_adr.s_isContentEnumerationFinished					= _TEXT_SEC_LEN + 0x1673E600;	// 0x7FF66B56F600	80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
 			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= _TEXT_SEC_LEN + 0x1828D9C0;	// 0x7FF66D0BE9C0	OMROPMNPTT
 			_adr.xenonUserData_m_guardedUserData_signinState	= _TEXT_SEC_LEN + 0x8B6E480;	// 0x7FF65D99F480	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
-			_adr.dvar_xblive_loggedin							= _TEXT_SEC_LEN + 0x16BCDDE0;	// 0x7FF66B9FEDE0	dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
+			_adr.dvar_xblive_loggedin							= _TEXT_SEC_LEN + 0x16BCCDE0;	// 0x7FF66B9FEDE0	dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
 			
 			//	ProfilePatches_Arg
 			_adr.Live_GetUserData								= _TEXT_SEC_LEN + 0x16AB2334;	// 0x7FF66B8E3334	LUI_CoD_LuaCall_IsUserAGuest -> Live_UserIsGuest -> Live_GetUserData_p
@@ -3809,19 +3809,55 @@ bool Dvar_SetBool_Internal_f(dvar_t** dvar, bool setFlag, int setValue, const ch
 		return false;
 	}
 
-	uintptr_t Adr_Dvar_SetBool_Internal = CalcPtr(_adr.Dvar_SetBool_Internal);
+	switch (_gameTitle)
+	{
+		case GameTitle::IW8_138:
+		{
+			auto Dvar_SetBool_Internal = reinterpret_cast<void(*)(dvar_t * dvar, bool value)>(CalcPtr(_adr.Dvar_SetBool_Internal));
 
-	auto Dvar_SetBool_Internal = reinterpret_cast<void(*)(dvar_t * dvar, bool value, int setSource)>(Adr_Dvar_SetBool_Internal);
 
 	if (!Dvar_SetBool_Internal)
 	{
 		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid 'write dev data' function pointer\n");
 		return false;
 	}
+			try
+			{
+				Dvar_SetBool_Internal(*dvar, setFlag);
 
+				if (setFlag)
+				{
+					NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to true\n", fmt);
+				}
+				else
+				{
+					NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to false\n", fmt);
+				}
+			}
+			catch (...)
+			{
+				NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Exception occurred while setting dev data '%s'\n", fmt);
+				return false;
+			}
+		}
+		break;
+
+		case GameTitle::IW8_157:
+		case GameTitle::IW8_159:
+		case GameTitle::IW8_167:
+		{
+			auto Dvar_SetBool_Internal = reinterpret_cast<void(*)(dvar_t * dvar, bool value, int setSource)>(CalcPtr(_adr.Dvar_SetBool_Internal));
+
+
+			if (!Dvar_SetBool_Internal)
+			{
+				NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Invalid 'write dev data' function pointer\n");
+				return false;
+			}
 	try
 	{
 		Dvar_SetBool_Internal(*dvar, setFlag, setValue);
+
 		if (setFlag)
 		{
 			NotifyMsg("[ \x1b[32m Success \x1b[39m ] Successfully set dev data '%s' to true\n", fmt);
@@ -3836,6 +3872,11 @@ bool Dvar_SetBool_Internal_f(dvar_t** dvar, bool setFlag, int setValue, const ch
 		NotifyMsg("[ \x1b[35m Failed \x1b[39m ] Exception occurred while setting dev data '%s'\n", fmt);
 		return false;
 	}
+		}
+		break;
+	}
+
+
 
 	return true;
 }
