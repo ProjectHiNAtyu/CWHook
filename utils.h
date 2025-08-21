@@ -29,6 +29,7 @@ enum GameTitle
 	IW8_167,
 	IW8_159,
 	IW8_157,
+	IW8_144,
 	IW8_138,
 
 	IW9,

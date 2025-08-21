@@ -2978,7 +2978,7 @@ void GetAddressOffset(GameTitle title)
 			
 			// XAsset
 			_adr.DB_LoadXFile									= _TEXT_SEC_LEN + 0x2887C60;	// 0x7FF6576B8C60	E8 ?? ?? ?? ?? 8B F8 33 ED 40 38 B3
-			_adr.DB_FindXAssetHeader							= _TEXT_SEC_LEN + 0x288AF40;	// 0x7FF6576BBF40	E8 ?? ?? ?? ?? 44 8B C5 8D 4D
+			_adr.DB_FindXAssetHeader							= _TEXT_SEC_LEN + 0x288AF40;	// 0x7FF6576BBF40	E8 ?? ?? ?? ?? 44 8B C5 8D 4D or GScr_IsInTournament
 			_adr.DB_CheckFastfileHeaderVersionAndMagic			= _TEXT_SEC_LEN + 0x2887A60;	// 0x7FF6576B8A60	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
 			_adr.DB_CheckXFileVersion							= _TEXT_SEC_LEN + 0x2887B20;	// 0x7FF6576B8B20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
 			_adr.DB_Zones_GetZoneNameFromIndex					= _TEXT_SEC_LEN + 0x2344840;	// 0x7FF657175840	<default>
@@ -2996,7 +2996,7 @@ void GetAddressOffset(GameTitle title)
 			_adr.LUI_OpenMenu									= _TEXT_SEC_LEN + 0x5621C10;	// 0x7FF65A452C10	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
 
 			// Debug
-			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x520C390;	// 0x7FF65A041390	DebugPrint LUIElement under func
+			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x5210390;	// 0x7FF65A041390	DebugPrint LUIElement under func
 			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x5213770;	// 0x7FF65A044770	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
 			_adr.DLog_Record									= _TEXT_SEC_LEN + 0x5B11980;	// 0x7FF65A942980	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
 			_adr.DLog_RecordErrorEvent							= _TEXT_SEC_LEN + 0x21345F0;	// 0x7FF656F655F0	PreCacheGlyph -> LUI_CoD_CreateClientRoots -> 
@@ -3025,6 +3025,200 @@ void GetAddressOffset(GameTitle title)
 
 
 			
+			_adr.Live_FakeUserSignIn							= _TEXT_SEC_LEN + 0x6AB8E0;		// 0x7FF683C49560	Platform_BeginAuth -> Platform_BeginAuth_exec -> platformConnectionState -> top ref -> return func(*(_QWORD *)(a1 + 8)); -> up func -> func(*(_DWORD *)(a1 + 8), v31, v32, a3, v34);
+			_adr.OnlineErrorManager_GetFenceState				= _TEXT_SEC_LEN + 0x37C5BD0;	// 0x7FF6881ECA90	LUI_CoD_LuaCall_GetBattleNetFenceState -> 
+			_adr.OnlineErrorManager_IsMpNotAllowed				= _TEXT_SEC_LEN + 0x37AEA60;	// 0x7FF6881D2790	OnlineErrorManager_GetFenceState ref+29 or 28 -> 
+			_adr.Platform_BeginAuth								= _TEXT_SEC_LEN + 0x37B0FE0;	// 0x7FF6881D58C0	OnlineErrorManager_IsMpNotAllowed ref+4A -> Platform_BeginAuth_exec -> bottom 1 up ref+4 ->
+			_adr.Live_UserSignIn								= _TEXT_SEC_LEN + 0x2D84100;	// 0x7FF6874AE2E0	%s?timestamp=%llu&requestor=%s&account= -> Live_UserSignIn_exec_exec -> Live_UserSignIn_exec ref+12 or +13 -> ref+43 or +36 or XBOXLIVE/MPNOTALLOWED ref+15 -> up func last call ->
+			_adr.platformConnectionState						= _TEXT_SEC_LEN + 0x16EA7A0;	// 0x7FF69922A3E0	Platform_BeginAuth -> Platform_BeginAuth_exec ->
+			_adr.platformId										= _TEXT_SEC_LEN + 0x8B6E540;	// 0x7FF69922A080	Platform_BeginAuth -> under 1 func -> ref arg -> -8byte
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			_adr.DDL_Lookup_MoveToNameHash						= 0x7FF65A954A70;	// UI_LuaCall_Game_GetCPNumScoreboardPlayer -> DDL_MoveToNameByHash -> DDL_Lookup_MoveToNameHash
+			
+			_adr.CurrentRegion_IssueFix1						= 0x7FF6585E07DE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+9
+			_adr.CurrentRegion_IssueFix2						= 0x7FF6585E02BE;	// LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536)
+			
+			
+		}
+		break;
+
+		case GameTitle::IW8_144:
+		{
+		
+			_adr.DumpBase										= 0x7FF7ABA50000;				// 0x7FF7ABA51000
+
+			//	XUID
+			_adr.Sys_Microseconds								= _TEXT_SEC_LEN + 0x290;	// 0x7FF657C97190	E8 ?? ?? ?? ?? 48 2B C3 48 8B C8
+			_adr.I_irand										= _TEXT_SEC_LEN + 0x2D0;	// 0x7FF657B7E5D0	69 05 ?? ?? ?? ?? ?? ?? ?? ?? 2B D1 48 63 D2
+			_adr.GetRandSeed									= _TEXT_SEC_LEN + 0x250;	// 0x7FF657B7E350	holdrand
+			
+			//	LUA	util
+			_adr.lua_pushboolean								= _TEXT_SEC_LEN + 0x6BD8C10;	// 0x7FF7B2629C10	LUI_CoD_LuaCall_IsUserSignedInToLive
+			
+			//	First hooks / set
+			_adr.Content_DoWeHaveContentPack					= _TEXT_SEC_LEN + 0x2D0;	// 0x7FF657B857D0	LUI_CoD_LuaCall_IsMapPackOwned
+			_adr.LUI_COD_LuaCall_IsPremiumPlayer				= _TEXT_SEC_LEN + 0x6281420;	// 0x7FF7B1CD2420	LUI_COD_LuaCall_IsPremiumPlayer
+			_adr.LUI_CoD_LuaCall_OfflineDataFetched				= _TEXT_SEC_LEN + 0x6417150;	// 0x7FF7B1E68150	LUI_CoD_LuaCall_OfflineDataFetched
+			_adr.LUI_CoD_LuaCall_IsLocalPlayAllowed				= _TEXT_SEC_LEN + 0x628D1E0;	// 0x7FF7B1CDE1E0	LUI_CoD_LuaCall_IsLocalPlayAllowed
+			_adr.Dvar_RegisterBool								= _TEXT_SEC_LEN + 0x2D0;	// 0x7FF657B8F460	E8 ?? ?? ?? ?? 48 8B F0 F6 46
+			_adr.R_EndFrame										= _TEXT_SEC_LEN + 0x500;	// 0x7FF659EC8750	48 83 EC ?? E8 ?? ?? ?? ?? 48 8B 15 ?? ?? ?? ?? 45 33 D2
+			_adr.Live_IsInSystemlinkLobby						= _TEXT_SEC_LEN + 0x3D5FBE0;	// 0x7FF7AF7B0BE0	LUI_CoD_LuaCall_InLobby
+			_adr.Live_IsUserSignedInToDemonware					= _TEXT_SEC_LEN + 0x300;	// 0x7FF657EA3970	LUI_LuaCall_Social_GetPlayerCrossplayGamertag or E8 ?? ?? ?? ?? 84 C0 74 ?? 4C 8D 43 ?? 8B D7
+
+			//	Sku style Patch
+			_adr.unk_PlatformPatch_flag1						= _TEXT_SEC_LEN + 0x850;	// 0x7FF65D99F750	%08x %08x %08x %08x -> under OBYTE(v594) = *(_BYTE *)(v174 + 756) ^ ((v175 ^ (v174 - 12)) * ((v175 ^ (v174 - 12)) + 2)) ^ ((unsigned __int16)((v175 ^ (v174 + 756)) * ((v175 ^ (v174 + 756)) + 2)) >> 8); -> xuid_patch_after_1_call_call -> xuid_patch_after_1_call or 80 3D ?? ?? ?? ?? 00 75 09 C7 01 00 00 00 00 33 C0 C3 8B 05 ?? ?? ?? ?? 89 01 48 8D 05 ?? ?? ??
+			_adr.unk_XUIDCheck1									= _TEXT_SEC_LEN + 0x1E78;	// 0x7FF66F801E78	48 8D 1D ?? ?? ?? ?? 40 88 35
+			_adr.accountLoggedIn								= _TEXT_SEC_LEN + 0x1682;	// 0x7FF66BCEA682	CurrentRegion_IssueFix2 -> ref call -> if ( !flag && *(_DWORD *)(func() + 16) == 1 )
+			_adr.CurrentRegion_IssueFix2_flag					= _adr.accountLoggedIn;			// 0x7FF66BCEA682	LUI_CoD_LuaCall_GetCurrentRegion -> g_currentRegion -> ref+4D (or :loc_7FF6B1A13536) or {\n\"account_country\": \"%s\",\n\"ratings_board_min_age
+			_adr.s_isContentEnumerationFinished					= _TEXT_SEC_LEN + 0x1600;	// 0x7FF66B56F600	80 3D ?? ?? ?? ?? ?? 74 ?? 48 89 7C 24
+			_adr.dvar_r_hudOutlineVRScopeThermalDarkColorFriend	= _TEXT_SEC_LEN + 0x18C0;	// 0x7FF66D0BE9C0	OMROPMNPTT
+			_adr.xenonUserData_m_guardedUserData_signinState	= _TEXT_SEC_LEN + 0x8B0;	// 0x7FF65D99F480	LUI_CoD_LuaCall_IsConnectedToFirstParty -> Live_IsSignedIn -> xenonUserData.m_guardedUserData[v1].signinState
+			_adr.dvar_xblive_loggedin							= _TEXT_SEC_LEN + 0x16E0;	// 0x7FF66B9FEDE0	dlog_event_server_playagain_start -> ref call -> upper v5 = func((unsigned int)flag); -> +8byte
+			
+			//	ProfilePatches_Arg
+			_adr.Live_GetUserData								= _TEXT_SEC_LEN + 0x16334;	// 0x7FF66B8E3334	LUI_CoD_LuaCall_IsUserAGuest -> Live_UserIsGuest -> Live_GetUserData_p
+			_adr.GamerProfile_LogInProfile						= _TEXT_SEC_LEN + 0x34B0;	// 0x7FF6582680B0	gamer_profile_input_type_updated
+			_adr.LoadSavedAchievements							= _TEXT_SEC_LEN + 0x1A10;	// 0x7FF656853510	achievements.%X.chv & achievements_1.chv
+			
+			//	h00dair mix style Patch
+			_adr.Live_IsSignedIn								= _TEXT_SEC_LEN + 0x3D0;	// 0x7FF6585E9AD0	XBOXLIVE/MPNOTALLOWED or LUI_CoD_LuaCall_IsConnectedToFirstParty
+			_adr.LiveStorage_DoWeHaveStatsForSource				= _TEXT_SEC_LEN + 0x2C0;	// 0x7FF6578429C0	LUI_CoD_LuaCall_DoWeHaveOnlineStats
+			_adr.controllerStatData								= _TEXT_SEC_LEN + 0x1764;	// 0x7FF66A09B764	LUI_CoD_LuaCall_StatsResetGetState -> LiveStorage_GetStatsResetState -> controllerResetStatData -> under arg controllerStatData
+			_adr.LiveStorage_StatsInit							= _TEXT_SEC_LEN + 0x220;	// 0x7FF657845620	ddl/mp/playerdata.ddl
+			_adr.LiveStorage_ReadStats							= _TEXT_SEC_LEN + 0x260;	// 0x7FF657842F60	playerdata_available
+
+
+			// 138
+			// Dvar_GenerateChecksum		0x7FF657B8A9C0 Dvar_GetStringSafe
+			// dvarCount					0x7FF66B56F610 %g %g %g %g ref func 1 up func
+			// sortedDvars					0x7FF66B56F630 dvarCount 8 down var
+			// dvarPool_start				0x7FF66B57D150 sortedDvars ref func up func
+			// dvarPool_end					0x7FF66B665E70 dvarPool_start ref+1C
+			// Dvar_RegisterNew				0x7FF657B8FEC0 dvarPool_start ref+261
+			// R_DrawTextFont				0x7FF66BA4AAE0 fonts/fira_mono_bold.ttf
+			// R_WhiteMaterial				0x7FF66F859820 ui_scrollbar
+			// CL_Keys_Event_1				0x7FF658230670 input_locked ref+5D5B
+			// CL_Keys_Event_2				0x7FF65AD06938 NetConstStrings_GetNameFromIndexPlusOne ref +F btw +44A 2 under func
+			// CL_Keys_Event_3				0x7FF658230679 CL_Keys_Event_1 +9
+			// CL_Keys_Event_4				0x7FF658230685 input_locked ref+5D5B
+			// CL_Keys_Event_5				0x7FF658230680 input_locked ref+5D5B
+			// CL_Keys_Event_6				0x7FF65822DDD5 CL_Keys_Event_1 F5 dec case 7LL:
+			// CL_Keys_Event_7				0x7FF65822BAB2 CL_Keys_Event_1 F5 dec switch ( __ROL8__(v69, 35) & 0xF )
+			// CL_Keys_Event_8				0x7FF65822DE19 CL_Keys_Event_6 +44
+			// CL_Keys_Event_9				0x7FF658230680 CL_Keys_Event_5
+			// CL_Keys_Event				0x7FF658230680 CL_Keys_Event_1
+			// cl_char_event				0x7FF658230680 CL_Keys_Event_1 ref +84 under
+			// 
+			// 
+			// 144
+			// cl_char_event				0x7FF7AFC66D00	0x4215D00	4216D00		CL_Keys_Event_1 ref +84 under
+			// CL_Keys_Event				0x7FF7AFC675B0	0x42165B0	42175B0		CL_Keys_Event_1
+			// CL_Keys_Event_9				0x7FF7AFC6D799	0x421C799	421D799		CL_Keys_Event_5
+			// CL_Keys_Event_8				0x7FF7AFC6AA35	0x4219A35	421AA35		CL_Keys_Event_6 +44
+			// CL_Keys_Event_7				0x7FF7AFC6882D	0x421782D	421882D		CL_Keys_Event_1 F5 dec switch ( __ROL8__(v69, 35) & 0xF )
+			// CL_Keys_Event_6				0x7FF7AFC6A9F1	0x42199F1	421A9F1		CL_Keys_Event_1 F5 dec case 7LL:
+			// CL_Keys_Event_5				0x7FF7AFC6D799	0x421C799	421D799		input_locked ref+5D5B
+			// CL_Keys_Event_4				0x7FF7AFC6D79E	0x421C79E	421D79E		input_locked ref+5D5B
+			// CL_Keys_Event_3				0x7FF7AFC6D792	0x421C792	421D792		CL_Keys_Event_1 +9
+			// CL_Keys_Event_2				0x7FF7B29AF8F8	0x6F5E8F8	6F5F8F8		NetConstStrings_GetNameFromIndexPlusOne ref +F btw +44A 2 under func
+			// CL_Keys_Event_1				0x7FF7AFC6D789	0x421C789	421D789		input_locked ref+5D5B
+			// R_WhiteMaterial				0x7FF7C7688C10	0x1BC37C10	1BC38C10	ui_scrollbar
+			// R_DrawTextFont				0x7FF7C36B5230	0x17C64230	17C65230	fonts/fira_mono_bold.ttf
+			// Dvar_RegisterNew				0x7FF7AF445A90	0x39F4A90	39F5A90		dvarPool_start ref+261
+			// Dvar_SetInt_Internal			0x7FF7AF448EE0	0x39F7EE0	39F8EE0		LUI_CoD_LuaCall_ResetMaxPrivatePartySizeForMainMenu
+			// dvarPool_end					0x7FF7C31CC0B0	0x1777B0B0	1777C0B0	dvarPool_start ref+1C
+			// dvarPool_start				0x7FF7C30D29F0	0x176819F0	176829F0	sortedDvars ref func up func
+			// sortedDvars					0x7FF7C30C3F30	0x17672F30	17673F30	dvarCount 8 down var
+			// dvarCount					0x7FF7C30C3F10	0x17672F10	17673F10	%g %g %g %g ref func 1 up func
+			// Dvar_GenerateChecksum		0x7FF7AF43F980	0x39EE980	39EF980		called Dvar_GetStringSafe
+			// PartyHost_RequestStartMatch	0x7FF7AEBF61A0	0x31A61A0	31A51A0		called Live_IsInSystemlinkLobby
+			
+			// bot
+			_adr.g_partyData									= _TEXT_SEC_LEN + 0x15A16428;	// 0x7FF7C1467428	LUI_CoD_LuaCall_SelectedMember_SetLocalMemberIsFollower
+			_adr.Lobby_GetLobbyData								= _TEXT_SEC_LEN + 0x2860;	// 0x7FF65764DC60	SV_ClientMP_CanSpawnBotOrTestClient 4 up func -> SV_ClientMP_AddBot -> SV_ClientMP_CanSpawnBot -> Live_GetGameParty
+			
+			// Cbuf
+			_adr.xpartydisband									= _TEXT_SEC_LEN + 0x5D00;	// 0x7FF65ACE0D00	xpartydisbandafterround\n
+			_adr.GScr_EndLobby									= _TEXT_SEC_LEN + 0x2E60;	// 0x7FF657789E60	xpartydisband ref func
+
+			// Dvar
+			_adr.Dvar_SetBool_Internal							= _TEXT_SEC_LEN + 0x39F6240;	// 0x7FF7AF447240	LUA_MENU/PATCH_UPDATE_SUCCESS
+			_adr.Dvar_FindVarByName								= _TEXT_SEC_LEN + 0x39EE8C0;	// 0x7FF7AF43F8C0	E8 ?? ?? ?? ?? 48 8B CB 48 63 50
+			_adr.Dvar_GetBoolSafe								= _TEXT_SEC_LEN + 0x2D10;	// 0x7FF657B8AB10	MLOLTLLNRT
+			_adr.Dvar_GetStringSafe								= _TEXT_SEC_LEN + 0x39F22F0;	// 0x7FF7AF4432F0	48 83 EC ?? E8 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 48 85 C0 75 ?? 48 8D 05 ?? ?? ?? ?? 48 83 C4 ?? C3 80 78
+			
+			
+			// XAsset
+			_adr.DB_LoadXFile									= _TEXT_SEC_LEN + 0x2860;	// 0x7FF6576B8C60	E8 ?? ?? ?? ?? 8B F8 33 ED 40 38 B3
+			_adr.DB_FindXAssetHeader							= _TEXT_SEC_LEN + 0x31D3B10;	// 0x7FF7AEC24B10	E8 ?? ?? ?? ?? 44 8B C5 8D 4D or GScr_IsInTournament
+			_adr.DB_CheckFastfileHeaderVersionAndMagic			= _TEXT_SEC_LEN + 0x2860;	// 0x7FF6576B8A60	E8 ?? ?? FF FF 84 C0 0F 84 ?? ?? FF FF 41 ?? ?? 00 ?? ?? ??
+			_adr.DB_CheckXFileVersion							= _TEXT_SEC_LEN + 0x2820;	// 0x7FF6576B8B20	DB_CheckFastfileHeaderVersionAndMagic under 1 func
+			_adr.DB_Zones_GetZoneNameFromIndex					= _TEXT_SEC_LEN + 0x2340;	// 0x7FF657175840	<default>
+			
+			// Collision
+			_adr.CL_TransientsCollisionMP_SetTransientMode		= _TEXT_SEC_LEN + 0x13D0;	// 0x7FF656DFE3D0	%s_cg_ls_tr ref up 1 func call arg ref 1 line or 48 83 EC 38 80 3D ?? ?? ?? 08 00 48 8B C2 4C 8B 0D ?? ?? ?? 08 BA 40 00 00 00 74 13 4C 8D 05 ?? ?? ?? 04 48 8B C8 48 83 C4 38 E9 ?? ?? ?? 04 89 4C 24 20 4C 8D 05 ?? ?? ?? 04 48 8B C8 E8 ?? ??
+			_adr.CL_TransientsCollisionMP_SetTransientMode_var	= _TEXT_SEC_LEN + 0xAF64;	// 0x7FF65EFADF64	CL_TransientsCollisionMP_SetTransientMode call variable
+			
+			// LUA util optional
+			_adr.lua_tolstring									= _TEXT_SEC_LEN + 0x6BD96E0;	// 0x7FF7B262A6E0	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 49 8B F8 8B DA 48 8B F1
+			
+			// LUA customize
+			_adr.luaL_loadbuffer								= _TEXT_SEC_LEN + 0x6BDEC80;	// 0x7FF7B262FC80	4C 8B DC 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 85 C9
+			_adr.luaL_loadfile									= _TEXT_SEC_LEN + 0x639EB0;	// 0x7FF7AC08AEB0	40 53 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 41
+			_adr.LUI_OpenMenu									= _TEXT_SEC_LEN + 0x510;	// 0x7FF65A452C10	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 41 8B F1 41 8B D8
+
+			// Debug
+			_adr.LUI_LuaCall_LUIGlobalPackage_DebugPrint		= _TEXT_SEC_LEN + 0x6208690;	// 0x7FF7B1C59690	DebugPrint LUIElement under func
+			_adr.LUI_ReportError								= _TEXT_SEC_LEN + 0x620BB90;	// 0x7FF7B1C5CB90	48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B FA 45 33 C0
+			_adr.DLog_Record									= _TEXT_SEC_LEN + 0x5B;	// 0x7FF65A942980	DLog_LuaRecordEvent -> DLog_RecordContext -> DLog_Record
+			_adr.DLog_RecordErrorEvent							= _TEXT_SEC_LEN + 0x21;	// 0x7FF656F655F0	PreCacheGlyph -> LUI_CoD_CreateClientRoots -> 
+
+			// GSC
+			_adr.Load_ScriptFile								= _TEXT_SEC_LEN + 0x290;	// 
+			_adr.DB_PatchMem_PushAsset							= _TEXT_SEC_LEN + 0x270;	// 
+			_adr.Load_Stream									= _TEXT_SEC_LEN + 0x2C0;	// 
+			_adr.DB_PushStreamPos								= _TEXT_SEC_LEN + 0x2B0;	// 
+			_adr.Load_XString									= _TEXT_SEC_LEN + 0x260;	// 
+			_adr.DB_PopStreamPos								= _TEXT_SEC_LEN + 0x200;	// 
+			_adr.DB_PatchMem_PopAsset							= _TEXT_SEC_LEN + 0x240;	// 
+			_adr.DB_ReadXFile									= _TEXT_SEC_LEN + 0x2A0;	// 
+			_adr.Load_ConstCharArray							= _TEXT_SEC_LEN + 0;	// 
+			_adr.Load_byteArray									= _TEXT_SEC_LEN + 0;	// 
+			_adr.varScriptFile									= _TEXT_SEC_LEN + 0xA20;	// 
+			_adr.varXString										= _TEXT_SEC_LEN + 0xA20;	// 
+			_adr.varConstChar									= _TEXT_SEC_LEN + 0xA20;	// 
+			_adr.varbyte										= _TEXT_SEC_LEN + 0xA20;	// 
+			_adr.AllocLoad_ConstChar							= _TEXT_SEC_LEN + 0;	// 
+			_adr.AllocLoad_byte									= _TEXT_SEC_LEN + 0;	// 
+			_adr.g_streamPosGlob_pos							= _TEXT_SEC_LEN + 0x15F0;	// 
+
+			
+
+
+
+			
+			_adr.Live_FakeUserSignIn							= _TEXT_SEC_LEN + 0x6AB8E0;		// 0x7FF683C49560	Platform_BeginAuth -> Platform_BeginAuth_exec -> platformConnectionState -> top ref -> return func(*(_QWORD *)(a1 + 8)); -> up func -> func(*(_DWORD *)(a1 + 8), v31, v32, a3, v34);
+			_adr.OnlineErrorManager_GetFenceState				= _TEXT_SEC_LEN + 0x37C5BD0;	// 0x7FF6881ECA90	LUI_CoD_LuaCall_GetBattleNetFenceState -> 
+			_adr.OnlineErrorManager_IsMpNotAllowed				= _TEXT_SEC_LEN + 0x37AEA60;	// 0x7FF6881D2790	OnlineErrorManager_GetFenceState ref+29 or 28 -> 
+			_adr.Platform_BeginAuth								= _TEXT_SEC_LEN + 0x37B0FE0;	// 0x7FF6881D58C0	OnlineErrorManager_IsMpNotAllowed ref+4A -> Platform_BeginAuth_exec -> bottom 1 up ref+4 ->
+			_adr.Live_UserSignIn								= _TEXT_SEC_LEN + 0x2D84100;	// 0x7FF6874AE2E0	%s?timestamp=%llu&requestor=%s&account= -> Live_UserSignIn_exec_exec -> Live_UserSignIn_exec ref+12 or +13 -> ref+43 or +36 or XBOXLIVE/MPNOTALLOWED ref+15 -> up func last call ->
+			_adr.platformConnectionState						= _TEXT_SEC_LEN + 0x16EA7A0;	// 0x7FF69922A3E0	Platform_BeginAuth -> Platform_BeginAuth_exec ->
+			_adr.platformId										= _TEXT_SEC_LEN + 0x8B6E540;	// 0x7FF69922A080	Platform_BeginAuth -> under 1 func -> ref arg -> -8byte
 			
 
 
